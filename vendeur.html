@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-IfpUOoa5LAzT5SBCW9YoIpFcQHUvJ5r1L3vNs86XaVA='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-1EMKn9I3g+Pw9uyZtKhI0lNli1euwOk4RxuzWBmR4C4='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#23110a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -323,6 +323,13 @@
       function sansAccents(t) {
         return String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
       }
+      // Le "code" d'un ebook dans son lien (ex. vendeur.html?ebook=argent)
+      function codeEbook(e) {
+        var id = String(e.id || "").trim().toLowerCase();
+        if (/^[a-z0-9-]{1,40}$/.test(id)) return id;
+        return sansAccents(e.nom).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+      }
+
       function enBas() { fil.scrollTop = fil.scrollHeight; }
 
       // Construit un texte où les morceaux entre ** ** sont en gras (sans jamais utiliser innerHTML)
@@ -583,7 +590,26 @@
         .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
         .then(function (d) { ebooks = (Array.isArray(d) ? d : []).filter(function (e) { return e && e.nom && e.prix; }); })
         .catch(function () { ebooks = []; })
-        .then(accueil);
+        .then(function () {
+          // Si le lien demande un ebook précis, la discussion commence directement sur lui
+          var demande = "";
+          try { demande = String(new URLSearchParams(location.search).get("ebook") || "").toLowerCase().slice(0, 40); } catch (e) { demande = ""; }
+          var cible = null;
+          ebooks.forEach(function (e) { if (!cible && demande && codeEbook(e) === demande) cible = e; });
+          if (cible) {
+            robot("Bonjour ! 👋 Je suis **Didy**, l'assistante automatique de **Didy Digital**.");
+            robot("Tu t'intéresses à **« " + cible.nom + " »** ? Très bon choix ! Voici tout ce qu'il faut savoir 👇");
+            robotBloc(function () { return fiche(cible); });
+            robot("Il coûte **" + cible.prix + "**. Tu le lis directement sur ton téléphone.");
+            choix([
+              { texte: "🛒 Je l'achète", action: function () { acheter(cible); } },
+              { texte: "🤔 J'ai une question", action: questions },
+              { texte: "📚 Voir les autres ebooks", action: function () { robot("Avec plaisir ! Voici ce que je te propose :"); menu(); } }
+            ]);
+          } else {
+            accueil();
+          }
+        });
 
       // ---------- Compteur de visites (GoatCounter, sans cookie) ----------
       var code = String(reglages.goatcounter || "").trim().toLowerCase();

@@ -25,6 +25,9 @@ Photo de profil → **Settings** → **Emails** → coche **« Keep my email add
       envoie les clients acheter sur Chariow.
 - [ ] Une fois le site en ligne, partager le lien de l'assistante **Didy** :
       https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html
+      Liens qui ouvrent Didy directement sur un ebook :
+      - Argent : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=argent
+      - Recettes : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=recettes
 
 - [ ] Mettre les 2 ebooks sur **Chariow** et ajouter les liens avec la page « Gérer mes ebooks ».
 - [ ] Dans **GoatCounter** → Settings : cocher l'option du compteur de visites.

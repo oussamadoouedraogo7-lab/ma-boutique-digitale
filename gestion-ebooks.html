@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-Uge+de4WRxKIQ03FtZ7SzW5/QyNT+ueGCBZcUuNoVr8='; script-src 'sha256-q2QQdNHrr9Au5I52FBL4VVKqjxF/UHRgJHgdRWVb0fo='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-r88t8AUwTVx5OPVuL2kslyx47jSlwPMx2LpFiPvbKfc='; script-src 'sha256-ShVW64zln0f6BZ4m57U/AayE3PgEzXDKsuZZjeaPy6I='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -95,6 +95,7 @@
     .liste small { color: var(--texte-doux); }
     .outils { display: flex; flex-wrap: wrap; gap: 6px; }
     .vide { color: var(--texte-doux); font-style: italic; }
+    .liste small.lien-didy { display: block; margin-top: 4px; color: var(--emeraude); font-size: 0.75rem; overflow-wrap: anywhere; }
 
     /* Formulaire */
     label { display: block; margin: 16px 0 6px; font-weight: 800; font-size: 0.95rem; }
@@ -287,6 +288,26 @@
       }
 
       // ----- Affiche la liste et le texte à copier -----
+      function sansAccents(t) {
+        return String(t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      }
+      function codeEbook(e) {
+        var id = String(e.id || "").trim().toLowerCase();
+        if (/^[a-z0-9-]{1,40}$/.test(id)) return id;
+        return sansAccents(e.nom).replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+      }
+      function lienDidy(e) {
+        return new URL("vendeur.html?ebook=" + encodeURIComponent(codeEbook(e)), location.href).href;
+      }
+      function copier(texte, idMessage, ok) {
+        function reussi() { message(idMessage, ok, "ok"); }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(texte).then(reussi, function () { message(idMessage, texte, "ok"); });
+        } else {
+          message(idMessage, texte, "ok");
+        }
+      }
+
       function rafraichir() {
         var liste = $("liste");
         liste.textContent = "";
@@ -298,12 +319,14 @@
           var infos = element("div");
           infos.appendChild(element("strong", "", (ebook.icone ? ebook.icone + " " : "") + ebook.nom));
           infos.appendChild(element("small", "", ebook.prix));
+          infos.appendChild(element("small", "lien-didy", "💬 " + lienDidy(ebook)));
           li.appendChild(infos);
 
           var outils = element("div", "outils");
           [
             { t: "↑", titre: "Monter", action: function () { deplacer(i, -1); }, cache: i === 0 },
             { t: "↓", titre: "Descendre", action: function () { deplacer(i, 1); }, cache: i === ebooks.length - 1 },
+            { t: "💬 Copier le lien Didy", action: function () { copier(lienDidy(ebook), "message-liste", "✅ Lien copié ! Partage-le sur WhatsApp, Facebook ou TikTok : Didy parlera directement de « " + ebook.nom + " »."); } },
             { t: "Modifier", action: function () { modifier(i); } },
             { t: "Supprimer", classe: " bouton-danger", action: function () { supprimer(i); } }
           ].forEach(function (o) {
@@ -416,9 +439,15 @@
         catch (err) { message("message-form", "⚠️ " + err.message, "erreur"); return; }
 
         if (enModification >= 0) {
+          // On garde les informations que le formulaire ne montre pas (ex. "id")
+          var ancien = ebooks[enModification] || {};
+          if (ancien.id) e.id = ancien.id;
           ebooks[enModification] = e;
           message("message-form", "✅ Modifications enregistrées dans la liste. Passe à l'étape 3.", "ok");
         } else {
+          var base = codeEbook(e) || "ebook", code = base, n = 2;
+          while (ebooks.some(function (x) { return codeEbook(x) === code; })) { code = base.slice(0, 36) + "-" + n++; }
+          e.id = code;
           ebooks.push(e);
           message("message-form", "✅ « " + e.nom + " » ajouté à la liste. Passe à l'étape 3.", "ok");
         }
