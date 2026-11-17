@@ -33,6 +33,10 @@ Photo de profil → **Settings** → **Emails** → coche **« Keep my email add
 - [ ] Ajouter les photos de couverture « Réussir en Europe » et « Arrêter de fumer » dans le dossier images
       (elles ne sont pas encore arrivées sur GitHub).
 - [ ] Mettre « 400 recettes… » sur Chariow et envoyer le lien.
+- [ ] Envoyer le **vrai lien Chariow de « Réussir en Europe »** (l'ancien était celui du business).
+- [ ] Ajouter l'ebook « Les Secrets de Réussite d'un Business en Ligne » :
+      lien Chariow https://tvqanrik.mychariow.shop/prd_bkx38tzd/checkout (couverture reçue),
+      il manque une capture de sa page Chariow (description et prix).
 
 - [ ] Mettre les 2 ebooks sur **Chariow** et ajouter les liens avec la page « Gérer mes ebooks ».
 - [ ] Dans **GoatCounter** → Settings : cocher l'option du compteur de visites.
