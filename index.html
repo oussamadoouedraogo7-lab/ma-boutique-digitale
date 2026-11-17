@@ -15,11 +15,11 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-Ae9KuvqjIhi2aP0Wk8BalWtnsT/1WSMkfeKnKylLV6U='; script-src 'sha256-AhEbowk5RL8ZmEJ2RGaaRr+CK/orQULHMF69qn8mqT8='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-YDmxTzMbsTM0B1PD+MNzSisbMK93jZqk6SzxEzZbSbc='; script-src 'sha256-x3+4ywm8FB2h1DuIhX/J442x4cx0vlwvxjFKrOJuo/Y='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
-  <meta name="description" content="Didy Digital : des ebooks simples et pratiques sur l'argent et la cuisine d'Afrique de l'Ouest. Commande facilement sur WhatsApp.">
+  <meta name="description" content="Didy Digital : des ebooks simples et pratiques pour apprendre et progresser. Paiement par Mobile Money ou en ligne.">
   <meta name="theme-color" content="#23110a">
 
   <!-- Les polices sont chargées en avance pour un affichage plus rapide -->
@@ -322,7 +322,16 @@
       font-size: 76px;
       background: linear-gradient(135deg, var(--orange), var(--soleil));
     }
-    .illustration { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .illustration, .photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .photo { object-fit: cover; }
+
+    /* Les couleurs de couverture possibles ("couleur" dans ebooks.json) */
+    .theme-orange   { background: linear-gradient(135deg, var(--orange), var(--soleil)); }
+    .theme-vert     { background: linear-gradient(135deg, var(--emeraude), #6ee7b7); }
+    .theme-hibiscus { background: linear-gradient(135deg, var(--hibiscus), var(--orange)); }
+    .theme-cacao    { background: linear-gradient(135deg, var(--cacao), #7c2d12); }
+    .theme-soleil   { background: linear-gradient(135deg, var(--soleil), #fde68a); }
+    .theme-terre    { background: linear-gradient(135deg, var(--terre), #fb923c); }
     .couverture .icone { filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25)); }
 
     .vapeur { animation: vapeur 3s ease-in-out infinite; opacity: 0; }
@@ -593,7 +602,7 @@
     <div class="hero-contenu">
       <span class="surtitre">✦ Ebooks · Afrique de l'Ouest</span>
       <h1>Didy Digital</h1>
-      <p>Bienvenue ! Des ebooks simples et pratiques pour mieux gérer ton argent et te régaler avec les saveurs d'Afrique de l'Ouest.</p>
+      <p>Bienvenue ! Des ebooks simples et pratiques pour apprendre, progresser et réussir au quotidien. À lire directement sur ton téléphone.</p>
       <div class="actions">
         <a class="bouton bouton-soleil" href="#ebooks">Voir les ebooks ↓</a>
         <a class="bouton bouton-contour" data-whatsapp="1" target="_blank" rel="noopener noreferrer">Nous écrire</a>
@@ -611,8 +620,8 @@
   <!-- ===== BANDE QUI DÉFILE (le texte est écrit deux fois pour une boucle sans fin) ===== -->
   <div class="bande-cadre" aria-hidden="true"><div class="bande">
     <div class="bande-piste">
-      <span>Budget malin</span><span>Épargne</span><span>Mafé</span><span>Riz gras</span><span>Tô sauce gombo</span><span>Jus de bissap</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
-      <span>Budget malin</span><span>Épargne</span><span>Mafé</span><span>Riz gras</span><span>Tô sauce gombo</span><span>Jus de bissap</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
+      <span>Ebooks pratiques</span><span>Lecture sur téléphone</span><span>Apprendre</span><span>Progresser</span><span>Réussir</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
+      <span>Ebooks pratiques</span><span>Lecture sur téléphone</span><span>Apprendre</span><span>Progresser</span><span>Réussir</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
     </div>
   </div></div>
 
@@ -622,7 +631,7 @@
       <div class="conteneur">
         <div class="entete-section revele">
           <span class="eyebrow">Nos ebooks</span>
-          <h2>Apprends, économise, <em>régale-toi.</em></h2>
+          <h2>Trouve l'ebook <em>qu'il te faut.</em></h2>
           <p>Choisis ton ebook, puis paie comme tu préfères : en ligne sur Chariow, ou par Mobile Money sur WhatsApp.</p>
         </div>
         <div class="grille" id="liste-ebooks">
@@ -652,8 +661,8 @@
     <section class="chiffres-section">
       <div class="conteneur">
         <div class="chiffres">
-          <div class="chiffre revele"><strong data-compteur="2">2</strong><span>ebooks pratiques</span></div>
-          <div class="chiffre revele"><strong data-compteur="400">400</strong><span>recettes d'Afrique de l'Ouest</span></div>
+          <div class="chiffre revele"><strong id="nombre-ebooks" data-compteur="0">0</strong><span>ebooks disponibles</span></div>
+          <div class="chiffre revele"><strong data-compteur="100" data-suffixe=" %">100 %</strong><span>lisibles sur ton téléphone</span></div>
           <div class="chiffre revele"><strong data-compteur="3">3</strong><span>façons de payer : Chariow, Moov Money, Orange Money</span></div>
         </div>
       </div>
@@ -731,45 +740,12 @@
 
   <!--
     =====================================================================
-    📚 LA LISTE DES EBOOKS : C'EST ICI QUE TU AJOUTES OU MODIFIES UN EBOOK
+    📚 LA LISTE DES EBOOKS EST DANS LE FICHIER "ebooks.json"
     =====================================================================
-    Pour ajouter un ebook :
-      1. Copie un bloc { ... } (de l'accolade { jusqu'à l'accolade } ).
-      2. Mets une VIRGULE après le bloc précédent.
-      3. Colle et change le nom, le prix, la description, l'icône et la couleur.
-    "apercu" (facultatif) : quelques exemples de contenu, affichés en petites étiquettes.
-    "apercuTitre" (facultatif) : le titre au-dessus des étiquettes (par défaut "Au menu :").
-    "illustration" (facultatif) : "mafe" ou "finance" affiche un dessin au lieu de l'icône.
-    "lienChariow" : colle ici le lien de la page de l'ebook sur Chariow (il doit commencer par https://).
-      Tant qu'il est vide "", le bouton Chariow ne s'affiche pas.
-    Garde bien les guillemets " " autour de chaque texte.
-    (Ce bloc contient seulement des données : tu peux le modifier sans toucher à la sécurité.)
+    Pour ajouter, modifier ou supprimer un ebook, le plus simple est
+    d'ouvrir la page "gestion-ebooks.html" de ton site : elle prépare
+    la nouvelle liste pour toi, tu n'as plus qu'à la coller dans ebooks.json.
   -->
-  <script type="application/json" id="donnees-ebooks">
-  [
-    {
-      "nom": "Gérer son argent quand on gagne peu",
-      "prix": "2 300 F CFA",
-      "description": "Tu gagnes peu et ton argent disparaît avant la fin du mois ? Ce guide simple et pratique t'apprend à organiser ton budget, à éviter les dépenses inutiles et à mettre de l'argent de côté, même avec un petit salaire.",
-      "icone": "💰",
-      "couleur": "orange",
-      "illustration": "finance",
-      "lienChariow": "",
-      "apercuTitre": "Tu vas apprendre à :",
-      "apercu": ["Faire ton budget", "Éviter les dépenses inutiles", "Épargner chaque mois", "Tenir jusqu'à la fin du mois"]
-    },
-    {
-      "nom": "400 recettes du Burkina Faso et d'Afrique de l'Ouest",
-      "prix": "1 600 F CFA",
-      "description": "Découvre 400 recettes complètes du Burkina Faso et de toute l'Afrique de l'Ouest : plats traditionnels, sauces, boissons et douceurs, expliquées pas à pas.",
-      "icone": "🍲",
-      "couleur": "vert",
-      "illustration": "mafe",
-      "lienChariow": "",
-      "apercu": ["Mafé", "Riz gras", "Tô sauce gombo", "Poulet bicyclette", "Attiéké poisson braisé", "Alloco", "Babenda", "Jus de bissap", "Dêguê"]
-    }
-  ]
-  </script>
 
   <!-- ===== LE SCRIPT DU SITE (ne pas modifier sans recalculer l'empreinte CSP) ===== -->
   <script>
@@ -827,20 +803,31 @@
         return svg;
       }
 
-      // ----- 1. Les cartes des ebooks -----
-      var zone = document.getElementById("liste-ebooks");
-      var ebooks = lireDonnees("donnees-ebooks", null);
-      if (!Array.isArray(ebooks)) {
-        zone.appendChild(element("div", "erreur", "Oups, la liste des ebooks contient une erreur (virgule ou guillemet oublié ?)."));
-        ebooks = [];
+      // ----- 1. Les cartes des ebooks (lues dans le fichier ebooks.json) -----
+      var COULEURS = { orange: "orange", vert: "vert", hibiscus: "hibiscus", cacao: "cacao", soleil: "soleil", terre: "terre", dore: "soleil" };
+
+      // N'accepte que les photos du dossier images/ du site (ex. "images/mafe.jpg")
+      function cheminPhoto(chemin) {
+        var c = String(chemin || "").trim();
+        return /^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(c) ? c : null;
       }
 
-      ebooks.forEach(function (ebook) {
+      function creerCarte(ebook) {
         var carte = element("article", "carte revele");
 
-        var couverture = element("div", "couverture");
+        var couleur = COULEURS[ebook.couleur] || "orange";
+        var couverture = element("div", "couverture theme-" + couleur);
         var modele = ebook.illustration ? document.getElementById("illustration-" + ebook.illustration) : null;
-        if (modele && modele.content) {
+        var photo = cheminPhoto(ebook.image);
+        if (photo) {
+          // Une photo du dossier images/ du site
+          var img = element("img", "photo");
+          img.src = photo;
+          img.alt = String(ebook.nom || "");
+          img.loading = "lazy";
+          img.decoding = "async";
+          couverture.appendChild(img);
+        } else if (modele && modele.content) {
           couverture.appendChild(modele.content.cloneNode(true));
         } else {
           var icone = element("span", "icone", ebook.icone || "📘");
@@ -897,8 +884,8 @@
         contenu.appendChild(paiement);
 
         carte.appendChild(contenu);
-        zone.appendChild(carte);
-      });
+        return carte;
+      }
 
       // ----- 2. Tous les autres liens WhatsApp de la page -----
       document.querySelectorAll("[data-whatsapp]").forEach(function (lien) {
@@ -937,8 +924,9 @@
 
       // ----- 5. Les éléments apparaissent quand on fait défiler la page -----
       var aReveler = document.querySelectorAll(".revele");
+      var observateur = null;
       if ("IntersectionObserver" in window && !calme) {
-        var observateur = new IntersectionObserver(function (entrees) {
+        observateur = new IntersectionObserver(function (entrees) {
           entrees.forEach(function (entree) {
             if (!entree.isIntersecting) return;
             entree.target.classList.add("visible");
@@ -954,6 +942,38 @@
       } else {
         aReveler.forEach(function (el) { el.classList.add("visible"); });
       }
+
+      function reveler(el, position) {
+        if (observateur) {
+          el.style.transitionDelay = Math.min(position, 4) * 0.12 + "s";
+          observateur.observe(el);
+        } else {
+          el.classList.add("visible");
+        }
+      }
+
+      // ----- Chargement de la liste des ebooks -----
+      var zone = document.getElementById("liste-ebooks");
+      fetch("ebooks.json", { cache: "no-cache", credentials: "same-origin" })
+        .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(function (ebooks) {
+          if (!Array.isArray(ebooks)) throw new Error("format");
+          ebooks.forEach(function (ebook, i) {
+            if (!ebook || !ebook.nom) return;
+            var carte = creerCarte(ebook);
+            zone.appendChild(carte);
+            reveler(carte, i);
+          });
+          var nombre = document.getElementById("nombre-ebooks");
+          nombre.setAttribute("data-compteur", String(zone.querySelectorAll(".carte").length));
+          nombre.textContent = String(zone.querySelectorAll(".carte").length);
+          if (nombre.closest(".visible")) compter(nombre);
+          majProgression();
+        })
+        .catch(function () {
+          zone.appendChild(element("div", "erreur",
+            "Oups, impossible d'afficher les ebooks pour le moment. Recharge la page, ou écris-nous sur WhatsApp."));
+        });
 
       // ----- 6. Compteur de visites GoatCounter (sans cookie, sans donnée personnelle) -----
       var reglages = lireDonnees("reglages", {}) || {};

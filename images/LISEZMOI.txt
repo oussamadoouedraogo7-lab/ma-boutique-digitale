@@ -1,0 +1,7 @@
+Dossier des photos du site Didy Digital.
+
+Mets ici les photos de tes ebooks (format .jpg, .png ou .webp),
+avec un nom simple, sans espace ni accent. Exemple : mafe.jpg
+
+Ensuite, dans la page "Gérer mes ebooks", écris dans la case Photo :
+images/mafe.jpg

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!--
+    ===== PAGE "GÉRER MES EBOOKS" =====
+    Cette page t'aide à préparer la liste de tes ebooks.
+    SÉCURITÉ : elle n'envoie RIEN sur internet. Tout se passe dans ton téléphone.
+    Elle lit seulement le fichier ebooks.json de ton site, puis te donne
+    le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-Uge+de4WRxKIQ03FtZ7SzW5/QyNT+ueGCBZcUuNoVr8='; script-src 'sha256-6O2m4wESHymGixEO7yxKHnwZC350Z581UxUm9GViVyI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#23110a">
+  <title>Gérer mes ebooks – Didy Digital</title>
+  <style>
+    @font-face { font-family: "Bricolage"; src: url("fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+    @font-face { font-family: "Jakarta"; src: url("fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+
+    :root {
+      --cacao: #23110a;
+      --terre: #c2410c;
+      --orange: #f97316;
+      --soleil: #fbbf24;
+      --emeraude: #059669;
+      --hibiscus: #e11d48;
+      --sable: #fdf4e3;
+      --creme: #fffaf2;
+      --texte-doux: #6b4a36;
+      --bord: #ecd3ae;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Jakarta", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--sable);
+      color: var(--cacao);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 36px 16px 64px;
+      text-align: center;
+      color: var(--creme);
+      background-color: var(--cacao);
+      background-image: radial-gradient(circle at 15% 0%, rgba(249, 115, 22, 0.45), transparent 55%), radial-gradient(circle at 90% 100%, rgba(5, 150, 105, 0.4), transparent 55%);
+    }
+    .marque { margin: 0; color: var(--soleil); font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.8rem; }
+    h1, h2 { font-family: "Bricolage", system-ui, sans-serif; line-height: 1.15; }
+    h1 { margin: 8px 0 6px; font-size: clamp(2rem, 9vw, 2.7rem); }
+    header p { margin: 0 auto; max-width: 520px; color: #f3e3cf; }
+
+    main { max-width: 760px; margin: -40px auto 0; padding: 0 16px 60px; }
+
+    .panneau {
+      margin-bottom: 20px;
+      padding: 22px 18px;
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: 0 10px 28px rgba(35, 17, 10, 0.08);
+    }
+    .panneau h2 { margin: 0 0 4px; font-size: 1.35rem; }
+    .panneau > p { margin: 0 0 16px; color: var(--texte-doux); font-size: 0.95rem; }
+
+    .etape-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      margin-right: 8px;
+      border-radius: 10px;
+      background: var(--soleil);
+      color: var(--cacao);
+      font-size: 1rem;
+      vertical-align: 2px;
+    }
+
+    /* Liste des ebooks existants */
+    .liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+    .liste li {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--sable);
+      border: 1px solid var(--bord);
+    }
+    .liste strong { display: block; line-height: 1.3; }
+    .liste small { color: var(--texte-doux); }
+    .outils { display: flex; flex-wrap: wrap; gap: 6px; }
+    .vide { color: var(--texte-doux); font-style: italic; }
+
+    /* Formulaire */
+    label { display: block; margin: 16px 0 6px; font-weight: 800; font-size: 0.95rem; }
+    label span { font-weight: 600; color: var(--texte-doux); font-size: 0.85rem; }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid var(--bord);
+      border-radius: 14px;
+      background: var(--creme);
+      color: var(--cacao);
+      font: inherit;
+      font-size: 1rem;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: var(--orange); background: #fff; }
+    .aide-champ { margin: 6px 0 0; color: var(--texte-doux); font-size: 0.82rem; }
+    .deux { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .bouton {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 10px 18px;
+      border: 0;
+      border-radius: 14px;
+      font-family: "Bricolage", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .bouton:focus-visible { outline: 3px solid var(--soleil); outline-offset: 3px; }
+    .bouton-principal { width: 100%; margin-top: 20px; background: var(--emeraude); color: #fff; }
+    .bouton-sombre { width: 100%; background: var(--cacao); color: var(--soleil); }
+    .bouton-clair { background: #fff; color: var(--cacao); border: 2px solid var(--bord); }
+    .bouton-petit { min-height: 40px; padding: 6px 12px; font-size: 0.9rem; border-radius: 12px; }
+    .bouton-danger { background: #fff1f2; color: #9f1239; }
+    .bouton-lien { width: 100%; margin-top: 10px; background: var(--soleil); color: var(--cacao); }
+    .actions-form { display: grid; grid-template-columns: 1fr; gap: 10px; }
+
+    .message { margin: 14px 0 0; padding: 12px 14px; border-radius: 14px; font-weight: 700; font-size: 0.92rem; }
+    .message.ok { background: #ecfdf5; color: #065f46; }
+    .message.erreur { background: #fff1f2; color: #9f1239; }
+    .cache { display: none; }
+
+    .resultat { min-height: 180px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.8rem; background: #fff; }
+
+    ol.instructions { margin: 10px 0 0; padding-left: 22px; color: var(--texte-doux); }
+    ol.instructions li { margin-bottom: 6px; }
+    ol.instructions strong { color: var(--cacao); }
+
+    .retour { display: block; text-align: center; margin-top: 10px; color: var(--terre); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="marque">Didy Digital</p>
+    <h1>📚 Gérer mes ebooks</h1>
+    <p>Ajoute, modifie ou supprime tes ebooks. Cette page n'envoie rien sur internet : tout reste dans ton téléphone.</p>
+  </header>
+
+  <main>
+    <!-- ===== 1. LES EBOOKS ACTUELS ===== -->
+    <section class="panneau">
+      <h2><span class="etape-num">1</span>Mes ebooks</h2>
+      <p>Voici les ebooks de ton site. Touche « Modifier » pour changer un ebook.</p>
+      <ul class="liste" id="liste"></ul>
+      <div id="message-liste" class="message cache"></div>
+    </section>
+
+    <!-- ===== 2. LE FORMULAIRE ===== -->
+    <section class="panneau">
+      <h2 id="titre-formulaire"><span class="etape-num">2</span>Ajouter un ebook</h2>
+      <p>Les cases avec * sont obligatoires.</p>
+
+      <form id="formulaire" novalidate autocomplete="off">
+        <label for="nom">Titre de l'ebook *</label>
+        <input id="nom" maxlength="120" placeholder="Ex. : Réussir son petit commerce">
+
+        <label for="prix">Prix *</label>
+        <input id="prix" maxlength="40" placeholder="Ex. : 2 000 F CFA">
+
+        <label for="description">Description * <span>(ce que le lecteur va apprendre)</span></label>
+        <textarea id="description" maxlength="600" placeholder="Ex. : Ce guide t'explique pas à pas comment…"></textarea>
+
+        <label for="apercuTitre">Titre des étiquettes <span>(facultatif)</span></label>
+        <input id="apercuTitre" maxlength="60" placeholder="Ex. : Tu vas apprendre à :  ou  Au menu :">
+
+        <label for="apercu">Étiquettes <span>(facultatif, une par ligne)</span></label>
+        <textarea id="apercu" maxlength="600" placeholder="Choisir son produit&#10;Fixer ses prix&#10;Trouver des clients"></textarea>
+
+        <div class="deux">
+          <div>
+            <label for="icone">Icône <span>(un emoji)</span></label>
+            <input id="icone" maxlength="8" placeholder="📘">
+          </div>
+          <div>
+            <label for="couleur">Couleur</label>
+            <select id="couleur">
+              <option value="orange">Orange</option>
+              <option value="vert">Vert</option>
+              <option value="hibiscus">Rouge bissap</option>
+              <option value="soleil">Jaune soleil</option>
+              <option value="terre">Terre cuite</option>
+              <option value="cacao">Brun cacao</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="illustration">Dessin <span>(facultatif)</span></label>
+        <select id="illustration">
+          <option value="">Aucun (on affiche l'icône)</option>
+          <option value="finance">Finance : tirelire et budget</option>
+          <option value="mafe">Cuisine : plat de mafé</option>
+        </select>
+
+        <label for="image">Photo <span>(facultatif)</span></label>
+        <input id="image" maxlength="80" placeholder="Ex. : images/mon-ebook.jpg">
+        <p class="aide-champ">Mets d'abord ta photo dans le dossier « images » sur GitHub, puis écris son nom ici. Une photo remplace le dessin et l'icône.</p>
+
+        <label for="lienChariow">Lien Chariow <span>(facultatif)</span></label>
+        <input id="lienChariow" maxlength="300" inputmode="url" placeholder="https://…">
+        <p class="aide-champ">Laisse vide si l'ebook n'est pas encore sur Chariow : le bouton restera caché.</p>
+
+        <div class="actions-form">
+          <button class="bouton bouton-principal" id="valider" type="submit">➕ Ajouter l'ebook à la liste</button>
+          <button class="bouton bouton-clair cache" id="annuler" type="button">Annuler la modification</button>
+        </div>
+        <div id="message-form" class="message cache"></div>
+      </form>
+    </section>
+
+    <!-- ===== 3. ENREGISTRER SUR LE SITE ===== -->
+    <section class="panneau">
+      <h2><span class="etape-num">3</span>Mettre à jour le site</h2>
+      <p>Quand ta liste est prête, copie le texte ci-dessous et colle-le dans le fichier ebooks.json sur GitHub.</p>
+
+      <textarea id="resultat" class="resultat" readonly aria-label="Nouvelle liste des ebooks"></textarea>
+      <button class="bouton bouton-sombre" id="copier" type="button">📋 Copier le texte</button>
+      <a class="bouton bouton-lien" href="https://github.com/oussamadoouedraogo7-lab/ma-boutique-digitale/edit/claude/project-explanation-fr-ccmfrg/ebooks.json" target="_blank" rel="noopener noreferrer">✏️ Ouvrir ebooks.json sur GitHub</a>
+      <div id="message-copie" class="message cache"></div>
+
+      <ol class="instructions">
+        <li>Touche <strong>« Copier le texte »</strong>.</li>
+        <li>Touche <strong>« Ouvrir ebooks.json sur GitHub »</strong> et connecte-toi si besoin.</li>
+        <li>Dans le fichier, <strong>efface tout</strong> (appui long → Tout sélectionner → Effacer).</li>
+        <li><strong>Colle</strong> le texte copié.</li>
+        <li>Touche <strong>« Commit changes »</strong>, puis encore <strong>« Commit changes »</strong>.</li>
+        <li>Attends 1 à 2 minutes, puis recharge ton site : le nouvel ebook apparaît ✅</li>
+      </ol>
+    </section>
+
+    <a class="retour" href="./">← Retour au site</a>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var ebooks = [];
+      var enModification = -1;   // -1 = on ajoute un nouvel ebook
+
+      var COULEURS = ["orange", "vert", "hibiscus", "soleil", "terre", "cacao"];
+      var DESSINS = ["", "finance", "mafe"];
+      var CHAMPS = ["nom", "prix", "description", "apercuTitre", "apercu", "icone", "couleur", "illustration", "image", "lienChariow"];
+
+      function $(id) { return document.getElementById(id); }
+
+      function element(balise, classe, texte) {
+        var el = document.createElement(balise);
+        if (classe) el.className = classe;
+        if (texte) el.textContent = texte;
+        return el;
+      }
+
+      function message(id, texte, type) {
+        var m = $(id);
+        m.textContent = texte;
+        m.className = "message " + type;
+      }
+
+      function texte(valeur, max) {
+        return String(valeur == null ? "" : valeur).replace(/\s+/g, " ").trim().slice(0, max);
+      }
+
+      // ----- Affiche la liste et le texte à copier -----
+      function rafraichir() {
+        var liste = $("liste");
+        liste.textContent = "";
+        if (!ebooks.length) {
+          liste.appendChild(element("li", "vide", "Aucun ebook pour le moment."));
+        }
+        ebooks.forEach(function (ebook, i) {
+          var li = element("li");
+          var infos = element("div");
+          infos.appendChild(element("strong", "", (ebook.icone ? ebook.icone + " " : "") + ebook.nom));
+          infos.appendChild(element("small", "", ebook.prix));
+          li.appendChild(infos);
+
+          var outils = element("div", "outils");
+          [
+            { t: "↑", titre: "Monter", action: function () { deplacer(i, -1); }, cache: i === 0 },
+            { t: "↓", titre: "Descendre", action: function () { deplacer(i, 1); }, cache: i === ebooks.length - 1 },
+            { t: "Modifier", action: function () { modifier(i); } },
+            { t: "Supprimer", classe: " bouton-danger", action: function () { supprimer(i); } }
+          ].forEach(function (o) {
+            if (o.cache) return;
+            var b = element("button", "bouton bouton-clair bouton-petit" + (o.classe || ""), o.t);
+            b.type = "button";
+            if (o.titre) b.setAttribute("aria-label", o.titre);
+            b.addEventListener("click", o.action);
+            outils.appendChild(b);
+          });
+          li.appendChild(outils);
+          liste.appendChild(li);
+        });
+        $("resultat").value = JSON.stringify(ebooks, null, 2) + "\n";
+      }
+
+      function deplacer(i, sens) {
+        var j = i + sens;
+        if (j < 0 || j >= ebooks.length) return;
+        var tmp = ebooks[i]; ebooks[i] = ebooks[j]; ebooks[j] = tmp;
+        rafraichir();
+        message("message-liste", "Ordre modifié. N'oublie pas l'étape 3 pour mettre le site à jour.", "ok");
+      }
+
+      function supprimer(i) {
+        if (!window.confirm("Supprimer « " + ebooks[i].nom + " » de la liste ?")) return;
+        ebooks.splice(i, 1);
+        if (enModification === i) annuler();
+        rafraichir();
+        message("message-liste", "Ebook supprimé de la liste. N'oublie pas l'étape 3 pour mettre le site à jour.", "ok");
+      }
+
+      function modifier(i) {
+        var e = ebooks[i];
+        enModification = i;
+        CHAMPS.forEach(function (c) {
+          var v = e[c];
+          if (c === "apercu") v = Array.isArray(v) ? v.join("\n") : "";
+          if (c === "couleur" && COULEURS.indexOf(v) < 0) v = (v === "dore" ? "soleil" : "orange");
+          if (c === "illustration" && DESSINS.indexOf(v || "") < 0) v = "";
+          $(c).value = v == null ? "" : v;
+        });
+        $("titre-formulaire").lastChild.textContent = "Modifier un ebook";
+        $("valider").textContent = "💾 Enregistrer les modifications";
+        $("annuler").classList.remove("cache");
+        $("message-form").className = "message cache";
+        $("nom").scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      function annuler() {
+        enModification = -1;
+        $("formulaire").reset();
+        $("titre-formulaire").lastChild.textContent = "Ajouter un ebook";
+        $("valider").textContent = "➕ Ajouter l'ebook à la liste";
+        $("annuler").classList.add("cache");
+      }
+
+      // ----- Vérifie le formulaire et construit l'ebook -----
+      function lireFormulaire() {
+        var e = {
+          nom: texte($("nom").value, 120),
+          prix: texte($("prix").value, 40),
+          description: texte($("description").value, 600)
+        };
+        if (!e.nom || !e.prix || !e.description) {
+          throw new Error("Remplis le titre, le prix et la description.");
+        }
+        var icone = texte($("icone").value, 8);
+        if (icone) e.icone = icone;
+
+        var couleur = $("couleur").value;
+        e.couleur = COULEURS.indexOf(couleur) >= 0 ? couleur : "orange";
+
+        var dessin = $("illustration").value;
+        if (dessin && DESSINS.indexOf(dessin) >= 0) e.illustration = dessin;
+
+        var image = texte($("image").value, 80);
+        if (image) {
+          if (!/^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(image)) {
+            throw new Error("La photo doit ressembler à : images/mon-ebook.jpg (sans espace ni accent).");
+          }
+          e.image = image;
+        }
+
+        var lien = texte($("lienChariow").value, 300);
+        if (lien) {
+          var ok = false;
+          try { ok = new URL(lien).protocol === "https:"; } catch (err) { ok = false; }
+          if (!ok) throw new Error("Le lien Chariow doit commencer par https://");
+        }
+        e.lienChariow = lien;
+
+        var titreEtiquettes = texte($("apercuTitre").value, 60);
+        if (titreEtiquettes) e.apercuTitre = titreEtiquettes;
+
+        var etiquettes = String($("apercu").value || "").split("\n")
+          .map(function (l) { return texte(l, 60); })
+          .filter(function (l) { return l; })
+          .slice(0, 12);
+        if (etiquettes.length) e.apercu = etiquettes;
+        return e;
+      }
+
+      $("formulaire").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var e;
+        try { e = lireFormulaire(); }
+        catch (err) { message("message-form", "⚠️ " + err.message, "erreur"); return; }
+
+        if (enModification >= 0) {
+          ebooks[enModification] = e;
+          message("message-form", "✅ Modifications enregistrées dans la liste. Passe à l'étape 3.", "ok");
+        } else {
+          ebooks.push(e);
+          message("message-form", "✅ « " + e.nom + " » ajouté à la liste. Passe à l'étape 3.", "ok");
+        }
+        annuler();
+        rafraichir();
+      });
+
+      $("annuler").addEventListener("click", function () {
+        annuler();
+        $("message-form").className = "message cache";
+      });
+
+      // ----- Copier le texte -----
+      $("copier").addEventListener("click", function () {
+        var zone = $("resultat");
+        function reussi() { message("message-copie", "✅ Texte copié ! Ouvre maintenant ebooks.json sur GitHub.", "ok"); }
+        function secours() {
+          zone.focus();
+          zone.select();
+          try { document.execCommand("copy"); reussi(); }
+          catch (e) { message("message-copie", "Sélectionne le texte à la main (appui long) puis copie-le.", "erreur"); }
+        }
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(zone.value).then(reussi, secours);
+        } else {
+          secours();
+        }
+      });
+
+      // ----- Lecture de la liste actuelle du site -----
+      fetch("ebooks.json", { cache: "no-cache", credentials: "same-origin" })
+        .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+        .then(function (donnees) {
+          if (!Array.isArray(donnees)) throw new Error();
+          ebooks = donnees.filter(function (e) { return e && e.nom; });
+          rafraichir();
+        })
+        .catch(function () {
+          ebooks = [];
+          rafraichir();
+          message("message-liste", "Impossible de lire la liste actuelle. Ouvre cette page depuis ton site en ligne.", "erreur");
+        });
+    })();
+  </script>
+</body>
+</html>

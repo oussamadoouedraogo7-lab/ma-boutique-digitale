@@ -1,0 +1,38 @@
+[
+  {
+    "nom": "Gérer son argent quand on gagne peu",
+    "prix": "2 300 F CFA",
+    "description": "Tu gagnes peu et ton argent disparaît avant la fin du mois ? Ce guide simple et pratique t'apprend à organiser ton budget, à éviter les dépenses inutiles et à mettre de l'argent de côté, même avec un petit salaire.",
+    "icone": "💰",
+    "couleur": "orange",
+    "illustration": "finance",
+    "lienChariow": "",
+    "apercuTitre": "Tu vas apprendre à :",
+    "apercu": [
+      "Faire ton budget",
+      "Éviter les dépenses inutiles",
+      "Épargner chaque mois",
+      "Tenir jusqu'à la fin du mois"
+    ]
+  },
+  {
+    "nom": "400 recettes du Burkina Faso et d'Afrique de l'Ouest",
+    "prix": "1 600 F CFA",
+    "description": "Découvre 400 recettes complètes du Burkina Faso et de toute l'Afrique de l'Ouest : plats traditionnels, sauces, boissons et douceurs, expliquées pas à pas.",
+    "icone": "🍲",
+    "couleur": "vert",
+    "illustration": "mafe",
+    "lienChariow": "",
+    "apercu": [
+      "Mafé",
+      "Riz gras",
+      "Tô sauce gombo",
+      "Poulet bicyclette",
+      "Attiéké poisson braisé",
+      "Alloco",
+      "Babenda",
+      "Jus de bissap",
+      "Dêguê"
+    ]
+  }
+]
