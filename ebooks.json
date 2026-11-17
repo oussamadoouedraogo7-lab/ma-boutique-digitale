@@ -6,6 +6,7 @@
     "icone": "💰",
     "couleur": "orange",
     "illustration": "finance",
+    "image": "images/couverture-argent.jpg",
     "lienChariow": "",
     "apercuTitre": "Tu vas apprendre à :",
     "apercu": [
@@ -22,6 +23,7 @@
     "icone": "🍲",
     "couleur": "vert",
     "illustration": "mafe",
+    "image": "images/couverture-recettes.jpg",
     "lienChariow": "",
     "apercu": [
       "Mafé",
