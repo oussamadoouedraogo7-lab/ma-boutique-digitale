@@ -49,6 +49,8 @@
     "description": "Partir vivre en Europe est un grand projet, et beaucoup se lancent sans préparation. Ce guide pratique vous aide à préparer votre projet sérieusement, avec méthode : clarifier vos objectifs, organiser vos recherches, comprendre les grandes étapes de la démarche et repérer les opportunités adaptées à votre situation. Un support clair pour avancer pas à pas et prendre vos décisions en connaissance de cause.",
     "icone": "✈️",
     "couleur": "vert",
+    "image": "images/couverture-europe.jpg",
+    "imageEntiere": true,
     "lienChariow": "https://tvqanrik.mychariow.shop/prd_bkx38tzd/checkout",
     "apercuTitre": "Vous allez apprendre à :",
     "apercu": [

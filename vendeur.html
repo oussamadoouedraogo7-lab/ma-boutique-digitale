@@ -12,9 +12,9 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mPA3Shg20GPzPOQkoxR/tkBu7qkS3LMRR72Qwhg7UOI='; script-src 'sha256-5j+x/f6OUNL4cjb5rAlp0YR4upKy5dqnP6gMkHmsZqk='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-3IIYbFccP/XXusU1IX3Gadwz6AUTqCNIrcyoXDK0ZNM='; script-src 'sha256-5j+x/f6OUNL4cjb5rAlp0YR4upKy5dqnP6gMkHmsZqk='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
-  <meta name="theme-color" content="#23110a">
+  <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
   <meta name="description" content="Discutez avec Didy, l'assistante de Didy Digital : elle vous aide à choisir votre ebook et à l'acheter en quelques secondes.">
   <link rel="preload" href="fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
@@ -23,11 +23,11 @@
     @font-face { font-family: "Jakarta"; src: url("fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
 
     :root {
-      --cacao: #23110a;
-      --cacao-2: #3a1d10;
-      --terre: #c2410c;
-      --orange: #f97316;
-      --soleil: #fbbf24;
+      --cacao: #141a4a;      /* bleu nuit, comme le site */
+      --cacao-2: #232c74;
+      --terre: #d9481c;
+      --orange: #f2a71b;     /* or, comme le site */
+      --soleil: #f2a71b;
       --emeraude: #059669;
       --hibiscus: #e11d48;
       --wa: #25d366;
@@ -69,7 +69,7 @@
       padding-top: calc(12px + env(safe-area-inset-top));
       color: var(--creme);
       background: var(--cacao);
-      background-image: radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.5), transparent 60%);
+      background-image: radial-gradient(circle at 0% 0%, rgba(242, 167, 27, 0.35), transparent 60%);
       box-shadow: 0 4px 16px rgba(35, 17, 10, 0.25);
       z-index: 2;
     }

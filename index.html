@@ -8,663 +8,332 @@
     ===== PROTECTION : POLITIQUE DE SÉCURITÉ DU CONTENU (CSP) =====
     Le navigateur n'exécute QUE le code de cette page :
     - le style et le script sont reconnus grâce à leur "empreinte" (sha256) ;
-    - les polices viennent uniquement de ton site (dossier fonts/) ;
-    - les images viennent de ton site, sauf le petit compteur de visites GoatCounter ;
+    - les polices et les images viennent de ton site (sauf le petit compteur GoatCounter) ;
     - aucun formulaire ne peut envoyer de données.
     ATTENTION : si tu modifies le bloc <style> ou le grand <script> du bas,
     leur empreinte change : il faudra la recalculer (demande-moi).
-    Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
+    Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-u8WK8hBiMfQgrkveoS/wZG23vlEQVBUAvAQs+Ssg0IY='; script-src 'sha256-7c3ZU7En+R5RnDK9s+/+M6lXPoHpcWE44F7AH1f47kQ='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-0f9YIXsRIAAlaJ74tplHwb5K+qv9HOPrwu0cp0ZWia8='; script-src 'sha256-zQIS6c0FynLLxNlh21PksdUaepgf6Fwgmwcv1GJd4xc='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
-  <meta name="description" content="Didy Digital : des ebooks simples et pratiques pour apprendre et progresser. Paiement par Mobile Money ou en ligne.">
-  <meta name="theme-color" content="#23110a">
+  <meta name="description" content="Didy Digital : des ebooks simples et pratiques, à lire sur votre téléphone. Paiement sécurisé sur Chariow ou par Moov Money et Orange Money.">
+  <meta name="theme-color" content="#141a4a">
 
-  <!-- Les polices sont chargées en avance pour un affichage plus rapide -->
   <link rel="preload" href="fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
 
   <style>
-    /* ===== LES POLICES (hébergées sur ton site, licence libre OFL) ===== */
-    @font-face {
-      font-family: "Bricolage";
-      src: url("fonts/bricolage-grotesque.woff2") format("woff2");
-      font-weight: 200 800;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: "Jakarta";
-      src: url("fonts/plus-jakarta-sans.woff2") format("woff2");
-      font-weight: 200 800;
-      font-display: swap;
-    }
+    /* ===== POLICES (hébergées sur ton site, licence libre OFL) ===== */
+    @font-face { font-family: "Bricolage"; src: url("fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+    @font-face { font-family: "Jakarta"; src: url("fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
 
-    /* ===== LES COULEURS DU SITE ===== */
+    /* ===== COULEURS : bleu nuit et or, avec les couleurs du pagne (terre, vert) ===== */
     :root {
-      --cacao: #23110a;       /* brun très foncé */
-      --cacao-2: #3a1d10;
-      --terre: #c2410c;       /* terre cuite */
-      --orange: #f97316;
-      --soleil: #fbbf24;      /* jaune soleil */
-      --or: #f59e0b;
-      --emeraude: #059669;    /* vert */
-      --hibiscus: #e11d48;    /* rouge bissap */
-      --wa: #25d366;          /* vert WhatsApp */
-      --sable: #fdf4e3;
-      --creme: #fffaf2;
-      --texte: #2a160c;
-      --texte-doux: #6b4a36;
-      --blanc: #ffffff;
-      --ombre: 0 14px 40px rgba(35, 17, 10, 0.14);
-      --ombre-forte: 0 24px 60px rgba(35, 17, 10, 0.25);
+      --nuit: #141a4a;
+      --nuit-2: #232c74;
+      --or: #f2a71b;
+      --or-clair: #ffd27a;
+      --terre: #d9481c;
+      --vert: #0f7b5f;
+      --wa: #25d366;
+      --ivoire: #fbf6ee;
+      --papier: #ffffff;
+      --encre: #1c1410;
+      --encre-douce: #5c4a3d;
+      --bord: #eadfcd;
+      --ombre: 0 10px 30px rgba(20, 26, 74, 0.10);
       --titres: "Bricolage", "Arial Black", system-ui, sans-serif;
       --corps: "Jakarta", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      --kente: repeating-linear-gradient(90deg, var(--or) 0 26px, var(--terre) 26px 40px, var(--vert) 40px 66px, var(--nuit) 66px 74px, var(--or-clair) 74px 88px);
     }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
       margin: 0;
       font-family: var(--corps);
-      background: var(--sable);
-      color: var(--texte);
-      line-height: 1.65;
+      background: var(--ivoire);
+      color: var(--encre);
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
+    h1, h2, h3 { font-family: var(--titres); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
+    .conteneur { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
 
-    h1, h2, h3 { font-family: var(--titres); line-height: 1.1; letter-spacing: -0.02em; }
-
-    /* ===== BARRE DE PROGRESSION (en haut, se remplit quand on descend) ===== */
+    /* ===== BARRE DE PROGRESSION ===== */
     .progression {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%;
-      height: 5px;
-      z-index: 20;
-      transform-origin: left;
-      transform: scaleX(0);
-      background: linear-gradient(90deg, var(--soleil), var(--orange), var(--hibiscus));
+      position: fixed; top: 0; left: 0; width: 100%; height: 4px; z-index: 30;
+      transform-origin: left; transform: scaleX(0);
+      background: linear-gradient(90deg, var(--or), var(--terre));
+    }
+
+    /* ===== BARRE DU HAUT ===== */
+    .barre {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(20, 26, 74, 0.94);
+      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .barre .conteneur { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 62px; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-family: var(--titres); font-weight: 800; font-size: 1.2rem; }
+    .logo-marque {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; border-radius: 11px;
+      background: var(--or); color: var(--nuit); font-size: 1.1rem;
+    }
+    .barre-didy {
+      display: inline-flex; align-items: center; gap: 6px;
+      min-height: 40px; padding: 8px 14px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1); color: #fff; text-decoration: none;
+      font-weight: 700; font-size: 0.9rem; border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     /* ===== EN-TÊTE ===== */
     .hero {
-      position: relative;
-      overflow: hidden;
-      min-height: 92vh;
-      min-height: 92svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 72px 16px 140px;
-      color: var(--creme);
-      background-color: var(--cacao);
-      /* motif de losanges inspiré du bogolan */
+      position: relative; overflow: hidden; color: #fff;
+      background-color: var(--nuit);
       background-image:
-        linear-gradient(45deg, rgba(251, 191, 36, 0.06) 25%, transparent 25%, transparent 75%, rgba(251, 191, 36, 0.06) 75%),
-        linear-gradient(-45deg, rgba(251, 191, 36, 0.06) 25%, transparent 25%, transparent 75%, rgba(251, 191, 36, 0.06) 75%);
-      background-size: 44px 44px;
+        radial-gradient(circle at 85% 20%, rgba(242, 167, 27, 0.28), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(217, 72, 28, 0.25), transparent 45%),
+        radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.4px);
+      background-size: auto, auto, 22px 22px;
     }
-
-    /* Les taches de lumière colorées qui bougent doucement */
-    .lumiere {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(60px);
-      opacity: 0.55;
-      animation: derive 14s ease-in-out infinite alternate;
-    }
-    .lumiere.l1 { width: 340px; height: 340px; background: var(--orange); top: -80px; left: -100px; }
-    .lumiere.l2 { width: 300px; height: 300px; background: var(--hibiscus); bottom: 40px; right: -120px; animation-delay: -5s; }
-    .lumiere.l3 { width: 260px; height: 260px; background: var(--emeraude); bottom: -60px; left: 10%; animation-delay: -9s; opacity: 0.45; }
-
-    /* Les formes qui flottent */
-    .forme {
-      position: absolute;
-      border: 3px solid rgba(251, 191, 36, 0.5);
-      border-radius: 50%;
-      animation: flotter 7s ease-in-out infinite;
-    }
-    .forme.f1 { width: 70px; height: 70px; top: 14%; right: 12%; }
-    .forme.f2 { width: 26px; height: 26px; top: 9%; left: 8%; background: var(--soleil); border: 0; animation-delay: -2s; }
-    .forme.f3 { width: 44px; height: 44px; bottom: 17%; right: 9%; border-radius: 12px; transform: rotate(45deg); border-color: rgba(5, 150, 105, 0.8); animation-delay: -4s; }
-
-    .hero-contenu { position: relative; z-index: 1; max-width: 720px; }
+    .hero .conteneur { display: grid; gap: 30px; padding-top: 40px; padding-bottom: 52px; align-items: center; }
+    @media (min-width: 900px) { .hero .conteneur { grid-template-columns: 1.1fr 0.9fr; padding-top: 72px; padding-bottom: 80px; } }
 
     .surtitre {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(251, 191, 36, 0.4);
-      color: var(--soleil);
-      font-weight: 700;
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      animation: monter 0.8s ease-out both;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(242, 167, 27, 0.14); color: var(--or-clair);
+      font-weight: 800; font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase;
     }
+    .hero h1 { margin-top: 18px; font-size: clamp(2.3rem, 9.5vw, 4rem); font-weight: 800; }
+    .hero h1 .souligne { color: var(--or); white-space: nowrap; background: linear-gradient(transparent 78%, rgba(217, 72, 28, 0.85) 78%, rgba(217, 72, 28, 0.85) 92%, transparent 92%); }
+    .hero p.intro { margin: 18px 0 0; max-width: 560px; color: #d8dcf5; font-size: clamp(1.02rem, 4vw, 1.15rem); }
 
-    .hero h1 {
-      margin: 22px 0 0;
-      font-size: clamp(3.2rem, 15vw, 6.5rem);
-      font-weight: 800;
-      background: linear-gradient(100deg, var(--soleil) 0%, var(--orange) 35%, var(--hibiscus) 65%, var(--soleil) 100%);
-      background-size: 250% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: monter 0.9s ease-out 0.1s both, briller 6s linear infinite;
-    }
-
-    .hero p {
-      margin: 18px auto 0;
-      max-width: 540px;
-      font-size: clamp(1.05rem, 4.4vw, 1.25rem);
-      color: #f3e3cf;
-      animation: monter 0.9s ease-out 0.25s both;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 30px;
-      animation: monter 0.9s ease-out 0.4s both;
-    }
-
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
     .bouton {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 54px;
-      padding: 12px 26px;
-      border-radius: 999px;
-      font-family: var(--titres);
-      font-weight: 700;
-      font-size: 1.05rem;
-      text-decoration: none;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 52px; padding: 12px 22px; border-radius: 14px; border: 0;
+      font-family: var(--titres); font-weight: 700; font-size: 1.02rem; text-align: center;
+      text-decoration: none; cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
-    .bouton:active { transform: scale(0.96); }
-    .bouton:focus-visible, .flottant:focus-visible, summary:focus-visible { outline: 3px solid var(--soleil); outline-offset: 3px; }
-    .bouton svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .bouton:active { transform: scale(0.97); }
+    .bouton:focus-visible, summary:focus-visible, .flottant:focus-visible, .lire-plus:focus-visible, .logo:focus-visible, .barre-didy:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+    .bouton-or { background: var(--or); color: var(--nuit); box-shadow: 0 10px 26px rgba(242, 167, 27, 0.35); }
+    .bouton-or:hover { transform: translateY(-2px); }
+    .bouton-ligne { color: #fff; border: 2px solid rgba(255, 255, 255, 0.35); }
+    .bouton-ligne:hover { background: rgba(255, 255, 255, 0.08); }
 
-    .bouton-soleil { background: var(--soleil); color: var(--cacao); box-shadow: 0 10px 30px rgba(251, 191, 36, 0.35); }
-    .bouton-soleil:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(251, 191, 36, 0.5); }
-    .bouton-contour { color: var(--creme); border: 2px solid rgba(255, 250, 242, 0.5); }
-    .bouton-contour:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
-    .bouton-wa { width: 100%; border-radius: 18px; background: linear-gradient(135deg, var(--wa), var(--emeraude)); color: var(--blanc); box-shadow: 0 10px 24px rgba(5, 150, 105, 0.35); }
-    .bouton-wa:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(5, 150, 105, 0.45); }
-
-    /* Le compteur de visites visible par tous */
+    .confiance-hero { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 24px 0 0; padding: 0; list-style: none; color: #c4c9ee; font-size: 0.9rem; font-weight: 600; }
     .compteur {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 22px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 250, 242, 0.25);
-      color: #f3e3cf;
-      font-weight: 600;
-      font-size: 0.95rem;
-      animation: monter 0.6s ease-out both;
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
+      padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.08);
+      color: #d8dcf5; font-size: 0.9rem; font-weight: 600;
     }
-    .compteur strong { color: var(--soleil); font-family: var(--titres); font-size: 1.1rem; }
+    .compteur strong { color: var(--or); font-family: var(--titres); }
     .compteur[hidden] { display: none; }
 
-    /* La petite souris qui invite à descendre */
-    .descendre {
-      position: absolute;
-      bottom: 92px;
-      left: 50%;
-      width: 28px;
-      height: 44px;
-      margin-left: -14px;
-      border: 2px solid rgba(255, 250, 242, 0.6);
-      border-radius: 16px;
-      z-index: 1;
+    /* Les couvertures en éventail */
+    .vitrine { position: relative; height: 250px; perspective: 1000px; }
+    @media (min-width: 900px) { .vitrine { height: 400px; } }
+    .vitrine[hidden] { display: none; }
+    .vitrine img {
+      position: absolute; top: 50%; left: 50%;
+      width: 46%; max-width: 240px; aspect-ratio: 1 / 1; object-fit: cover;
+      margin: -23% 0 0 -23%;
+      border-radius: 16px; background: #e9e9ea;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
+      border: 3px solid rgba(255, 255, 255, 0.9);
+      animation: eventail 7s ease-in-out infinite;
     }
-    .descendre::after {
-      content: "";
-      position: absolute;
-      top: 8px; left: 50%;
-      width: 4px; height: 8px;
-      margin-left: -2px;
-      border-radius: 2px;
-      background: var(--soleil);
-      animation: rouler 1.8s ease-in-out infinite;
+    @media (min-width: 900px) { .vitrine img { margin: -120px 0 0 -120px; } }
+    .vitrine img:nth-child(1) { --rot: -13deg; --dx: -40%; z-index: 1; animation-delay: -1s; }
+    .vitrine img:nth-child(2) { --rot: 11deg;  --dx: 40%;  z-index: 2; animation-delay: -3s; }
+    .vitrine img:nth-child(3) { --rot: -2deg;  --dx: 0%;   z-index: 3; animation-delay: -5s; }
+    @keyframes eventail {
+      0%, 100% { transform: translateX(var(--dx)) rotate(var(--rot)) rotateY(-8deg) translateY(0); }
+      50%      { transform: translateX(var(--dx)) rotate(var(--rot)) rotateY(8deg) translateY(-12px); }
     }
 
-    /* La vague en bas de l'en-tête */
-    .vague { position: absolute; left: 0; bottom: -1px; width: 100%; height: 70px; display: block; }
-
-    /* ===== BANDE DÉFILANTE ===== */
-    .bande-cadre { position: relative; z-index: 2; overflow: hidden; margin-top: -30px; padding: 16px 0; }
-    .bande {
-      overflow: hidden;
-      background: var(--soleil);
-      color: var(--cacao);
-      transform: rotate(-2deg);
-      margin: 0 -12px;
-      padding: 14px 0;
-      box-shadow: 0 10px 30px rgba(35, 17, 10, 0.15);
-    }
-    .bande-piste {
-      display: flex;
-      width: max-content;
-      animation: defiler 28s linear infinite;
-    }
-    .bande-piste span {
-      font-family: var(--titres);
-      font-weight: 800;
-      font-size: 1.15rem;
-      white-space: nowrap;
-      padding: 0 18px;
-    }
-    .bande-piste span::after { content: "✦"; margin-left: 36px; color: var(--terre); }
+    /* Bande de pagne */
+    .pagne { height: 12px; background: var(--kente); }
 
     /* ===== SECTIONS ===== */
-    section { padding: 72px 16px; }
-    .conteneur { max-width: 1080px; margin: 0 auto; }
-
-    .entete-section { text-align: center; max-width: 640px; margin: 0 auto 40px; }
-    .eyebrow {
-      display: inline-block;
-      font-weight: 800;
-      font-size: 0.8rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--terre);
-    }
-    .entete-section h2 { margin: 10px 0 12px; font-size: clamp(2rem, 8vw, 3rem); }
-    .entete-section h2 em { font-style: normal; color: var(--terre); }
-    .entete-section p { margin: 0; color: var(--texte-doux); font-size: 1.05rem; }
+    section { padding: 60px 0; }
+    .entete-section { max-width: 640px; margin: 0 0 30px; }
+    .eyebrow { display: inline-block; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--terre); }
+    .entete-section h2 { margin-top: 8px; font-size: clamp(1.9rem, 7vw, 2.7rem); color: var(--nuit); }
+    .entete-section p { margin: 12px 0 0; color: var(--encre-douce); font-size: 1.04rem; }
 
     /* ===== CARTES DES EBOOKS ===== */
-    .grille {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 28px;
-    }
-
+    .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 24px; }
     .carte {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      background: var(--blanc);
-      border-radius: 28px;
-      box-shadow: var(--ombre);
-      overflow: hidden;
-      border: 1px solid rgba(194, 65, 12, 0.08);
-      transition: transform 0.35s ease, box-shadow 0.35s ease;
+      position: relative; display: flex; flex-direction: column;
+      background: var(--papier); border-radius: 22px; overflow: hidden;
+      border: 1px solid var(--bord); box-shadow: var(--ombre);
     }
-    .carte:hover { transform: translateY(-8px); box-shadow: var(--ombre-forte); }
+    .carte:hover, .carte.touche { box-shadow: 0 24px 56px rgba(242, 167, 27, 0.30), 0 8px 20px rgba(217, 72, 28, 0.16); }
 
-    .couverture {
-      position: relative;
-      height: 220px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 76px;
-      background: linear-gradient(135deg, var(--orange), var(--soleil));
-    }
-    .illustration, .photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-    .photo { object-fit: cover; }
-    .photo-entiere { object-fit: contain; padding: 8px 0; }
-    .couverture.couverture-claire { background: #f4f4f4; }
+    .couverture { position: relative; height: 240px; display: flex; align-items: center; justify-content: center; font-size: 72px; overflow: hidden; }
+    .theme-orange   { background: linear-gradient(135deg, var(--terre), var(--or)); }
+    .theme-vert     { background: linear-gradient(135deg, var(--vert), #4fb38a); }
+    .theme-hibiscus { background: linear-gradient(135deg, #b5133e, var(--terre)); }
+    .theme-cacao    { background: linear-gradient(135deg, #2a160c, #7c2d12); }
+    .theme-soleil   { background: linear-gradient(135deg, var(--or), var(--or-clair)); }
+    .theme-terre    { background: linear-gradient(135deg, var(--terre), #f08a4b); }
+    .couverture.couverture-claire { background: #e9e9ea; }
+    /* Derrière une boîte 3D : la même image, floutée, pour un fond sans cadre */
+    .couverture-flou { position: absolute; inset: -30px; width: calc(100% + 60px); height: calc(100% + 60px); object-fit: cover; filter: blur(24px) saturate(1.15); opacity: 0.75; }
 
-    /* ===== ANIMATIONS DES COUVERTURES =====
-       On n'anime que "opacity", "scale", "translate", "rotate" et "transform" :
-       le téléphone les calcule avec sa carte graphique, donc ça reste fluide
-       même sur un petit Android. */
-    .couverture-cadre {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      perspective: 900px;          /* donne la profondeur 3D */
-    }
+    /* Animations des couvertures (opacity, scale, translate, rotate, transform : fluides sur Android) */
+    .couverture-cadre { position: absolute; inset: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; perspective: 900px; }
     .couverture-cadre > * {
-      opacity: 0;
-      scale: 1.14;
-      /* inclinaison 3D qui suit le doigt (réglée par le script) */
       transform: rotateX(var(--incl-x, 0deg)) rotateY(var(--incl-y, 0deg));
       transition: opacity 0.9s ease, scale 1.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s ease-out;
     }
-    /* Reflet de lumière quand on touche */
+    .js .couverture-cadre > * { opacity: 0; scale: 1.14; }
+    .js .carte.visible .couverture-cadre > * { opacity: 1; scale: 1.06; animation: flotter-couverture 8s ease-in-out 1.3s infinite; }
+    .js .carte.visible .couverture-cadre > .photo-entiere { scale: 1; }
+    .js .carte.visible.touche .couverture-cadre > *,
+    .js .carte.visible:hover .couverture-cadre > * { scale: 1.12; transition: opacity 0.9s ease, scale 0.5s ease, transform 0.35s ease-out; }
     .couverture-cadre::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
+      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
       background: radial-gradient(circle at var(--lumiere-x, 50%) var(--lumiere-y, 30%), rgba(255, 255, 255, 0.35), transparent 55%);
-      opacity: 0;
-      transition: opacity 0.35s ease;
     }
-    .carte.touche .couverture-cadre::after,
-    .carte:hover .couverture-cadre::after { opacity: 1; }
-    /* 1. Apparition en douceur quand la carte arrive à l'écran */
-    .carte.visible .couverture-cadre > * {
-      opacity: 1;
-      scale: 1.06;
-      /* 2. Flottement lent en 3D (commence après l'apparition) */
-      animation: flotter-couverture 8s ease-in-out 1.3s infinite;
-    }
-    /* 3. Léger zoom quand on touche (ou survole) la couverture */
-    .carte.visible.touche .couverture-cadre > *,
-    .carte.visible:hover .couverture-cadre > * {
-      scale: 1.13;
-      transition: opacity 0.9s ease, scale 0.5s ease;
-    }
-    /* … et ombre colorée autour de la carte */
-    .carte.touche,
-    .carte:hover {
-      box-shadow: 0 24px 60px rgba(249, 115, 22, 0.38), 0 10px 24px rgba(225, 29, 72, 0.2);
-    }
+    .carte.touche .couverture-cadre::after, .carte:hover .couverture-cadre::after { opacity: 1; }
     @keyframes flotter-couverture {
       0%, 100% { translate: 0 0;    rotate: 0.35 1 0 -5deg; }
       50%      { translate: 0 -7px; rotate: 0.35 1 0 5deg; }
     }
-
-    /* Les couleurs de couverture possibles ("couleur" dans ebooks.json) */
-    .theme-orange   { background: linear-gradient(135deg, var(--orange), var(--soleil)); }
-    .theme-vert     { background: linear-gradient(135deg, var(--emeraude), #6ee7b7); }
-    .theme-hibiscus { background: linear-gradient(135deg, var(--hibiscus), var(--orange)); }
-    .theme-cacao    { background: linear-gradient(135deg, var(--cacao), #7c2d12); }
-    .theme-soleil   { background: linear-gradient(135deg, var(--soleil), #fde68a); }
-    .theme-terre    { background: linear-gradient(135deg, var(--terre), #fb923c); }
+    .illustration, .photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .photo { object-fit: cover; }
+    .photo-entiere { object-fit: contain; padding: 10px 0; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.25)); }
     .couverture .icone { filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25)); }
-
     .vapeur { animation: vapeur 3s ease-in-out infinite; opacity: 0; }
     .vapeur.v2 { animation-delay: 1s; }
     .vapeur.v3 { animation-delay: 2s; }
     .piece { animation: piece 2.6s ease-in infinite; }
+    .couverture-lien { position: absolute; inset: 0; z-index: 1; }
+    .couverture-lien:focus-visible { outline: 3px solid var(--or); outline-offset: -3px; }
 
-    .prix {
-      position: absolute;
-      right: 16px;
-      bottom: -22px;
-      padding: 10px 18px;
-      border-radius: 16px;
-      background: var(--cacao);
-      color: var(--soleil);
-      font-family: var(--titres);
-      font-weight: 800;
-      font-size: 1.15rem;
-      box-shadow: 0 10px 22px rgba(35, 17, 10, 0.3);
+    .contenu { display: flex; flex-direction: column; flex: 1; gap: 14px; padding: 20px 20px 22px; }
+    .ligne-prix { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .prix { font-family: var(--titres); font-weight: 800; font-size: 1.5rem; color: var(--terre); white-space: nowrap; }
+    .paiement-unique { font-size: 0.8rem; font-weight: 700; color: var(--encre-douce); }
+    .contenu h3 { font-size: 1.3rem; color: var(--nuit); }
+    .description { margin: 0; color: var(--encre-douce); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+    .description.ouverte { -webkit-line-clamp: unset; display: block; }
+    .lire-plus { align-self: flex-start; margin-top: -8px; padding: 2px 0; border: 0; background: none; color: var(--terre); font: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .lire-plus[hidden] { display: none; }
+
+    .apercu { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+    .apercu li { position: relative; padding-left: 28px; font-size: 0.93rem; font-weight: 600; color: var(--encre); }
+    .apercu li::before {
+      content: "✓"; position: absolute; left: 0; top: 0.15em;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 19px; height: 19px; border-radius: 50%; background: #e3f3ec; color: var(--vert); font-size: 0.72rem; font-weight: 800;
     }
+    .reperes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+    .reperes li { padding: 4px 10px; border-radius: 999px; background: var(--ivoire); border: 1px solid var(--bord); font-size: 0.78rem; font-weight: 700; color: var(--encre-douce); }
 
-    .contenu { display: flex; flex-direction: column; flex: 1; padding: 34px 24px 24px; }
-    .contenu h3 { margin: 0 0 10px; font-size: 1.45rem; color: var(--cacao); }
-    .contenu p { margin: 0 0 20px; color: var(--texte-doux); }
+    .boutons-carte { display: grid; gap: 10px; margin-top: auto; padding-top: 4px; }
+    .bouton-acheter { width: 100%; background: var(--nuit); color: #fff; box-shadow: 0 10px 22px rgba(20, 26, 74, 0.25); }
+    .bouton-acheter:hover { background: var(--nuit-2); transform: translateY(-2px); }
+    .bouton-didy { width: 100%; background: #fff3dc; color: var(--nuit); border: 1px solid #f6d79a; }
+    .bouton-didy:hover { background: #ffe9bf; }
 
-    .apercu-titre { margin: 0 0 10px; font-weight: 800; font-size: 0.9rem; color: var(--emeraude); }
-    .apercu { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-wrap: wrap; gap: 8px; }
-    .apercu li {
-      max-width: 100%;
-      overflow-wrap: anywhere;
-      padding: 6px 13px;
-      border-radius: 999px;
-      background: var(--sable);
-      border: 1px solid #f3d9b1;
-      color: var(--cacao-2);
-      font-size: 0.86rem;
-      font-weight: 700;
-    }
+    /* Autres moyens de paiement (repliés) */
+    .autres { border-top: 1px dashed var(--bord); padding-top: 10px; }
+    .autres summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-weight: 700; font-size: 0.92rem; color: var(--encre-douce); min-height: 40px; }
+    .autres summary::-webkit-details-marker { display: none; }
+    .autres summary::after { content: "+"; font-size: 1.3rem; color: var(--terre); transition: transform 0.25s ease; }
+    .autres[open] summary::after { transform: rotate(45deg); }
+    .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
+    .bouton-mm { flex-direction: column; gap: 0; min-height: 58px; padding: 8px; border-radius: 12px; color: #fff; font-size: 0.95rem; line-height: 1.2; }
+    .bouton-mm small { font-family: var(--corps); font-weight: 600; font-size: 0.72rem; opacity: 0.9; }
+    .moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); }
+    .orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); }
+    .note-securite { margin: 10px 0 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; }
 
-    /* Lien invisible sur toute la couverture (ouvre Didy) */
-    .couverture-lien { position: absolute; inset: 0; z-index: 1; border-radius: 28px 28px 0 0; }
-    .couverture-lien:focus-visible { outline: 3px solid var(--soleil); outline-offset: -3px; }
-    .couverture .prix { z-index: 2; }
-
-    /* Repères de confiance */
-    .reperes { list-style: none; margin: -6px 0 18px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
-    .reperes li { font-size: 0.82rem; font-weight: 700; color: var(--emeraude); }
-
-    /* Bouton "Discuter avec Didy" */
-    .bouton-didy {
-      width: 100%;
-      margin: 0 0 22px;
-      border-radius: 18px;
-      background: var(--sable);
-      color: var(--terre);
-      border: 2px solid var(--orange);
-      font-size: 1rem;
-    }
-    .bouton-didy:hover { background: var(--orange); color: var(--blanc); transform: translateY(-2px); }
-
-    /* ===== LE CHOIX DU PAIEMENT DANS CHAQUE CARTE ===== */
-    .paiement { margin-top: auto; padding-top: 18px; border-top: 1px dashed #ecd3ae; }
-    .paiement-titre { margin: 0 0 12px; font-family: var(--titres); font-weight: 800; font-size: 1.05rem; color: var(--cacao); }
-    .option-titre { margin: 0 0 8px; font-weight: 800; font-size: 0.85rem; color: var(--texte-doux); }
-    .bouton-chariow { width: 100%; border-radius: 18px; background: var(--cacao); color: var(--soleil); box-shadow: 0 10px 24px rgba(35, 17, 10, 0.25); }
-    .bouton-chariow:hover { transform: translateY(-3px); }
-    .note { margin: 8px 0 0; font-size: 0.82rem; color: var(--texte-doux); text-align: center; }
-    .ou { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--texte-doux); font-weight: 800; font-size: 0.85rem; }
-    .ou::before, .ou::after { content: ""; flex: 1; height: 1px; background: #ecd3ae; }
-    .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .bouton-mm {
-      flex-direction: column;
-      gap: 2px;
-      min-height: 64px;
-      padding: 10px 8px;
-      border-radius: 18px;
-      color: var(--blanc);
-      font-size: 1rem;
-      line-height: 1.2;
-      text-align: center;
-    }
-    .bouton-mm small { font-family: var(--corps); font-weight: 600; font-size: 0.75rem; opacity: 0.9; }
-    .bouton-mm:hover { transform: translateY(-3px); }
-    .moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); box-shadow: 0 10px 22px rgba(11, 61, 122, 0.3); }
-    .orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); box-shadow: 0 10px 22px rgba(230, 92, 0, 0.3); }
-    .confiance { margin: 14px 0 0; padding: 10px 12px; border-radius: 14px; background: #ecfdf5; color: #065f46; font-size: 0.82rem; font-weight: 600; text-align: center; }
-
-    .erreur { background: var(--blanc); border-radius: 28px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
+    .erreur { grid-column: 1 / -1; background: #fff; border-radius: 22px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
 
     /* ===== COMMENT ÇA MARCHE ===== */
-    .etapes-section { background: var(--creme); }
-    .etapes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; counter-reset: etape; }
-    .etape {
-      position: relative;
-      padding: 30px 24px 26px;
-      border-radius: 24px;
-      background: var(--blanc);
-      box-shadow: var(--ombre);
-    }
+    .etapes-section { background: var(--papier); border-top: 1px solid var(--bord); border-bottom: 1px solid var(--bord); }
+    .etapes { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); counter-reset: etape; }
+    .etape { padding: 22px; border-radius: 18px; background: var(--ivoire); border: 1px solid var(--bord); }
     .etape::before {
-      counter-increment: etape;
-      content: counter(etape);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 54px;
-      height: 54px;
-      margin-bottom: 14px;
-      border-radius: 18px;
-      font-family: var(--titres);
-      font-weight: 800;
-      font-size: 1.6rem;
-      color: var(--blanc);
-      background: linear-gradient(135deg, var(--orange), var(--hibiscus));
-      transform: rotate(-6deg);
+      counter-increment: etape; content: counter(etape);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 12px; margin-bottom: 12px;
+      background: var(--nuit); color: var(--or); font-family: var(--titres); font-weight: 800; font-size: 1.2rem;
     }
-    .etape:nth-child(2)::before { background: linear-gradient(135deg, var(--wa), var(--emeraude)); transform: rotate(5deg); }
-    .etape:nth-child(3)::before { background: linear-gradient(135deg, var(--soleil), var(--or)); color: var(--cacao); transform: rotate(-3deg); }
-    .etape h3 { margin: 0 0 6px; font-size: 1.25rem; }
-    .etape p { margin: 0; color: var(--texte-doux); }
+    .etape h3 { font-size: 1.12rem; color: var(--nuit); }
+    .etape p { margin: 6px 0 0; color: var(--encre-douce); font-size: 0.95rem; }
 
-    /* ===== CHIFFRES ===== */
-    .chiffres-section {
-      background: var(--cacao);
-      color: var(--creme);
-      background-image: radial-gradient(circle at 20% 0%, rgba(249, 115, 22, 0.35), transparent 50%), radial-gradient(circle at 90% 100%, rgba(5, 150, 105, 0.35), transparent 50%);
-    }
-    .chiffres { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px; text-align: center; }
-    .chiffre { padding: 24px 12px; border-radius: 24px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(251, 191, 36, 0.2); }
-    .chiffre strong {
-      display: block;
-      font-family: var(--titres);
-      font-size: clamp(2.6rem, 11vw, 3.6rem);
-      font-weight: 800;
-      line-height: 1;
-      color: var(--soleil);
-    }
-    .chiffre span { display: block; margin-top: 8px; color: #f3e3cf; }
+    /* ===== DIDY ===== */
+    .didy-bloc { position: relative; display: grid; gap: 26px; align-items: center; padding: 34px 22px 26px; border-radius: 26px; background: var(--nuit); color: #fff; overflow: hidden; }
+    @media (min-width: 900px) { .didy-bloc { grid-template-columns: 1fr 1fr; padding: 52px 48px 48px; } }
+    .didy-bloc::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 8px; background: var(--kente); }
+    .didy-bloc .eyebrow { color: var(--or-clair); }
+    .didy-bloc h2 { margin-top: 8px; font-size: clamp(1.8rem, 6.5vw, 2.5rem); }
+    .didy-bloc h2 em { font-style: normal; color: var(--or); }
+    .didy-bloc p { color: #d8dcf5; margin: 12px 0 22px; }
+    .discussion { display: grid; gap: 10px; padding: 16px; border-radius: 20px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .msg { max-width: 88%; padding: 10px 14px; border-radius: 16px; font-size: 0.93rem; line-height: 1.45; }
+    .msg.robot { justify-self: start; background: #fff; color: var(--encre); border-bottom-left-radius: 5px; }
+    .msg.client { justify-self: end; background: var(--or); color: var(--nuit); font-weight: 700; border-bottom-right-radius: 5px; }
+    .msg-nom { display: block; font-size: 0.72rem; font-weight: 800; color: var(--terre); margin-bottom: 2px; }
 
-    /* ===== QUESTIONS FRÉQUENTES ===== */
-    .faq { max-width: 760px; margin: 0 auto; display: grid; gap: 12px; }
-    details {
-      background: var(--blanc);
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(35, 17, 10, 0.07);
-      overflow: hidden;
-    }
-    summary {
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 20px 22px;
-      font-family: var(--titres);
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-    summary::-webkit-details-marker { display: none; }
-    summary::after {
-      content: "+";
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--sable);
-      color: var(--terre);
-      font-size: 1.4rem;
-      transition: transform 0.3s ease, background 0.3s ease;
-    }
-    details[open] summary::after { transform: rotate(45deg); background: var(--soleil); }
-    details p { margin: 0; padding: 0 22px 20px; color: var(--texte-doux); }
-
-    /* ===== APPEL FINAL ===== */
-    .final {
-      position: relative;
-      overflow: hidden;
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 52px 24px;
-      border-radius: 32px;
-      text-align: center;
-      color: var(--blanc);
-      background: linear-gradient(135deg, var(--terre), var(--hibiscus));
-      box-shadow: var(--ombre-forte);
-    }
-    .final::before, .final::after {
-      content: "";
-      position: absolute;
-      border-radius: 50%;
-      border: 3px solid rgba(255, 255, 255, 0.2);
-    }
-    .final::before { width: 220px; height: 220px; top: -90px; right: -60px; }
-    .final::after { width: 140px; height: 140px; bottom: -60px; left: -30px; background: rgba(251, 191, 36, 0.25); border: 0; }
-    .final h2 { position: relative; margin: 0 0 10px; font-size: clamp(2rem, 8vw, 3rem); }
-    .final p { position: relative; margin: 0 auto 26px; max-width: 480px; opacity: 0.95; }
-    .final .bouton { position: relative; }
+    /* ===== QUESTIONS ===== */
+    .faq { display: grid; gap: 10px; max-width: 800px; }
+    details.question { background: var(--papier); border: 1px solid var(--bord); border-radius: 16px; }
+    details.question summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 18px 20px; font-family: var(--titres); font-weight: 700; font-size: 1.05rem; color: var(--nuit); }
+    details.question summary::-webkit-details-marker { display: none; }
+    details.question summary::after { content: "+"; flex-shrink: 0; width: 30px; height: 30px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--ivoire); color: var(--terre); font-size: 1.3rem; transition: transform 0.3s ease; }
+    details.question[open] summary::after { transform: rotate(45deg); }
+    details.question p { margin: 0; padding: 0 20px 18px; color: var(--encre-douce); }
 
     /* ===== PIED DE PAGE ===== */
-    .pied {
-      margin-top: 72px;
-      background: var(--cacao);
-      color: #f3e3cf;
-      text-align: center;
-      padding: 48px 16px calc(110px + env(safe-area-inset-bottom));
-    }
-    .pied .marque { margin: 0 0 6px; font-family: var(--titres); font-size: 1.8rem; font-weight: 800; color: var(--soleil); }
-    .pied p { margin: 8px 0; }
-    .numeros { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 18px 0; }
-    .numeros a small { font-weight: 600; opacity: 0.75; }
-    .numeros a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 48px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(251, 191, 36, 0.35);
-      color: var(--blanc);
-      font-weight: 700;
-      text-decoration: none;
-    }
-    .numeros a:hover { background: rgba(255, 255, 255, 0.14); }
-    .numeros svg { width: 20px; height: 20px; color: var(--wa); }
-    .pied small { display: block; margin-top: 22px; opacity: 0.6; }
+    .pied { background: var(--nuit); color: #c4c9ee; padding: 0 0 calc(100px + env(safe-area-inset-bottom)); }
+    .pied .pagne { margin-bottom: 36px; }
+    .pied-grille { display: grid; gap: 24px; }
+    @media (min-width: 800px) { .pied-grille { grid-template-columns: 1.2fr 1fr; } }
+    .pied .logo { font-size: 1.4rem; }
+    .pied p { margin: 10px 0 0; }
+    .numeros { display: grid; gap: 10px; }
+    .numeros a { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 16px; border-radius: 14px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; text-decoration: none; font-weight: 700; }
+    .numeros a small { margin-left: auto; font-weight: 600; color: var(--or-clair); }
+    .numeros svg { width: 20px; height: 20px; color: var(--wa); flex-shrink: 0; }
+    .pied small.droits { display: block; margin-top: 28px; opacity: 0.6; }
 
     /* ===== BOUTON WHATSAPP FLOTTANT ===== */
     .flottant {
-      position: fixed;
-      right: 18px;
-      bottom: calc(18px + env(safe-area-inset-bottom));
-      z-index: 15;
-      width: 62px;
-      height: 62px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--wa);
-      color: var(--blanc);
-      animation: pulsation 2.4s ease-in-out infinite;
+      position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 25;
+      width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      background: var(--wa); color: #fff; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
       -webkit-tap-highlight-color: transparent;
     }
-    .flottant svg { width: 32px; height: 32px; }
+    .flottant svg { width: 30px; height: 30px; }
 
-    /* ===== APPARITION AU DÉFILEMENT ===== */
-    .revele { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    .revele.visible { opacity: 1; transform: none; }
-    .carte.revele.visible:hover { transform: translateY(-8px); }
-    .carte.revele { transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease; }
+    /* ===== APPARITION AU DÉFILEMENT (seulement si le script tourne) ===== */
+    .js .revele { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease; }
+    .js .revele.visible { opacity: 1; transform: none; }
 
-    /* ===== ANIMATIONS ===== */
-    @keyframes monter { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-    @keyframes briller { to { background-position: 250% center; } }
-    @keyframes derive { from { transform: translate(0, 0) scale(1); } to { transform: translate(60px, 40px) scale(1.2); } }
-    @keyframes flotter { 0%, 100% { translate: 0 0; } 50% { translate: 0 -16px; } }
-    @keyframes rouler { 0% { opacity: 0; transform: translateY(0); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(14px); } }
-    @keyframes defiler { to { transform: translateX(-50%); } }
     @keyframes vapeur { 0% { opacity: 0; transform: translateY(10px); } 40% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-16px); } }
     @keyframes piece { 0% { opacity: 0; transform: translateY(-14px); } 25% { opacity: 1; } 70% { opacity: 1; transform: translateY(14px); } 100% { opacity: 0; transform: translateY(26px); } }
-    @keyframes pulsation {
-      0%, 100% { box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5), 0 0 0 0 rgba(37, 211, 102, 0.5); }
-      50%      { box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5), 0 0 0 14px rgba(37, 211, 102, 0); }
-    }
 
-    /* Respecte les personnes qui ont désactivé les animations sur leur téléphone */
+    /* Respecte les téléphones réglés pour réduire les animations */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-      .revele { opacity: 1; transform: none; }
-      .hero h1, .hero p, .surtitre, .actions { opacity: 1; }
+      .js .revele { opacity: 1; transform: none; }
       .couverture-cadre > * { opacity: 1 !important; scale: 1 !important; translate: none !important; rotate: none !important; transform: none !important; }
+      .vitrine img { transform: translateX(var(--dx)) rotate(var(--rot)); }
     }
   </style>
 </head>
@@ -672,53 +341,49 @@
 
   <div class="progression" id="progression" aria-hidden="true"></div>
 
-  <!-- ===== EN-TÊTE ===== -->
-  <header class="hero">
-    <div class="lumiere l1" aria-hidden="true"></div>
-    <div class="lumiere l2" aria-hidden="true"></div>
-    <div class="lumiere l3" aria-hidden="true"></div>
-    <div class="forme f1" aria-hidden="true"></div>
-    <div class="forme f2" aria-hidden="true"></div>
-    <div class="forme f3" aria-hidden="true"></div>
-
-    <div class="hero-contenu">
-      <span class="surtitre">✦ Ebooks · Afrique de l'Ouest</span>
-      <h1>Didy Digital</h1>
-      <p>Bienvenue ! Des ebooks simples et pratiques pour apprendre, progresser et réussir au quotidien. À lire directement sur ton téléphone.</p>
-      <div class="actions">
-        <a class="bouton bouton-soleil" href="#ebooks">Voir les ebooks ↓</a>
-        <a class="bouton bouton-contour" href="vendeur.html">💬 Discuter avec Didy</a>
-      </div>
-      <div class="compteur" id="compteur-visites" hidden>👀 <strong id="nombre-visites">0</strong> visites sur le site</div>
+  <!-- ===== BARRE DU HAUT ===== -->
+  <nav class="barre" aria-label="Menu principal">
+    <div class="conteneur">
+      <a class="logo" href="#haut"><span class="logo-marque" aria-hidden="true">D</span>Didy Digital</a>
+      <a class="barre-didy" href="vendeur.html">💬 Didy</a>
     </div>
+  </nav>
 
-    <div class="descendre" aria-hidden="true"></div>
-
-    <svg class="vague" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 40 C240 80 480 0 720 30 C960 60 1200 10 1440 40 L1440 70 L0 70 Z" fill="#fdf4e3"/>
-    </svg>
+  <!-- ===== EN-TÊTE ===== -->
+  <header class="hero" id="haut">
+    <div class="conteneur">
+      <div>
+        <span class="surtitre">✦ Ebooks pratiques · Afrique de l'Ouest</span>
+        <h1>Des guides simples pour <span class="souligne">avancer</span> dans votre vie.</h1>
+        <p class="intro">Argent, cuisine, projets, santé : des ebooks clairs et concrets, à lire directement sur votre téléphone. Payez en toute sécurité et recevez votre ebook rapidement.</p>
+        <div class="actions">
+          <a class="bouton bouton-or" href="#ebooks">Voir les ebooks</a>
+          <a class="bouton bouton-ligne" href="vendeur.html">💬 Discuter avec Didy</a>
+        </div>
+        <ul class="confiance-hero">
+          <li>🔒 Paiement sécurisé</li>
+          <li>📱 Moov &amp; Orange Money</li>
+          <li>📥 Ebook téléchargeable</li>
+        </ul>
+        <div class="compteur" id="compteur-visites" hidden>👀 <strong id="nombre-visites">0</strong> visites sur le site</div>
+      </div>
+      <div class="vitrine" id="vitrine" aria-hidden="true" hidden></div>
+    </div>
+    <div class="pagne" aria-hidden="true"></div>
   </header>
 
-  <!-- ===== BANDE QUI DÉFILE (le texte est écrit deux fois pour une boucle sans fin) ===== -->
-  <div class="bande-cadre" aria-hidden="true"><div class="bande">
-    <div class="bande-piste">
-      <span>Ebooks pratiques</span><span>Lecture sur téléphone</span><span>Apprendre</span><span>Progresser</span><span>Réussir</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
-      <span>Ebooks pratiques</span><span>Lecture sur téléphone</span><span>Apprendre</span><span>Progresser</span><span>Réussir</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
-    </div>
-  </div></div>
-
   <main>
-    <!-- ===== LES EBOOKS (les cartes sont créées à partir de la liste plus bas) ===== -->
+    <!-- ===== LES EBOOKS (créés à partir de ebooks.json) ===== -->
     <section id="ebooks">
       <div class="conteneur">
         <div class="entete-section revele">
           <span class="eyebrow">Nos ebooks</span>
-          <h2>Trouve l'ebook <em>qu'il te faut.</em></h2>
-          <p>Choisis ton ebook, puis paie comme tu préfères : en ligne sur Chariow, ou par Mobile Money sur WhatsApp.</p>
+          <h2>Choisissez votre prochain guide</h2>
+          <p>Touchez une couverture pour en savoir plus avec Didy, ou achetez directement en toute sécurité.</p>
         </div>
         <div class="grille" id="liste-ebooks">
           <noscript>
-            <div class="erreur">Active JavaScript pour voir les ebooks, ou écris-nous sur WhatsApp au +226 03 07 88 05 ou au +226 05 56 44 51.</div>
+            <div class="erreur">Activez JavaScript pour voir les ebooks, ou écrivez-nous sur WhatsApp au +226 03 07 88 05 ou au +226 05 56 44 51.</div>
           </noscript>
         </div>
       </div>
@@ -729,23 +394,31 @@
       <div class="conteneur">
         <div class="entete-section revele">
           <span class="eyebrow">Simple et rapide</span>
-          <h2>Comment <em>commander ?</em></h2>
+          <h2>Comment commander ?</h2>
         </div>
-        <div class="etapes">
-          <div class="etape revele"><h3>Choisis ton ebook</h3><p>Regarde les ebooks et choisis celui qui te plaît.</p></div>
-          <div class="etape revele"><h3>Choisis comment payer</h3><p>En ligne sur Chariow, ou par Moov Money ou Orange Money en nous écrivant sur WhatsApp.</p></div>
-          <div class="etape revele"><h3>Reçois ton ebook</h3><p>Sur Chariow, tu le reçois automatiquement. Sur WhatsApp, on te l'envoie dès que ton paiement est confirmé.</p></div>
-        </div>
+        <ol class="etapes">
+          <li class="etape revele"><h3>Choisissez votre ebook</h3><p>Lisez la présentation, ou posez vos questions à Didy, notre assistante.</p></li>
+          <li class="etape revele"><h3>Payez en toute sécurité</h3><p>En ligne sur Chariow, ou par Moov Money ou Orange Money via WhatsApp.</p></li>
+          <li class="etape revele"><h3>Recevez votre ebook</h3><p>Sur Chariow, il arrive automatiquement. Sur WhatsApp, nous vous l'envoyons dès que le paiement est confirmé.</p></li>
+        </ol>
       </div>
     </section>
 
-    <!-- ===== CHIFFRES ===== -->
-    <section class="chiffres-section">
+    <!-- ===== DIDY ===== -->
+    <section>
       <div class="conteneur">
-        <div class="chiffres">
-          <div class="chiffre revele"><strong id="nombre-ebooks" data-compteur="0">0</strong><span>ebooks disponibles</span></div>
-          <div class="chiffre revele"><strong data-compteur="100" data-suffixe=" %">100 %</strong><span>lisibles sur ton téléphone</span></div>
-          <div class="chiffre revele"><strong data-compteur="3">3</strong><span>façons de payer : Chariow, Moov Money, Orange Money</span></div>
+        <div class="didy-bloc revele">
+          <div>
+            <span class="eyebrow">Assistante 24h/24</span>
+            <h2>Une question ? <em>Didy</em> vous répond tout de suite.</h2>
+            <p>Didy, notre assistante automatique, vous aide à choisir le bon ebook, répond à vos questions et vous guide jusqu'au paiement, à toute heure.</p>
+            <a class="bouton bouton-or" href="vendeur.html">💬 Discuter avec Didy</a>
+          </div>
+          <div class="discussion" aria-hidden="true">
+            <div class="msg robot"><span class="msg-nom">Didy</span>Bonjour et bienvenue chez Didy Digital 🙏 Qu'est-ce qui vous ferait plaisir aujourd'hui ?</div>
+            <div class="msg client">Comment je reçois l'ebook ?</div>
+            <div class="msg robot"><span class="msg-nom">Didy</span>Sur Chariow, vous le recevez automatiquement juste après le paiement 📥</div>
+          </div>
         </div>
       </div>
     </section>
@@ -755,37 +428,32 @@
       <div class="conteneur">
         <div class="entete-section revele">
           <span class="eyebrow">Questions fréquentes</span>
-          <h2>Tu te poses <em>une question ?</em></h2>
+          <h2>Vous vous posez une question ?</h2>
         </div>
         <div class="faq">
-          <details class="revele"><summary>Comment je peux payer ?</summary><p>Tu as deux choix. 1) En ligne sur Chariow : tu paies sur leur page sécurisée et tu reçois ton ebook automatiquement. 2) Par Mobile Money sur WhatsApp : choisis Moov Money (+226 03 07 88 05) ou Orange Money (+226 05 56 44 51), WhatsApp s'ouvre avec un message prêt, et on t'indique comment payer.</p></details>
-          <details class="revele"><summary>Comment je reçois mon ebook ?</summary><p>Sur Chariow, l'ebook t'est envoyé automatiquement après le paiement. Sur WhatsApp, on t'envoie le fichier dès que ton paiement est confirmé.</p></details>
-          <details class="revele"><summary>Est-ce que le paiement est sûr ?</summary><p>Oui. Ce site ne touche jamais à ton argent et ne te demande aucune information. Tu paies toi-même, dans ton application Moov Money ou Orange Money, ou sur la page sécurisée de Chariow. Nous ne te demanderons JAMAIS ton code secret. Paie uniquement aux numéros affichés sur ce site.</p></details>
-          <details class="revele"><summary>Je peux le lire sur mon téléphone ?</summary><p>Oui ! Les ebooks se lisent directement sur ton téléphone, où tu veux, quand tu veux.</p></details>
-          <details class="revele"><summary>Mes informations sont-elles protégées ?</summary><p>Oui. Ce site ne te demande aucune information et ne garde aucune donnée personnelle.</p></details>
+          <details class="question revele"><summary>Comment payer ?</summary><p>Deux possibilités : en ligne sur Chariow, avec une page de paiement sécurisée, ou par Moov Money (+226 03 07 88 05) ou Orange Money (+226 05 56 44 51) en nous écrivant sur WhatsApp.</p></details>
+          <details class="question revele"><summary>Comment je reçois mon ebook ?</summary><p>Sur Chariow, l'ebook vous est envoyé automatiquement après le paiement. Par Mobile Money, nous vous l'envoyons sur WhatsApp dès que le paiement est confirmé.</p></details>
+          <details class="question revele"><summary>Je peux le lire sur mon téléphone ?</summary><p>Oui. Les ebooks se lisent directement sur votre téléphone, où vous voulez, quand vous voulez.</p></details>
+          <details class="question revele"><summary>Le paiement est-il sûr ?</summary><p>Oui. Ce site ne touche jamais à votre argent et ne vous demande aucune information. Vous payez vous-même, dans votre application Mobile Money ou sur la page sécurisée de Chariow. Nous ne vous demanderons jamais votre code secret : payez uniquement aux numéros affichés sur ce site.</p></details>
         </div>
-      </div>
-    </section>
-
-    <!-- ===== APPEL FINAL ===== -->
-    <section>
-      <div class="final revele">
-        <h2>Prêt à commencer ?</h2>
-        <p>Écris-nous maintenant sur WhatsApp, on te répond avec plaisir.</p>
-        <a class="bouton bouton-soleil" data-whatsapp="1" target="_blank" rel="noopener noreferrer">Commander sur WhatsApp</a>
       </div>
     </section>
   </main>
 
   <!-- ===== PIED DE PAGE ===== -->
   <footer class="pied">
-    <p class="marque">Didy Digital</p>
-    <p>Une question ? Écris-nous sur WhatsApp :</p>
-    <div class="numeros">
-      <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>· Moov Money</small></a>
-      <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51 <small>· Orange Money</small></a>
+    <div class="pagne" aria-hidden="true"></div>
+    <div class="conteneur pied-grille">
+      <div>
+        <a class="logo" href="#haut"><span class="logo-marque" aria-hidden="true">D</span>Didy Digital</a>
+        <p>Des ebooks simples et pratiques pour avancer dans votre vie. Une question ? Écrivez-nous sur WhatsApp, nous vous répondons avec plaisir.</p>
+      </div>
+      <div class="numeros">
+        <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money</small></a>
+        <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51 <small>Orange Money</small></a>
+      </div>
     </div>
-    <small>© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small>
+    <div class="conteneur"><small class="droits">© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small></div>
   </footer>
 
   <!-- ===== BOUTON WHATSAPP FLOTTANT ===== -->
@@ -793,24 +461,18 @@
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path id="icone-wa" d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.43 9.43 0 1 1 7.99 4.42zm8.02-17.45A11.27 11.27 0 0 0 12.05.75C5.8.75.72 5.83.72 12.08c0 2 .52 3.95 1.51 5.67L.63 23.25l5.63-1.48a11.3 11.3 0 0 0 5.79 1.47c6.25 0 11.33-5.08 11.33-11.33 0-3.03-1.18-5.87-3.31-8z"/></svg>
   </a>
 
-  <!-- ===== DESSINS DES COUVERTURES ===== -->
+  <!-- ===== DESSINS DE SECOURS (si un ebook n'a pas de photo) ===== -->
   <template id="illustration-mafe">
     <svg class="illustration" viewBox="0 0 400 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><clipPath id="mafe-assiette"><circle cx="200" cy="110" r="76"/></clipPath><linearGradient id="mafe-sauce" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d0651f"/><stop offset="1" stop-color="#9c4115"/></linearGradient><radialGradient id="mafe-vignette" cx="50%" cy="50%" r="70%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#2a0e03" stop-opacity=".55"/></radialGradient></defs><rect x="0" y="0" width="400" height="27" fill="#b5582a"/><line x1="0" y1="0" x2="400" y2="0" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M231 6q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M286 13q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M238 20q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="27" width="400" height="27" fill="#c4652f"/><line x1="0" y1="27" x2="400" y2="27" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M231 33q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M260 40q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M300 47q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="54" width="400" height="27" fill="#ad5226"/><line x1="0" y1="54" x2="400" y2="54" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M97 60q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M94 67q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M262 74q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="81" width="400" height="27" fill="#bf5f2c"/><line x1="0" y1="81" x2="400" y2="81" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M243 87q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M95 94q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M48 101q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="108" width="400" height="27" fill="#b5582a"/><line x1="0" y1="108" x2="400" y2="108" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M228 114q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M155 121q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M72 128q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="135" width="400" height="27" fill="#c4652f"/><line x1="0" y1="135" x2="400" y2="135" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M46 141q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M275 148q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M21 155q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="162" width="400" height="27" fill="#ad5226"/><line x1="0" y1="162" x2="400" y2="162" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M202 168q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M231 175q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M80 182q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><rect x="0" y="189" width="400" height="27" fill="#bf5f2c"/><line x1="0" y1="189" x2="400" y2="189" stroke="#7a3412" stroke-width="1.5" opacity=".6"/><path d="M7 195q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M270 202q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><path d="M32 209q40 -3 80 0t80 0" stroke="#8a3c16" stroke-width="1" fill="none" opacity=".35"/><ellipse cx="52" cy="54" rx="30" ry="28" fill="#2a0e03" opacity=".3"/><circle cx="48" cy="46" r="30" fill="#9cc65a"/><circle cx="48" cy="46" r="24" fill="#c9e39a"/><circle cx="48" cy="46" r="14" fill="#e3f1c4"/><path d="M48 46 L74.0 46.0" stroke="#86b347" stroke-width="1.5"/><path d="M48 46 L61.0 68.5" stroke="#86b347" stroke-width="1.5"/><path d="M48 46 L35.0 68.5" stroke="#86b347" stroke-width="1.5"/><path d="M48 46 L22.0 46.0" stroke="#86b347" stroke-width="1.5"/><path d="M48 46 L35.0 23.5" stroke="#86b347" stroke-width="1.5"/><path d="M48 46 L61.0 23.5" stroke="#86b347" stroke-width="1.5"/><ellipse cx="44" cy="176" rx="15" ry="14" fill="#2a0e03" opacity=".3"/><circle cx="40" cy="170" r="15" fill="#c98a4b"/><path d="M32 164q8 -6 16 0" stroke="#e6b27a" stroke-width="2" fill="none"/><path d="M40 155l-2 -6" stroke="#8a5a2b" stroke-width="2"/><ellipse cx="74" cy="192" rx="15" ry="14" fill="#2a0e03" opacity=".3"/><circle cx="70" cy="186" r="15" fill="#c98a4b"/><path d="M62 180q8 -6 16 0" stroke="#e6b27a" stroke-width="2" fill="none"/><path d="M70 171l-2 -6" stroke="#8a5a2b" stroke-width="2"/><g transform="rotate(-20 345 170)"><path d="M305 164L355 166q6 4 0 8L305 176z" fill="#f07a1f"/><path d="M353 170l14 -6M353 170l14 6M353 170l16 0" stroke="#3f8f2a" stroke-width="3" stroke-linecap="round"/></g><g transform="rotate(-12 352 186)"><path d="M312 180L362 182q6 4 0 8L312 192z" fill="#f07a1f"/><path d="M360 186l14 -6M360 186l14 6M360 186l16 0" stroke="#3f8f2a" stroke-width="3" stroke-linecap="round"/></g><g transform="rotate(20 100 24)"><ellipse cx="96" cy="24" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/><ellipse cx="105" cy="24" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/></g><g transform="rotate(-30 116 32)"><ellipse cx="112" cy="32" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/><ellipse cx="121" cy="32" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/></g><g transform="rotate(10 300 22)"><ellipse cx="296" cy="22" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/><ellipse cx="305" cy="22" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/></g><g transform="rotate(40 290 196)"><ellipse cx="286" cy="196" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/><ellipse cx="295" cy="196" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/></g><g transform="rotate(-10 310 200)"><ellipse cx="306" cy="200" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/><ellipse cx="315" cy="200" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/></g><g transform="rotate(70 16 110)"><ellipse cx="12" cy="110" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/><ellipse cx="21" cy="110" rx="6" ry="4.5" fill="#e5bf85" stroke="#b07c42" stroke-width=".8"/></g><ellipse cx="204" cy="116" rx="92" ry="90" fill="#2a0e03" opacity=".3"/><circle cx="200" cy="110" r="92" fill="#2b2622"/><circle cx="200" cy="110" r="80" fill="#1d1916"/><circle cx="277.7" cy="140.5" r="1" fill="#46403b"/><circle cx="204.2" cy="192.1" r="1" fill="#46403b"/><circle cx="116.7" cy="129.2" r="1" fill="#46403b"/><circle cx="247.3" cy="38.0" r="1" fill="#46403b"/><circle cx="145.3" cy="43.6" r="1" fill="#46403b"/><circle cx="155.2" cy="37.0" r="1" fill="#46403b"/><circle cx="184.2" cy="198.6" r="1" fill="#46403b"/><circle cx="288.7" cy="107.6" r="1" fill="#46403b"/><circle cx="177.8" cy="28.4" r="1" fill="#46403b"/><circle cx="210.7" cy="193.6" r="1" fill="#46403b"/><circle cx="279.7" cy="147.6" r="1" fill="#46403b"/><circle cx="128.1" cy="162.0" r="1" fill="#46403b"/><circle cx="132.2" cy="168.7" r="1" fill="#46403b"/><circle cx="247.1" cy="42.8" r="1" fill="#46403b"/><circle cx="222.4" cy="196.4" r="1" fill="#46403b"/><circle cx="111.8" cy="126.8" r="1" fill="#46403b"/><circle cx="134.0" cy="159.6" r="1" fill="#46403b"/><circle cx="139.4" cy="45.9" r="1" fill="#46403b"/><circle cx="189.8" cy="192.1" r="1" fill="#46403b"/><circle cx="155.5" cy="187.9" r="1" fill="#46403b"/><circle cx="204.2" cy="27.2" r="1" fill="#46403b"/><circle cx="201.9" cy="192.8" r="1" fill="#46403b"/><circle cx="282.2" cy="142.5" r="1" fill="#46403b"/><circle cx="238.0" cy="187.7" r="1" fill="#46403b"/><circle cx="121.0" cy="137.1" r="1" fill="#46403b"/><circle cx="190.6" cy="27.5" r="1" fill="#46403b"/><circle cx="148.6" cy="44.9" r="1" fill="#46403b"/><circle cx="126.5" cy="150.0" r="1" fill="#46403b"/><circle cx="188.9" cy="199.1" r="1" fill="#46403b"/><circle cx="227.8" cy="30.3" r="1" fill="#46403b"/><circle cx="262.7" cy="54.6" r="1" fill="#46403b"/><circle cx="130.1" cy="164.8" r="1" fill="#46403b"/><circle cx="148.0" cy="45.6" r="1" fill="#46403b"/><circle cx="283.5" cy="104.4" r="1" fill="#46403b"/><circle cx="195.4" cy="198.1" r="1" fill="#46403b"/><circle cx="159.8" cy="184.2" r="1" fill="#46403b"/><circle cx="274.1" cy="146.8" r="1" fill="#46403b"/><circle cx="127.1" cy="68.3" r="1" fill="#46403b"/><circle cx="131.7" cy="59.5" r="1" fill="#46403b"/><circle cx="114.2" cy="136.0" r="1" fill="#46403b"/><circle cx="113.9" cy="118.8" r="1" fill="#46403b"/><circle cx="255.8" cy="47.9" r="1" fill="#46403b"/><circle cx="250.6" cy="183.6" r="1" fill="#46403b"/><circle cx="234.7" cy="33.5" r="1" fill="#46403b"/><circle cx="232.5" cy="191.7" r="1" fill="#46403b"/><circle cx="277.8" cy="79.4" r="1" fill="#46403b"/><circle cx="284.7" cy="82.5" r="1" fill="#46403b"/><circle cx="132.1" cy="58.3" r="1" fill="#46403b"/><circle cx="265.4" cy="160.0" r="1" fill="#46403b"/><circle cx="281.6" cy="90.5" r="1" fill="#46403b"/><circle cx="176.3" cy="29.3" r="1" fill="#46403b"/><circle cx="238.8" cy="32.4" r="1" fill="#46403b"/><circle cx="177.5" cy="190.3" r="1" fill="#46403b"/><circle cx="184.7" cy="28.9" r="1" fill="#46403b"/><circle cx="211.7" cy="195.7" r="1" fill="#46403b"/><circle cx="252.1" cy="40.5" r="1" fill="#46403b"/><circle cx="183.1" cy="197.7" r="1" fill="#46403b"/><circle cx="223.4" cy="188.7" r="1" fill="#46403b"/><circle cx="189.7" cy="194.9" r="1" fill="#46403b"/><circle cx="277.5" cy="140.9" r="1" fill="#46403b"/><circle cx="141.2" cy="173.6" r="1" fill="#46403b"/><circle cx="257.5" cy="172.5" r="1" fill="#46403b"/><circle cx="269.6" cy="53.1" r="1" fill="#46403b"/><circle cx="151.7" cy="37.0" r="1" fill="#46403b"/><circle cx="128.3" cy="67.9" r="1" fill="#46403b"/><circle cx="280.2" cy="128.0" r="1" fill="#46403b"/><circle cx="274.0" cy="63.1" r="1" fill="#46403b"/><circle cx="279.9" cy="90.9" r="1" fill="#46403b"/><circle cx="143.7" cy="45.2" r="1" fill="#46403b"/><circle cx="189.7" cy="26.1" r="1" fill="#46403b"/><g clip-path="url(#mafe-assiette)"><rect x="110" y="30" width="110" height="170" fill="#f3ecdc"/><ellipse cx="211.9" cy="45.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(94 211.9 45.7)"/><ellipse cx="188.3" cy="174.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(33 188.3 174.4)"/><ellipse cx="193.4" cy="176.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(21 193.4 176.7)"/><ellipse cx="183.7" cy="174.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(7 183.7 174.5)"/><ellipse cx="199.7" cy="123.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(169 199.7 123.4)"/><ellipse cx="156.4" cy="124.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(18 156.4 124.9)"/><ellipse cx="129.2" cy="133.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(106 129.2 133.7)"/><ellipse cx="187.5" cy="94.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(177 187.5 94.6)"/><ellipse cx="174.3" cy="102.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(21 174.3 102.7)"/><ellipse cx="168.7" cy="114.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(153 168.7 114.3)"/><ellipse cx="129.9" cy="37.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(28 129.9 37.5)"/><ellipse cx="166.8" cy="129.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(65 166.8 129.9)"/><ellipse cx="202.7" cy="91.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(173 202.7 91.4)"/><ellipse cx="177.1" cy="114.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(168 177.1 114.9)"/><ellipse cx="205.7" cy="111.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(83 205.7 111.7)"/><ellipse cx="158.4" cy="73.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(110 158.4 73.1)"/><ellipse cx="194.3" cy="151.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(54 194.3 151.7)"/><ellipse cx="156.6" cy="125.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(53 156.6 125.0)"/><ellipse cx="134.3" cy="111.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(16 134.3 111.4)"/><ellipse cx="207.5" cy="77.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(28 207.5 77.2)"/><ellipse cx="162.6" cy="76.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(105 162.6 76.9)"/><ellipse cx="156.4" cy="115.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(80 156.4 115.1)"/><ellipse cx="186.5" cy="165.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(115 186.5 165.3)"/><ellipse cx="150.8" cy="163.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(155 150.8 163.3)"/><ellipse cx="125.7" cy="144.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(90 125.7 144.5)"/><ellipse cx="149.8" cy="157.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(164 149.8 157.5)"/><ellipse cx="134.2" cy="105.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(68 134.2 105.0)"/><ellipse cx="143.4" cy="56.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(161 143.4 56.0)"/><ellipse cx="132.4" cy="51.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(167 132.4 51.0)"/><ellipse cx="179.6" cy="91.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(175 179.6 91.5)"/><ellipse cx="139.8" cy="162.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(45 139.8 162.5)"/><ellipse cx="186.3" cy="151.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(9 186.3 151.8)"/><ellipse cx="138.1" cy="76.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(138 138.1 76.5)"/><ellipse cx="184.8" cy="115.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(40 184.8 115.2)"/><ellipse cx="157.4" cy="157.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(22 157.4 157.5)"/><ellipse cx="158.9" cy="173.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(33 158.9 173.3)"/><ellipse cx="162.5" cy="64.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(96 162.5 64.7)"/><ellipse cx="171.5" cy="135.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(87 171.5 135.8)"/><ellipse cx="163.7" cy="135.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(25 163.7 135.6)"/><ellipse cx="187.0" cy="161.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(31 187.0 161.7)"/><ellipse cx="141.2" cy="174.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(79 141.2 174.4)"/><ellipse cx="170.3" cy="157.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(67 170.3 157.4)"/><ellipse cx="203.9" cy="167.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(129 203.9 167.5)"/><ellipse cx="129.4" cy="102.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(107 129.4 102.8)"/><ellipse cx="191.1" cy="110.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(55 191.1 110.0)"/><ellipse cx="194.8" cy="44.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(44 194.8 44.0)"/><ellipse cx="170.0" cy="141.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(120 170.0 141.1)"/><ellipse cx="135.4" cy="114.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(132 135.4 114.6)"/><ellipse cx="197.6" cy="141.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(148 197.6 141.5)"/><ellipse cx="207.4" cy="47.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(112 207.4 47.4)"/><ellipse cx="169.4" cy="79.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(143 169.4 79.3)"/><ellipse cx="179.5" cy="115.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(65 179.5 115.6)"/><ellipse cx="150.1" cy="93.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(53 150.1 93.5)"/><ellipse cx="149.4" cy="56.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(134 149.4 56.0)"/><ellipse cx="146.6" cy="111.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(137 146.6 111.6)"/><ellipse cx="132.3" cy="34.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(7 132.3 34.8)"/><ellipse cx="170.4" cy="40.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(139 170.4 40.9)"/><ellipse cx="194.1" cy="121.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(23 194.1 121.8)"/><ellipse cx="184.2" cy="44.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(117 184.2 44.3)"/><ellipse cx="159.2" cy="183.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(68 159.2 183.3)"/><ellipse cx="144.2" cy="110.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(111 144.2 110.9)"/><ellipse cx="203.1" cy="180.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(134 203.1 180.0)"/><ellipse cx="150.5" cy="63.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(7 150.5 63.9)"/><ellipse cx="205.3" cy="54.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(9 205.3 54.2)"/><ellipse cx="139.5" cy="69.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(72 139.5 69.5)"/><ellipse cx="151.0" cy="89.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(127 151.0 89.4)"/><ellipse cx="131.4" cy="148.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(130 131.4 148.0)"/><ellipse cx="178.1" cy="146.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(135 178.1 146.0)"/><ellipse cx="201.1" cy="37.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(105 201.1 37.6)"/><ellipse cx="196.3" cy="130.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(52 196.3 130.1)"/><ellipse cx="199.7" cy="117.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(135 199.7 117.3)"/><ellipse cx="141.5" cy="118.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(34 141.5 118.7)"/><ellipse cx="142.9" cy="149.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(46 142.9 149.6)"/><ellipse cx="150.4" cy="83.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(55 150.4 83.1)"/><ellipse cx="192.0" cy="64.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(34 192.0 64.3)"/><ellipse cx="202.0" cy="54.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(66 202.0 54.7)"/><ellipse cx="156.9" cy="101.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(139 156.9 101.8)"/><ellipse cx="193.1" cy="53.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(160 193.1 53.7)"/><ellipse cx="183.7" cy="36.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(145 183.7 36.8)"/><ellipse cx="183.4" cy="176.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(29 183.4 176.2)"/><ellipse cx="185.4" cy="133.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(128 185.4 133.0)"/><ellipse cx="211.9" cy="163.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(123 211.9 163.9)"/><ellipse cx="131.6" cy="39.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(157 131.6 39.8)"/><ellipse cx="168.3" cy="122.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(48 168.3 122.7)"/><ellipse cx="138.6" cy="65.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(72 138.6 65.8)"/><ellipse cx="205.4" cy="48.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(34 205.4 48.9)"/><ellipse cx="207.6" cy="106.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(83 207.6 106.1)"/><ellipse cx="157.2" cy="100.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(110 157.2 100.5)"/><ellipse cx="140.9" cy="92.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(179 140.9 92.2)"/><ellipse cx="125.7" cy="65.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(116 125.7 65.2)"/><ellipse cx="154.4" cy="91.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(154 154.4 91.8)"/><ellipse cx="136.9" cy="114.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(82 136.9 114.0)"/><ellipse cx="202.4" cy="159.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(161 202.4 159.1)"/><ellipse cx="206.6" cy="122.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(129 206.6 122.9)"/><ellipse cx="174.6" cy="87.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(71 174.6 87.2)"/><ellipse cx="204.0" cy="150.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(103 204.0 150.1)"/><ellipse cx="134.0" cy="85.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(177 134.0 85.5)"/><ellipse cx="155.3" cy="101.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(103 155.3 101.3)"/><ellipse cx="140.6" cy="62.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(77 140.6 62.8)"/><ellipse cx="164.2" cy="35.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(163 164.2 35.7)"/><ellipse cx="203.2" cy="41.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(170 203.2 41.7)"/><ellipse cx="148.9" cy="67.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(145 148.9 67.7)"/><ellipse cx="138.4" cy="46.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(127 138.4 46.0)"/><ellipse cx="179.8" cy="143.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(147 179.8 143.4)"/><ellipse cx="124.1" cy="130.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(60 124.1 130.0)"/><ellipse cx="145.1" cy="96.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(50 145.1 96.6)"/><ellipse cx="180.3" cy="35.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(64 180.3 35.7)"/><ellipse cx="146.8" cy="87.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(130 146.8 87.2)"/><ellipse cx="159.4" cy="115.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(163 159.4 115.2)"/><ellipse cx="162.0" cy="134.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(152 162.0 134.6)"/><ellipse cx="182.2" cy="183.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(40 182.2 183.0)"/><ellipse cx="156.7" cy="185.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(138 156.7 185.3)"/><ellipse cx="177.0" cy="43.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(107 177.0 43.1)"/><ellipse cx="147.6" cy="96.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(93 147.6 96.2)"/><ellipse cx="169.7" cy="109.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(143 169.7 109.4)"/><ellipse cx="205.7" cy="137.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(75 205.7 137.5)"/><ellipse cx="124.4" cy="154.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(10 124.4 154.5)"/><ellipse cx="179.0" cy="97.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(99 179.0 97.8)"/><ellipse cx="126.8" cy="83.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(12 126.8 83.2)"/><ellipse cx="174.4" cy="146.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(18 174.4 146.8)"/><ellipse cx="193.8" cy="68.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(122 193.8 68.9)"/><ellipse cx="144.6" cy="151.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(133 144.6 151.9)"/><ellipse cx="130.9" cy="160.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(36 130.9 160.4)"/><ellipse cx="210.1" cy="161.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(29 210.1 161.4)"/><ellipse cx="126.5" cy="99.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(52 126.5 99.1)"/><ellipse cx="199.5" cy="89.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(31 199.5 89.6)"/><ellipse cx="154.7" cy="55.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(116 154.7 55.8)"/><ellipse cx="176.1" cy="133.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(107 176.1 133.8)"/><ellipse cx="154.8" cy="150.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(74 154.8 150.0)"/><ellipse cx="188.1" cy="71.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(128 188.1 71.2)"/><ellipse cx="202.3" cy="156.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(91 202.3 156.4)"/><ellipse cx="146.7" cy="129.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(144 146.7 129.1)"/><ellipse cx="184.9" cy="63.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(61 184.9 63.6)"/><ellipse cx="139.1" cy="72.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(50 139.1 72.8)"/><ellipse cx="201.1" cy="40.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(2 201.1 40.2)"/><ellipse cx="146.4" cy="100.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(9 146.4 100.3)"/><ellipse cx="131.2" cy="118.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(22 131.2 118.5)"/><ellipse cx="204.2" cy="59.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(161 204.2 59.1)"/><ellipse cx="210.3" cy="109.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(53 210.3 109.5)"/><ellipse cx="152.4" cy="111.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(19 152.4 111.1)"/><ellipse cx="194.2" cy="103.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(54 194.2 103.8)"/><ellipse cx="162.0" cy="150.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(38 162.0 150.6)"/><ellipse cx="155.2" cy="136.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(83 155.2 136.0)"/><ellipse cx="148.2" cy="152.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(109 148.2 152.4)"/><ellipse cx="180.8" cy="124.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(82 180.8 124.6)"/><ellipse cx="129.1" cy="47.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(145 129.1 47.0)"/><ellipse cx="165.6" cy="140.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(2 165.6 140.9)"/><ellipse cx="128.8" cy="67.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(154 128.8 67.3)"/><ellipse cx="129.4" cy="81.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(177 129.4 81.4)"/><ellipse cx="151.5" cy="171.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(91 151.5 171.5)"/><ellipse cx="181.2" cy="85.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(82 181.2 85.0)"/><ellipse cx="185.8" cy="122.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(71 185.8 122.8)"/><ellipse cx="161.4" cy="159.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(117 161.4 159.3)"/><ellipse cx="150.6" cy="96.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(132 150.6 96.3)"/><ellipse cx="144.3" cy="90.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(6 144.3 90.4)"/><ellipse cx="154.7" cy="95.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(49 154.7 95.7)"/><ellipse cx="188.5" cy="91.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(138 188.5 91.4)"/><ellipse cx="135.9" cy="126.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(45 135.9 126.2)"/><ellipse cx="130.1" cy="104.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(5 130.1 104.9)"/><ellipse cx="141.9" cy="43.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(145 141.9 43.0)"/><ellipse cx="148.6" cy="37.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(16 148.6 37.5)"/><ellipse cx="174.4" cy="81.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(21 174.4 81.7)"/><ellipse cx="152.1" cy="76.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(80 152.1 76.7)"/><ellipse cx="129.6" cy="132.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(24 129.6 132.9)"/><ellipse cx="189.1" cy="135.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(56 189.1 135.2)"/><ellipse cx="166.0" cy="175.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(117 166.0 175.6)"/><ellipse cx="157.5" cy="86.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(172 157.5 86.7)"/><ellipse cx="134.3" cy="110.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(18 134.3 110.1)"/><ellipse cx="185.7" cy="176.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(170 185.7 176.7)"/><ellipse cx="153.4" cy="34.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(22 153.4 34.6)"/><ellipse cx="202.0" cy="183.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(6 202.0 183.4)"/><ellipse cx="169.1" cy="144.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(107 169.1 144.8)"/><ellipse cx="205.1" cy="176.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(41 205.1 176.8)"/><ellipse cx="211.2" cy="92.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(82 211.2 92.6)"/><ellipse cx="140.4" cy="100.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(70 140.4 100.3)"/><ellipse cx="209.3" cy="43.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(29 209.3 43.2)"/><ellipse cx="149.3" cy="58.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(15 149.3 58.3)"/><ellipse cx="189.8" cy="36.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(9 189.8 36.7)"/><ellipse cx="150.1" cy="64.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(55 150.1 64.8)"/><ellipse cx="175.0" cy="127.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(152 175.0 127.6)"/><ellipse cx="167.8" cy="102.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(103 167.8 102.9)"/><ellipse cx="137.5" cy="152.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(160 137.5 152.2)"/><ellipse cx="171.3" cy="161.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(66 171.3 161.5)"/><ellipse cx="165.6" cy="96.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(169 165.6 96.8)"/><ellipse cx="171.3" cy="183.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(56 171.3 183.3)"/><ellipse cx="157.9" cy="67.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(98 157.9 67.9)"/><ellipse cx="209.8" cy="158.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(14 209.8 158.0)"/><ellipse cx="181.2" cy="71.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(120 181.2 71.1)"/><ellipse cx="203.5" cy="104.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(107 203.5 104.2)"/><ellipse cx="176.5" cy="58.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(82 176.5 58.5)"/><ellipse cx="135.0" cy="175.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(33 135.0 175.7)"/><ellipse cx="179.3" cy="188.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(132 179.3 188.9)"/><ellipse cx="170.1" cy="57.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(0 170.1 57.5)"/><ellipse cx="140.4" cy="176.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(32 140.4 176.9)"/><ellipse cx="129.4" cy="76.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(135 129.4 76.1)"/><ellipse cx="130.7" cy="108.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(21 130.7 108.9)"/><ellipse cx="208.0" cy="125.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(77 208.0 125.5)"/><ellipse cx="123.7" cy="63.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(174 123.7 63.3)"/><ellipse cx="130.2" cy="162.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(9 130.2 162.9)"/><ellipse cx="170.9" cy="116.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(79 170.9 116.0)"/><ellipse cx="150.4" cy="97.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(78 150.4 97.3)"/><ellipse cx="211.8" cy="138.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(92 211.8 138.1)"/><ellipse cx="128.7" cy="55.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(100 128.7 55.9)"/><ellipse cx="182.8" cy="150.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(167 182.8 150.5)"/><ellipse cx="162.1" cy="168.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(121 162.1 168.7)"/><ellipse cx="143.4" cy="122.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(2 143.4 122.0)"/><ellipse cx="199.0" cy="165.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(52 199.0 165.7)"/><ellipse cx="203.1" cy="57.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(96 203.1 57.7)"/><ellipse cx="206.4" cy="151.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(100 206.4 151.0)"/><ellipse cx="172.0" cy="47.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(51 172.0 47.6)"/><ellipse cx="155.9" cy="51.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(70 155.9 51.1)"/><ellipse cx="172.7" cy="146.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(114 172.7 146.9)"/><ellipse cx="196.4" cy="48.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(159 196.4 48.4)"/><ellipse cx="130.5" cy="139.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(45 130.5 139.7)"/><ellipse cx="138.2" cy="96.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(151 138.2 96.8)"/><ellipse cx="185.4" cy="49.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(40 185.4 49.7)"/><ellipse cx="210.9" cy="101.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(87 210.9 101.7)"/><ellipse cx="204.9" cy="100.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(35 204.9 100.6)"/><ellipse cx="180.3" cy="153.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(98 180.3 153.6)"/><ellipse cx="165.4" cy="177.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(3 165.4 177.7)"/><ellipse cx="187.4" cy="129.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(62 187.4 129.6)"/><ellipse cx="181.4" cy="128.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(66 181.4 128.9)"/><ellipse cx="151.8" cy="87.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(112 151.8 87.4)"/><ellipse cx="131.6" cy="92.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(85 131.6 92.9)"/><ellipse cx="193.0" cy="162.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(40 193.0 162.7)"/><ellipse cx="144.8" cy="118.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(140 144.8 118.1)"/><ellipse cx="143.1" cy="129.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(36 143.1 129.5)"/><ellipse cx="173.7" cy="64.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(50 173.7 64.9)"/><ellipse cx="173.1" cy="38.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(50 173.1 38.2)"/><ellipse cx="191.9" cy="55.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(147 191.9 55.3)"/><ellipse cx="159.6" cy="86.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(92 159.6 86.0)"/><ellipse cx="146.0" cy="171.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(34 146.0 171.7)"/><ellipse cx="143.5" cy="122.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(143 143.5 122.8)"/><ellipse cx="127.7" cy="176.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(85 127.7 176.8)"/><ellipse cx="176.1" cy="53.1" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(73 176.1 53.1)"/><ellipse cx="183.7" cy="90.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(92 183.7 90.7)"/><ellipse cx="196.8" cy="62.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(19 196.8 62.9)"/><ellipse cx="162.9" cy="96.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(35 162.9 96.9)"/><ellipse cx="149.7" cy="138.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(97 149.7 138.7)"/><ellipse cx="177.4" cy="133.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(40 177.4 133.9)"/><ellipse cx="140.0" cy="107.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(135 140.0 107.0)"/><ellipse cx="156.8" cy="122.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(86 156.8 122.8)"/><ellipse cx="168.8" cy="75.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(85 168.8 75.1)"/><ellipse cx="126.8" cy="156.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(171 126.8 156.3)"/><ellipse cx="192.9" cy="96.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(153 192.9 96.9)"/><ellipse cx="131.2" cy="87.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(176 131.2 87.9)"/><ellipse cx="172.8" cy="97.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(124 172.8 97.5)"/><ellipse cx="202.0" cy="106.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(104 202.0 106.3)"/><ellipse cx="196.3" cy="52.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(134 196.3 52.3)"/><ellipse cx="151.7" cy="115.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(6 151.7 115.2)"/><ellipse cx="150.9" cy="42.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(157 150.9 42.5)"/><ellipse cx="203.0" cy="148.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(82 203.0 148.2)"/><ellipse cx="189.7" cy="81.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(17 189.7 81.5)"/><ellipse cx="144.0" cy="165.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(128 144.0 165.7)"/><ellipse cx="200.6" cy="185.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(177 200.6 185.7)"/><ellipse cx="131.5" cy="176.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(78 131.5 176.0)"/><ellipse cx="181.1" cy="180.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(170 181.1 180.7)"/><ellipse cx="155.2" cy="119.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(42 155.2 119.2)"/><ellipse cx="142.0" cy="150.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(31 142.0 150.5)"/><ellipse cx="203.3" cy="49.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(31 203.3 49.4)"/><ellipse cx="201.4" cy="123.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(0 201.4 123.8)"/><ellipse cx="148.6" cy="147.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(83 148.6 147.6)"/><ellipse cx="137.5" cy="102.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(135 137.5 102.8)"/><ellipse cx="157.8" cy="89.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(59 157.8 89.6)"/><ellipse cx="126.1" cy="38.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(78 126.1 38.9)"/><ellipse cx="151.2" cy="56.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(52 151.2 56.3)"/><ellipse cx="140.2" cy="168.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(15 140.2 168.0)"/><ellipse cx="139.6" cy="164.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(120 139.6 164.7)"/><ellipse cx="123.4" cy="133.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(143 123.4 133.1)"/><ellipse cx="140.2" cy="132.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(12 140.2 132.7)"/><ellipse cx="180.5" cy="81.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(70 180.5 81.7)"/><ellipse cx="200.3" cy="145.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(85 200.3 145.3)"/><ellipse cx="184.6" cy="180.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(106 184.6 180.3)"/><ellipse cx="129.1" cy="68.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(30 129.1 68.8)"/><ellipse cx="185.9" cy="64.6" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(60 185.9 64.6)"/><ellipse cx="167.1" cy="80.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(95 167.1 80.1)"/><ellipse cx="194.3" cy="115.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(151 194.3 115.8)"/><ellipse cx="168.4" cy="186.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(170 168.4 186.4)"/><ellipse cx="142.3" cy="54.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(23 142.3 54.7)"/><ellipse cx="163.6" cy="45.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(18 163.6 45.9)"/><ellipse cx="169.8" cy="41.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(150 169.8 41.1)"/><ellipse cx="147.6" cy="73.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(22 147.6 73.1)"/><ellipse cx="136.8" cy="188.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(62 136.8 188.2)"/><ellipse cx="138.1" cy="148.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(47 138.1 148.5)"/><ellipse cx="193.1" cy="57.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(159 193.1 57.5)"/><ellipse cx="163.5" cy="151.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(0 163.5 151.1)"/><ellipse cx="205.6" cy="112.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(16 205.6 112.0)"/><ellipse cx="172.0" cy="134.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(82 172.0 134.6)"/><ellipse cx="181.2" cy="156.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(74 181.2 156.1)"/><ellipse cx="167.5" cy="165.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(133 167.5 165.9)"/><ellipse cx="189.0" cy="116.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(42 189.0 116.9)"/><ellipse cx="132.1" cy="101.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(112 132.1 101.9)"/><ellipse cx="171.3" cy="74.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(60 171.3 74.0)"/><ellipse cx="145.4" cy="118.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(154 145.4 118.9)"/><ellipse cx="166.9" cy="39.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(13 166.9 39.5)"/><ellipse cx="173.5" cy="170.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(83 173.5 170.2)"/><ellipse cx="135.7" cy="36.8" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(111 135.7 36.8)"/><ellipse cx="167.3" cy="146.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(18 167.3 146.8)"/><ellipse cx="132.3" cy="61.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(139 132.3 61.8)"/><ellipse cx="174.2" cy="146.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(37 174.2 146.7)"/><ellipse cx="126.9" cy="100.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(80 126.9 100.4)"/><ellipse cx="195.8" cy="149.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(150 195.8 149.2)"/><ellipse cx="166.9" cy="135.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(43 166.9 135.4)"/><ellipse cx="156.1" cy="72.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(176 156.1 72.7)"/><ellipse cx="181.3" cy="127.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(15 181.3 127.0)"/><ellipse cx="150.4" cy="106.8" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(55 150.4 106.8)"/><ellipse cx="185.3" cy="183.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(125 185.3 183.3)"/><ellipse cx="190.0" cy="127.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(37 190.0 127.7)"/><ellipse cx="189.0" cy="115.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(0 189.0 115.4)"/><ellipse cx="143.7" cy="172.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(23 143.7 172.9)"/><ellipse cx="157.4" cy="80.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(19 157.4 80.5)"/><ellipse cx="209.4" cy="140.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(156 209.4 140.1)"/><ellipse cx="142.7" cy="73.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(61 142.7 73.5)"/><ellipse cx="159.7" cy="47.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(93 159.7 47.4)"/><ellipse cx="149.8" cy="181.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(55 149.8 181.6)"/><ellipse cx="125.6" cy="96.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(14 125.6 96.9)"/><ellipse cx="188.4" cy="122.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(45 188.4 122.5)"/><ellipse cx="163.6" cy="95.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(97 163.6 95.3)"/><ellipse cx="156.1" cy="41.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(88 156.1 41.7)"/><ellipse cx="144.2" cy="157.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(122 144.2 157.8)"/><ellipse cx="140.3" cy="67.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(78 140.3 67.5)"/><ellipse cx="164.5" cy="110.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(173 164.5 110.5)"/><ellipse cx="138.3" cy="110.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(98 138.3 110.0)"/><ellipse cx="159.7" cy="41.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(92 159.7 41.4)"/><ellipse cx="207.4" cy="130.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(46 207.4 130.9)"/><ellipse cx="188.7" cy="113.9" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(166 188.7 113.9)"/><ellipse cx="186.4" cy="75.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(14 186.4 75.9)"/><ellipse cx="135.8" cy="180.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(35 135.8 180.1)"/><ellipse cx="190.9" cy="146.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(5 190.9 146.9)"/><ellipse cx="211.8" cy="164.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(21 211.8 164.9)"/><ellipse cx="198.9" cy="93.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(132 198.9 93.5)"/><ellipse cx="182.2" cy="81.1" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(61 182.2 81.1)"/><ellipse cx="166.0" cy="63.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(152 166.0 63.3)"/><ellipse cx="133.5" cy="66.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(108 133.5 66.5)"/><ellipse cx="165.1" cy="142.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(140 165.1 142.3)"/><ellipse cx="145.4" cy="147.2" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(96 145.4 147.2)"/><ellipse cx="135.2" cy="65.9" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(136 135.2 65.9)"/><ellipse cx="186.1" cy="97.2" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(132 186.1 97.2)"/><ellipse cx="199.9" cy="69.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(94 199.9 69.3)"/><ellipse cx="153.0" cy="67.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(6 153.0 67.7)"/><ellipse cx="189.2" cy="109.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(76 189.2 109.3)"/><ellipse cx="181.4" cy="44.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(142 181.4 44.4)"/><ellipse cx="184.0" cy="138.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(60 184.0 138.0)"/><ellipse cx="192.5" cy="74.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(30 192.5 74.5)"/><ellipse cx="157.3" cy="43.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(84 157.3 43.4)"/><ellipse cx="147.6" cy="143.7" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(40 147.6 143.7)"/><ellipse cx="205.3" cy="65.5" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(89 205.3 65.5)"/><ellipse cx="181.9" cy="71.4" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(87 181.9 71.4)"/><ellipse cx="203.7" cy="159.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(149 203.7 159.5)"/><ellipse cx="145.1" cy="167.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(179 145.1 167.1)"/><ellipse cx="204.3" cy="174.8" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(93 204.3 174.8)"/><ellipse cx="203.9" cy="176.3" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(13 203.9 176.3)"/><ellipse cx="155.9" cy="166.1" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(120 155.9 166.1)"/><ellipse cx="186.7" cy="172.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(6 186.7 172.2)"/><ellipse cx="125.2" cy="84.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(144 125.2 84.5)"/><ellipse cx="148.8" cy="161.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(164 148.8 161.2)"/><ellipse cx="164.2" cy="130.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(7 164.2 130.0)"/><ellipse cx="173.9" cy="181.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(160 173.9 181.0)"/><ellipse cx="126.3" cy="118.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(106 126.3 118.7)"/><ellipse cx="127.7" cy="44.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(115 127.7 44.7)"/><ellipse cx="156.4" cy="175.9" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(34 156.4 175.9)"/><ellipse cx="183.5" cy="76.6" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(92 183.5 76.6)"/><ellipse cx="164.6" cy="37.3" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(49 164.6 37.3)"/><ellipse cx="146.3" cy="74.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(60 146.3 74.3)"/><ellipse cx="168.9" cy="178.5" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(0 168.9 178.5)"/><ellipse cx="143.5" cy="111.0" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(140 143.5 111.0)"/><ellipse cx="129.1" cy="162.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(85 129.1 162.5)"/><ellipse cx="145.8" cy="50.2" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(80 145.8 50.2)"/><ellipse cx="194.5" cy="66.4" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(175 194.5 66.4)"/><ellipse cx="136.1" cy="64.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(40 136.1 64.0)"/><ellipse cx="152.0" cy="141.5" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(75 152.0 141.5)"/><ellipse cx="155.3" cy="78.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(171 155.3 78.6)"/><ellipse cx="170.1" cy="71.0" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(92 170.1 71.0)"/><ellipse cx="151.2" cy="61.7" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(32 151.2 61.7)"/><ellipse cx="201.0" cy="188.3" rx="3.2" ry="1.4" fill="#ffffff" transform="rotate(79 201.0 188.3)"/><ellipse cx="132.1" cy="104.4" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(123 132.1 104.4)"/><ellipse cx="125.6" cy="131.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(123 125.6 131.0)"/><ellipse cx="126.8" cy="73.6" rx="3.2" ry="1.4" fill="#e9e0cc" transform="rotate(177 126.8 73.6)"/><ellipse cx="157.3" cy="145.7" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(94 157.3 145.7)"/><ellipse cx="186.4" cy="85.0" rx="3.2" ry="1.4" fill="#f7f1e4" transform="rotate(52 186.4 85.0)"/><path d="M208 30q-12 20 0 40q12 20 -2 40q-12 20 2 40q12 20 -4 50L300 200L300 30z" fill="url(#mafe-sauce)"/><ellipse cx="250" cy="60" rx="26" ry="10" fill="#e8873a" opacity=".45"/><ellipse cx="262" cy="150" rx="22" ry="8" fill="#e8873a" opacity=".45"/><ellipse cx="236" cy="110" rx="14" ry="6" fill="#e8873a" opacity=".45"/><circle cx="265.6" cy="152.7" r="1.8" fill="#f2a65a" opacity=".7"/><circle cx="240.2" cy="136.9" r="1.9" fill="#f2a65a" opacity=".7"/><circle cx="264.9" cy="149.2" r="1.2" fill="#f2a65a" opacity=".7"/><circle cx="237.6" cy="132.0" r="1.3" fill="#f2a65a" opacity=".7"/><circle cx="226.1" cy="46.8" r="1.8" fill="#f2a65a" opacity=".7"/><circle cx="271.5" cy="171.2" r="1.2" fill="#f2a65a" opacity=".7"/><circle cx="256.3" cy="99.5" r="1.9" fill="#f2a65a" opacity=".7"/><circle cx="238.8" cy="166.3" r="2.4" fill="#f2a65a" opacity=".7"/><circle cx="217.9" cy="137.7" r="1.2" fill="#f2a65a" opacity=".7"/><circle cx="217.5" cy="82.2" r="2.0" fill="#f2a65a" opacity=".7"/><circle cx="274.6" cy="60.6" r="1.5" fill="#f2a65a" opacity=".7"/><circle cx="216.6" cy="115.5" r="1.7" fill="#f2a65a" opacity=".7"/><circle cx="237.4" cy="85.2" r="2.1" fill="#f2a65a" opacity=".7"/><circle cx="265.3" cy="81.9" r="1.5" fill="#f2a65a" opacity=".7"/><circle cx="252.1" cy="144.5" r="2.4" fill="#f2a65a" opacity=".7"/><circle cx="238.4" cy="135.2" r="1.8" fill="#f2a65a" opacity=".7"/><circle cx="263.0" cy="64.1" r="1.2" fill="#f2a65a" opacity=".7"/><circle cx="221.4" cy="166.4" r="1.4" fill="#f2a65a" opacity=".7"/><circle cx="244.3" cy="60.6" r="1.5" fill="#f2a65a" opacity=".7"/><circle cx="216.2" cy="118.6" r="1.2" fill="#f2a65a" opacity=".7"/><circle cx="252.5" cy="80.6" r="1.3" fill="#f2a65a" opacity=".7"/><circle cx="243.9" cy="92.6" r="1.4" fill="#f2a65a" opacity=".7"/><circle cx="218.1" cy="53.4" r="2.2" fill="#f2a65a" opacity=".7"/><circle cx="233.6" cy="55.2" r="1.3" fill="#f2a65a" opacity=".7"/><circle cx="244.0" cy="174.6" r="1.3" fill="#f2a65a" opacity=".7"/><path d="M226 128q14 -16 30 -6q10 8 2 20q-14 10 -30 2z" fill="#dfe9b0" stroke="#b6cf7a" stroke-width="1.5"/><path d="M230 132q12 -4 24 2" stroke="#b6cf7a" stroke-width="1.2" fill="none"/><g transform="rotate(-15 246 74)"><path d="M231 66q10 -8 26 -2q8 8 2 18q-12 8 -26 2q-8 -8 -2 -18z" fill="#6e2e12"/><path d="M238 68q8 -4 16 0" stroke="#a5522a" stroke-width="3" fill="none" stroke-linecap="round"/></g><g transform="rotate(20 268 108)"><path d="M253 100q10 -8 26 -2q8 8 2 18q-12 8 -26 2q-8 -8 -2 -18z" fill="#6e2e12"/><path d="M260 102q8 -4 16 0" stroke="#a5522a" stroke-width="3" fill="none" stroke-linecap="round"/></g><g transform="rotate(10 238 160)"><path d="M223 152q10 -8 26 -2q8 8 2 18q-12 8 -26 2q-8 -8 -2 -18z" fill="#6e2e12"/><path d="M230 154q8 -4 16 0" stroke="#a5522a" stroke-width="3" fill="none" stroke-linecap="round"/></g><g transform="rotate(-30 222 96)"><path d="M207 88q10 -8 26 -2q8 8 2 18q-12 8 -26 2q-8 -8 -2 -18z" fill="#6e2e12"/><path d="M214 90q8 -4 16 0" stroke="#a5522a" stroke-width="3" fill="none" stroke-linecap="round"/></g><g transform="rotate(25 258 138)"><rect x="249" y="132" width="18" height="12" rx="3" fill="#f07a1f"/><rect x="252" y="134" width="10" height="4" rx="2" fill="#ffc27d" opacity=".7"/></g><g transform="rotate(-20 276 74)"><rect x="267" y="68" width="18" height="12" rx="3" fill="#f2a03d"/><rect x="270" y="70" width="10" height="4" rx="2" fill="#ffc27d" opacity=".7"/></g><g transform="rotate(10 230 52)"><rect x="221" y="46" width="18" height="12" rx="3" fill="#f07a1f"/><rect x="224" y="48" width="10" height="4" rx="2" fill="#ffc27d" opacity=".7"/></g><g transform="rotate(-35 282 160)"><rect x="273" y="154" width="18" height="12" rx="3" fill="#f2a03d"/><rect x="276" y="156" width="10" height="4" rx="2" fill="#ffc27d" opacity=".7"/></g><g transform="rotate(40 214 140)"><rect x="205" y="134" width="18" height="12" rx="3" fill="#f07a1f"/><rect x="208" y="136" width="10" height="4" rx="2" fill="#ffc27d" opacity=".7"/></g><g transform="rotate(-20 286 124)"><rect x="276" y="117" width="20" height="14" rx="6" fill="#4b2b4f"/><rect x="279" y="119" width="14" height="5" rx="2.5" fill="#8a6a7a" opacity=".7"/></g><ellipse cx="275.7" cy="108.0" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(106 275.7 108.0)"/><ellipse cx="239.6" cy="117.8" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(142 239.6 117.8)"/><ellipse cx="219.0" cy="116.6" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(168 219.0 116.6)"/><ellipse cx="272.9" cy="77.8" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(48 272.9 77.8)"/><ellipse cx="280.7" cy="157.4" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(113 280.7 157.4)"/><ellipse cx="255.0" cy="167.3" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(12 255.0 167.3)"/><ellipse cx="227.3" cy="48.5" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(43 227.3 48.5)"/><ellipse cx="252.7" cy="132.7" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(69 252.7 132.7)"/><ellipse cx="240.1" cy="143.0" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(79 240.1 143.0)"/><ellipse cx="219.4" cy="105.6" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(53 219.4 105.6)"/><ellipse cx="219.5" cy="92.4" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(134 219.5 92.4)"/><ellipse cx="233.5" cy="76.9" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(126 233.5 76.9)"/><ellipse cx="242.9" cy="149.4" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(170 242.9 149.4)"/><ellipse cx="268.7" cy="173.2" rx="2.6" ry="1.5" fill="#3f8f2a" transform="rotate(25 268.7 173.2)"/></g><path d="M180 92a20 20 0 0 1 34 -18z" fill="#7cb518"/><path d="M184 90a15 15 0 0 1 26 -14z" fill="#d4ee8f"/><line x1="197" y1="83" x2="188.8" y2="71.7" stroke="#a6cc4e" stroke-width="1"/><line x1="197" y1="83" x2="194.5" y2="69.2" stroke="#a6cc4e" stroke-width="1"/><line x1="197" y1="83" x2="200.7" y2="69.5" stroke="#a6cc4e" stroke-width="1"/><path d="M214 118q8 -4 12 6q-2 8 -10 4z" fill="#d62828"/><path d="M216 117l-3 -5" stroke="#3f8f2a" stroke-width="2" stroke-linecap="round"/><path class="vapeur v1" d="M232 60q-8 -10 0 -20t0 -22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/><path class="vapeur v2" d="M252 60q-8 -10 0 -20t0 -22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/><path class="vapeur v3" d="M272 60q-8 -10 0 -20t0 -22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/><ellipse cx="352" cy="56" rx="36" ry="34" fill="#2a0e03" opacity=".3"/><circle cx="348" cy="48" r="36" fill="#2b2622"/><circle cx="348" cy="48" r="29" fill="url(#mafe-sauce)"/><path d="M334 40q10 -8 22 -2q6 8 0 14q-12 6 -22 0q-4 -6 0 -12z" fill="#6e2e12"/><ellipse cx="358" cy="60" rx="9" ry="4" fill="#e8873a" opacity=".5"/><path d="M360 36L392 4" stroke="#c9c2b8" stroke-width="5" stroke-linecap="round"/><rect width="400" height="210" fill="url(#mafe-vignette)"/></svg>
   </template>
   <template id="illustration-finance">
     <svg class="illustration" viewBox="0 0 400 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="fin-fond" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb347"/><stop offset="1" stop-color="#e8590c"/></linearGradient><radialGradient id="fin-cochon" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#e0a100"/></radialGradient><radialGradient id="fin-piece" cx="35%" cy="35%" r="70%"><stop offset="0" stop-color="#fff1a8"/><stop offset="1" stop-color="#d99a00"/></radialGradient></defs><rect width="400" height="210" fill="url(#fin-fond)"/><circle cx="30" cy="30" r="40" fill="#fff" opacity=".1"/><circle cx="380" cy="40" r="55" fill="#fff" opacity=".1"/><circle cx="340" cy="200" r="40" fill="#fff" opacity=".1"/><circle cx="60" cy="200" r="30" fill="#fff" opacity=".1"/><g transform="rotate(-14 95 168)"><rect x="40" y="140" width="110" height="56" rx="6" fill="#2f9e5b" stroke="#1f6e3f" stroke-width="2"/><rect x="48" y="148" width="94" height="40" rx="4" fill="none" stroke="#b9e6c6" stroke-width="1.5"/><circle cx="95" cy="168" r="13" fill="#b9e6c6"/><text x="95" y="173" font-family="Arial" font-weight="700" font-size="13" text-anchor="middle" fill="#1f6e3f">F</text></g><g transform="rotate(-4 107 178)"><rect x="52" y="150" width="110" height="56" rx="6" fill="#2f9e5b" stroke="#1f6e3f" stroke-width="2"/><rect x="60" y="158" width="94" height="40" rx="4" fill="none" stroke="#b9e6c6" stroke-width="1.5"/><circle cx="107" cy="178" r="13" fill="#b9e6c6"/><text x="107" y="183" font-family="Arial" font-weight="700" font-size="13" text-anchor="middle" fill="#1f6e3f">F</text></g><g transform="rotate(-7 115 85)"><rect x="54" y="24" width="124" height="128" rx="10" fill="#7a2e0e" opacity=".35" transform="translate(5 6)"/><rect x="54" y="24" width="124" height="128" rx="10" fill="#fffaf0"/><rect x="54" y="24" width="124" height="26" rx="10" fill="#1f8a4c"/><rect x="54" y="40" width="124" height="10" fill="#1f8a4c"/><text x="116" y="42" font-family="Arial" font-weight="700" font-size="13" text-anchor="middle" fill="#fff">BUDGET</text><path d="M64 66l3 3l6 -7" stroke="#1f8a4c" stroke-width="2.2" fill="none" stroke-linecap="round"/><rect x="80" y="62" width="70" height="6" rx="3" fill="#e9dcc6"/><path d="M64 80l3 3l6 -7" stroke="#e8590c" stroke-width="2.2" fill="none" stroke-linecap="round"/><rect x="80" y="76" width="50" height="6" rx="3" fill="#e9dcc6"/><path d="M64 94l3 3l6 -7" stroke="#1f8a4c" stroke-width="2.2" fill="none" stroke-linecap="round"/><rect x="80" y="90" width="84" height="6" rx="3" fill="#e9dcc6"/><path d="M64 108l3 3l6 -7" stroke="#e8590c" stroke-width="2.2" fill="none" stroke-linecap="round"/><rect x="80" y="104" width="36" height="6" rx="3" fill="#e9dcc6"/><rect x="120" y="134" width="8" height="10" rx="2" fill="#f2b705"/><rect x="132" y="128" width="8" height="16" rx="2" fill="#f2b705"/><rect x="144" y="122" width="8" height="22" rx="2" fill="#f2b705"/><rect x="156" y="114" width="8" height="30" rx="2" fill="#f2b705"/><path d="M118 120l12 -6l12 -6l14 -10" stroke="#1f8a4c" stroke-width="2.5" fill="none" stroke-linecap="round"/></g><ellipse cx="270" cy="182" rx="72" ry="10" fill="#7a2e0e" opacity=".3"/><rect x="232" y="150" width="15" height="30" rx="6" fill="#d99a00"/><rect x="250" y="150" width="15" height="30" rx="6" fill="#d99a00"/><rect x="288" y="150" width="15" height="30" rx="6" fill="#d99a00"/><rect x="306" y="150" width="15" height="30" rx="6" fill="#d99a00"/><path d="M330 118q22 -4 18 -18q-4 -8 -10 -2" stroke="#d99a00" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="270" cy="122" rx="66" ry="50" fill="url(#fin-cochon)"/><path d="M228 84l-6 -26l26 16z" fill="#e0a100"/><path d="M230 80l-3 -14l13 8z" fill="#ffb3a7"/><ellipse cx="208" cy="126" rx="16" ry="20" fill="#f2c040"/><circle cx="204" cy="120" r="3.5" fill="#a86b00"/><circle cx="204" cy="132" r="3.5" fill="#a86b00"/><circle cx="236" cy="104" r="5" fill="#3a1505"/><circle cx="238" cy="102" r="1.6" fill="#fff"/><ellipse cx="248" cy="124" rx="9" ry="5" fill="#ff9e8a" opacity=".6"/><rect x="256" y="72" width="34" height="7" rx="3.5" fill="#a86b00"/><ellipse cx="290" cy="104" rx="26" ry="14" fill="#fff" opacity=".25"/><g class="piece"><circle cx="273" cy="44" r="17" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="2"/><text x="273" y="50" font-family="Arial" font-weight="700" font-size="16" text-anchor="middle" fill="#8a5a00">F</text></g><ellipse cx="360" cy="186" rx="22" ry="8" fill="#d99a00"/><ellipse cx="360" cy="183" rx="22" ry="8" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="360" cy="177" rx="22" ry="8" fill="#d99a00"/><ellipse cx="360" cy="174" rx="22" ry="8" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="360" cy="168" rx="22" ry="8" fill="#d99a00"/><ellipse cx="360" cy="165" rx="22" ry="8" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="360" cy="159" rx="22" ry="8" fill="#d99a00"/><ellipse cx="360" cy="156" rx="22" ry="8" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="360" cy="150" rx="22" ry="8" fill="#d99a00"/><ellipse cx="360" cy="147" rx="22" ry="8" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="360" cy="141" rx="22" ry="8" fill="#d99a00"/><ellipse cx="360" cy="138" rx="22" ry="8" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="330" cy="190" rx="18" ry="7" fill="#d99a00"/><ellipse cx="330" cy="187" rx="18" ry="7" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="330" cy="181" rx="18" ry="7" fill="#d99a00"/><ellipse cx="330" cy="178" rx="18" ry="7" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><ellipse cx="330" cy="172" rx="18" ry="7" fill="#d99a00"/><ellipse cx="330" cy="169" rx="18" ry="7" fill="url(#fin-piece)" stroke="#b07a00" stroke-width="1"/><path d="M326 110l22 -22l14 12l26 -30" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M376 66l14 -2l-2 14z" fill="#fff"/><path d="M196 23l2 5l5 2l-5 2l-2 5l-2 -5l-5 -2l5 -2z" fill="#fff" opacity=".85"/><path d="M380 133l2 5l5 2l-5 2l-2 5l-2 -5l-5 -2l5 -2z" fill="#fff" opacity=".85"/><path d="M20 83l2 5l5 2l-5 2l-2 5l-2 -5l-5 -2l5 -2z" fill="#fff" opacity=".85"/></svg>
   </template>
-
   <!--
-    =====================================================================
-    ⚙️ LES RÉGLAGES
-    =====================================================================
-    "goatcounter" : ton code GoatCounter, pour compter les visites.
-      Exemple : si ton tableau de bord est https://didydigital.goatcounter.com
-      alors écris "didydigital". Laisse "" (vide) pour ne rien compter.
+    ⚙️ LES RÉGLAGES (modifiables sans risque)
+    "goatcounter" : ton code GoatCounter, pour compter les visites ("" = rien compter).
     "afficherCompteur" : true pour montrer "👀 … visites" en haut du site, false pour le cacher.
-    "compteurMinimum" : le compteur ne s'affiche qu'à partir de ce nombre de visites
-      (ex. 100 pour attendre d'avoir 100 visites). 0 = toujours affiché.
+    "compteurMinimum" : le compteur ne s'affiche qu'à partir de ce nombre de visites.
   -->
   <script type="application/json" id="reglages">
   {
@@ -821,105 +483,78 @@
   </script>
 
   <!--
-    =====================================================================
-    📚 LA LISTE DES EBOOKS EST DANS LE FICHIER "ebooks.json"
-    =====================================================================
-    Pour ajouter, modifier ou supprimer un ebook, le plus simple est
-    d'ouvrir la page "gestion-ebooks.html" de ton site : elle prépare
-    la nouvelle liste pour toi, tu n'as plus qu'à la coller dans ebooks.json.
+    📚 LA LISTE DES EBOOKS EST DANS LE FICHIER "ebooks.json".
+    Le plus simple pour la modifier : la page "gestion-ebooks.html".
   -->
 
   <!-- ===== LE SCRIPT DU SITE (ne pas modifier sans recalculer l'empreinte CSP) ===== -->
   <script>
     (function () {
       "use strict";
+      document.documentElement.classList.add("js");
 
-      // Numéros WhatsApp : indicatif 226 (Burkina Faso) + numéro, sans "+" ni espaces
       // "1" = compte Moov Money, "2" = compte Orange Money
       var NUMEROS = { "1": "22603078805", "2": "22605564451" };
       var MESSAGE_GENERAL = "Bonjour Didy Digital ! J'aimerais avoir des informations sur vos ebooks.";
+      var COULEURS = { orange: "orange", vert: "vert", hibiscus: "hibiscus", cacao: "cacao", soleil: "soleil", terre: "terre", dore: "soleil" };
+      var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       function lienWhatsApp(message, quel) {
         return "https://wa.me/" + (NUMEROS[quel] || NUMEROS["1"]) + "?text=" + encodeURIComponent(message);
       }
-
-      // Lit un bloc de données JSON de la page, sans jamais l'exécuter
       function lireDonnees(id, parDefaut) {
-        try { return JSON.parse(document.getElementById(id).textContent); }
-        catch (e) { return parDefaut; }
+        try { return JSON.parse(document.getElementById(id).textContent); } catch (e) { return parDefaut; }
       }
-
-      // Crée un élément avec du texte. On utilise textContent (jamais innerHTML) :
-      // le texte est affiché tel quel, aucun code caché ne peut s'exécuter.
+      // textContent uniquement (jamais innerHTML) : aucun code caché ne peut s'exécuter
       function element(balise, classe, texte) {
         var el = document.createElement(balise);
         if (classe) el.className = classe;
         if (texte) el.textContent = texte;
         return el;
       }
-
-      // N'accepte que les liens sécurisés "https://" (bloque tout lien piégé du type "javascript:")
+      // N'accepte que les liens "https://" (bloque les liens piégés)
       function lienSecurise(url) {
-        try {
-          var u = new URL(String(url || ""));
-          return u.protocol === "https:" ? u.href : null;
-        } catch (e) { return null; }
+        try { var u = new URL(String(url || "")); return u.protocol === "https:" ? u.href : null; } catch (e) { return null; }
       }
-
       function lienExterne(classe) {
         var a = element("a", classe);
         a.target = "_blank";
         a.rel = "noopener noreferrer";
         return a;
       }
-
-      function iconeWhatsApp() {
-        var ns = "http://www.w3.org/2000/svg";
-        var svg = document.createElementNS(ns, "svg");
-        svg.setAttribute("viewBox", "0 0 24 24");
-        svg.setAttribute("fill", "currentColor");
-        svg.setAttribute("aria-hidden", "true");
-        var use = document.createElementNS(ns, "use");
-        use.setAttribute("href", "#icone-wa");
-        svg.appendChild(use);
-        return svg;
-      }
-
-      // ----- 1. Les cartes des ebooks (lues dans le fichier ebooks.json) -----
-      var COULEURS = { orange: "orange", vert: "vert", hibiscus: "hibiscus", cacao: "cacao", soleil: "soleil", terre: "terre", dore: "soleil" };
-
-      // N'accepte que les photos du dossier images/ du site (ex. "images/mafe.jpg")
+      // N'accepte que les photos du dossier images/ (ex. "images/mafe.jpg")
       function cheminPhoto(chemin) {
         var c = String(chemin || "").trim();
         return /^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(c) ? c : null;
       }
-
       // Le "code" de l'ebook pour ouvrir Didy directement sur lui (ex. vendeur.html?ebook=argent)
       function codeEbook(e) {
         var id = String(e.id || "").trim().toLowerCase();
         if (/^[a-z0-9-]{1,40}$/.test(id)) return id;
-        return String(e.nom || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        return String(e.nom || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
           .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
       }
 
-      var calmeCouvertures = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
+      // ----- 1. Une carte d'ebook -----
       function creerCarte(ebook) {
         var lienDidy = "vendeur.html?ebook=" + encodeURIComponent(codeEbook(ebook));
+        var chariow = lienSecurise(ebook.lienChariow);
         var carte = element("article", "carte revele");
 
-        var couleur = COULEURS[ebook.couleur] || "orange";
-        var couverture = element("div", "couverture theme-" + couleur);
-        // Le "cadre" garde l'image à l'intérieur de la couverture quand elle zoome ou flotte
+        // Couverture : photo, dessin ou icône
+        var couverture = element("div", "couverture theme-" + (COULEURS[ebook.couleur] || "orange"));
         var cadre = element("div", "couverture-cadre");
-        var modele = ebook.illustration ? document.getElementById("illustration-" + ebook.illustration) : null;
         var photo = cheminPhoto(ebook.image);
+        var modele = ebook.illustration ? document.getElementById("illustration-" + ebook.illustration) : null;
         if (photo) {
-          // Une photo du dossier images/ du site
-          // "imageEntiere": true = image montrée en entier (ex. une boîte 3D sur fond blanc)
           var entiere = ebook.imageEntiere === true;
+          if (entiere) {
+            couverture.classList.add("couverture-claire");
+            var flou = element("img", "couverture-flou");
+            flou.src = photo; flou.alt = ""; flou.loading = "lazy"; flou.decoding = "async";
+            couverture.appendChild(flou);
+          }
           var img = element("img", entiere ? "photo photo-entiere" : "photo");
-          if (entiere) couverture.classList.add("couverture-claire");
           img.src = photo;
           img.alt = String(ebook.nom || "");
           img.loading = "lazy";
@@ -933,212 +568,202 @@
           cadre.appendChild(icone);
         }
         couverture.appendChild(cadre);
-        couverture.appendChild(element("div", "prix", ebook.prix));
-        // Toucher la couverture ouvre la discussion avec Didy sur cet ebook
         var lienCouverture = element("a", "couverture-lien");
         lienCouverture.href = lienDidy;
-        lienCouverture.setAttribute("aria-label", "Discuter avec Didy de l'ebook « " + ebook.nom + " »");
+        lienCouverture.setAttribute("aria-label", "Découvrir « " + ebook.nom + " » avec Didy");
         couverture.appendChild(lienCouverture);
         carte.appendChild(couverture);
+        activer3D(carte, couverture, cadre);
 
-        // Quand on touche la couverture : léger zoom, ombre colorée,
-        // et inclinaison 3D vers le doigt avec un reflet de lumière
+        // Texte
+        var contenu = element("div", "contenu");
+        var lignePrix = element("div", "ligne-prix");
+        lignePrix.appendChild(element("span", "prix", ebook.prix));
+        lignePrix.appendChild(element("span", "paiement-unique", "Paiement unique"));
+        contenu.appendChild(lignePrix);
+        contenu.appendChild(element("h3", "", ebook.nom));
+
+        var description = element("p", "description", ebook.description);
+        contenu.appendChild(description);
+        var lirePlus = element("button", "lire-plus", "Lire la suite");
+        lirePlus.type = "button";
+        lirePlus.hidden = true;
+        lirePlus.addEventListener("click", function () {
+          var ouverte = description.classList.toggle("ouverte");
+          lirePlus.textContent = ouverte ? "Réduire" : "Lire la suite";
+        });
+        contenu.appendChild(lirePlus);
+        window.requestAnimationFrame(function () {
+          if (description.scrollHeight > description.clientHeight + 2) lirePlus.hidden = false;
+        });
+
+        if (Array.isArray(ebook.apercu) && ebook.apercu.length) {
+          var liste = element("ul", "apercu");
+          ebook.apercu.slice(0, 3).forEach(function (x) { liste.appendChild(element("li", "", String(x))); });
+          contenu.appendChild(liste);
+        }
+
+        var reperes = element("ul", "reperes");
+        ["📥 Téléchargeable", "📱 Sur téléphone", "🔒 Paiement sécurisé"].forEach(function (r) { reperes.appendChild(element("li", "", r)); });
+        contenu.appendChild(reperes);
+
+        // Boutons
+        var boutons = element("div", "boutons-carte");
+        var acheter;
+        if (chariow) {
+          acheter = lienExterne("bouton bouton-acheter");
+          acheter.href = chariow;
+          acheter.appendChild(element("span", "", "🛒 Acheter maintenant"));
+        } else {
+          acheter = element("a", "bouton bouton-acheter");
+          acheter.href = lienDidy;
+          acheter.appendChild(element("span", "", "🛒 Commander"));
+        }
+        boutons.appendChild(acheter);
+        var didy = element("a", "bouton bouton-didy");
+        didy.href = lienDidy;
+        didy.appendChild(element("span", "", "💬 Une question ? Demandez à Didy"));
+        boutons.appendChild(didy);
+        contenu.appendChild(boutons);
+
+        // Mobile Money (replié)
+        var autres = element("details", "autres");
+        autres.appendChild(element("summary", "", "Payer par Moov Money ou Orange Money"));
+        var grille = element("div", "mm-grille");
+        [{ nom: "Moov Money", classe: "moov", numero: "1" }, { nom: "Orange Money", classe: "orange-money", numero: "2" }].forEach(function (m) {
+          var b = lienExterne("bouton bouton-mm " + m.classe);
+          b.href = lienWhatsApp("Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par " + m.nom + ".", m.numero);
+          b.appendChild(element("span", "", m.nom));
+          b.appendChild(element("small", "", "via WhatsApp"));
+          grille.appendChild(b);
+        });
+        autres.appendChild(grille);
+        autres.appendChild(element("p", "note-securite", "🔒 Nous ne vous demanderons jamais votre code secret."));
+        contenu.appendChild(autres);
+
+        carte.appendChild(contenu);
+        return carte;
+      }
+
+      // ----- 2. La 3D : la couverture s'incline vers le doigt, avec un reflet -----
+      function activer3D(carte, couverture, cadre) {
         var minuterie = null, image3d = cadre.firstElementChild, enCours = false, dernier = null;
         function incliner() {
           enCours = false;
           if (!dernier || !image3d) return;
           var r = couverture.getBoundingClientRect();
-          var x = Math.min(Math.max((dernier.clientX - r.left) / r.width, 0), 1);
-          var y = Math.min(Math.max((dernier.clientY - r.top) / r.height, 0), 1);
+          var x = Math.min(Math.max((dernier.x - r.left) / r.width, 0), 1);
+          var y = Math.min(Math.max((dernier.y - r.top) / r.height, 0), 1);
           image3d.style.setProperty("--incl-y", ((x - 0.5) * 14).toFixed(1) + "deg");
           image3d.style.setProperty("--incl-x", ((0.5 - y) * 10).toFixed(1) + "deg");
           cadre.style.setProperty("--lumiere-x", Math.round(x * 100) + "%");
           cadre.style.setProperty("--lumiere-y", Math.round(y * 100) + "%");
         }
         function suivre(ev) {
-          if (calmeCouvertures) return;
-          dernier = { clientX: ev.clientX, clientY: ev.clientY };
+          if (calme) return;
+          dernier = { x: ev.clientX, y: ev.clientY };
           if (!enCours) { enCours = true; window.requestAnimationFrame(incliner); }
         }
-        function redresser() {
-          if (!image3d) return;
-          image3d.style.setProperty("--incl-x", "0deg");
-          image3d.style.setProperty("--incl-y", "0deg");
-        }
-        couverture.addEventListener("pointerdown", function (ev) {
-          window.clearTimeout(minuterie);
-          carte.classList.add("touche");
-          suivre(ev);
-        }, { passive: true });
+        couverture.addEventListener("pointerdown", function (ev) { window.clearTimeout(minuterie); carte.classList.add("touche"); suivre(ev); }, { passive: true });
         couverture.addEventListener("pointermove", suivre, { passive: true });
-        ["pointerup", "pointercancel", "pointerleave"].forEach(function (nomEvenement) {
-          couverture.addEventListener(nomEvenement, function () {
+        ["pointerup", "pointercancel", "pointerleave"].forEach(function (nom) {
+          couverture.addEventListener(nom, function () {
             window.clearTimeout(minuterie);
-            minuterie = window.setTimeout(function () { carte.classList.remove("touche"); redresser(); }, 450);
+            minuterie = window.setTimeout(function () {
+              carte.classList.remove("touche");
+              if (image3d) { image3d.style.setProperty("--incl-x", "0deg"); image3d.style.setProperty("--incl-y", "0deg"); }
+            }, 450);
           }, { passive: true });
         });
-
-        var contenu = element("div", "contenu");
-        contenu.appendChild(element("h3", "", ebook.nom));
-        contenu.appendChild(element("p", "", ebook.description));
-
-        // Petits repères qui rassurent avant de payer
-        var reperes = element("ul", "reperes");
-        ["📥 Téléchargeable", "📱 Lisible sur téléphone", "🔒 Paiement sécurisé"].forEach(function (r) {
-          reperes.appendChild(element("li", "", r));
-        });
-        contenu.appendChild(reperes);
-
-        var boutonDidy = element("a", "bouton bouton-didy");
-        boutonDidy.href = lienDidy;
-        boutonDidy.appendChild(element("span", "", "💬 Discuter avec Didy de cet ebook"));
-        contenu.appendChild(boutonDidy);
-
-        if (Array.isArray(ebook.apercu) && ebook.apercu.length) {
-          contenu.appendChild(element("div", "apercu-titre", ebook.apercuTitre || "Au menu :"));
-          var liste = element("ul", "apercu");
-          ebook.apercu.forEach(function (nom) { liste.appendChild(element("li", "", String(nom))); });
-          contenu.appendChild(liste);
-        }
-
-        // ----- Le choix du paiement -----
-        var paiement = element("div", "paiement");
-        paiement.appendChild(element("div", "paiement-titre", "Comment souhaitez-vous payer ?"));
-
-        // Option 1 : payer en ligne sur Chariow (seulement si un lien https:// est renseigné)
-        var chariow = lienSecurise(ebook.lienChariow);
-        if (chariow) {
-          paiement.appendChild(element("div", "option-titre", "Paiement en ligne"));
-          var boutonChariow = lienExterne("bouton bouton-chariow");
-          boutonChariow.href = chariow;
-          boutonChariow.appendChild(element("span", "", "🛒 Acheter sur Chariow"));
-          paiement.appendChild(boutonChariow);
-          paiement.appendChild(element("p", "note", "Page de paiement sécurisée · ebook reçu automatiquement"));
-          paiement.appendChild(element("div", "ou", "OU"));
-        }
-
-        // Option 2 : payer par Mobile Money en écrivant sur WhatsApp
-        paiement.appendChild(element("div", "option-titre", "Mobile Money via WhatsApp"));
-        var grille = element("div", "mm-grille");
-        [
-          { nom: "Moov Money", classe: "moov", numero: "1" },
-          { nom: "Orange Money", classe: "orange-money", numero: "2" }
-        ].forEach(function (moyen) {
-          var b = lienExterne("bouton bouton-mm " + moyen.classe);
-          b.href = lienWhatsApp(
-            "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix +
-            "). Je veux payer par " + moyen.nom + ".", moyen.numero);
-          b.appendChild(element("span", "", moyen.nom));
-          b.appendChild(element("small", "", "via WhatsApp"));
-          grille.appendChild(b);
-        });
-        paiement.appendChild(grille);
-        paiement.appendChild(element("p", "confiance", "🔒 Nous ne vous demanderons jamais votre code secret."));
-        contenu.appendChild(paiement);
-
-        carte.appendChild(contenu);
-        return carte;
       }
 
-      // ----- 2. Tous les autres liens WhatsApp de la page -----
+      // ----- 3. Les couvertures en éventail dans l'en-tête -----
+      function remplirVitrine(ebooks) {
+        var vitrine = document.getElementById("vitrine");
+        var choix = ebooks.filter(function (e) { return cheminPhoto(e.image) && e.imageEntiere === true; });
+        if (choix.length < 3) choix = choix.concat(ebooks.filter(function (e) { return cheminPhoto(e.image) && e.imageEntiere !== true; }));
+        choix = choix.slice(0, 3);
+        if (choix.length < 2) return;
+        choix.forEach(function (e) {
+          var img = element("img");
+          img.src = cheminPhoto(e.image);
+          img.alt = "";
+          img.decoding = "async";
+          vitrine.appendChild(img);
+        });
+        vitrine.hidden = false;
+      }
+
+      // ----- 4. Liens WhatsApp, année -----
       document.querySelectorAll("[data-whatsapp]").forEach(function (lien) {
         lien.href = lienWhatsApp(MESSAGE_GENERAL, lien.getAttribute("data-whatsapp"));
       });
       document.getElementById("annee").textContent = new Date().getFullYear();
 
-      // ----- 3. Barre de progression en haut de l'écran -----
+      // ----- 5. Barre de progression -----
       var barre = document.getElementById("progression");
-      var enAttente = false;
+      var attente = false;
       function majProgression() {
         var max = document.documentElement.scrollHeight - window.innerHeight;
         barre.style.transform = "scaleX(" + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ")";
-        enAttente = false;
+        attente = false;
       }
       window.addEventListener("scroll", function () {
-        if (!enAttente) { enAttente = true; window.requestAnimationFrame(majProgression); }
+        if (!attente) { attente = true; window.requestAnimationFrame(majProgression); }
       }, { passive: true });
       majProgression();
 
-      // ----- 4. Les chiffres qui comptent jusqu'à leur valeur -----
-      var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      function compter(el) {
-        var cible = parseInt(el.getAttribute("data-compteur"), 10) || 0;
-        var suffixe = el.getAttribute("data-suffixe") || "";
-        if (calme) { el.textContent = cible + suffixe; return; }
-        var debut = null;
-        function pas(t) {
-          if (!debut) debut = t;
-          var p = Math.min((t - debut) / 1600, 1);
-          el.textContent = Math.round(cible * (1 - Math.pow(1 - p, 3))) + suffixe;
-          if (p < 1) window.requestAnimationFrame(pas);
-        }
-        window.requestAnimationFrame(pas);
-      }
-
-      // ----- 5. Les éléments apparaissent quand on fait défiler la page -----
-      var aReveler = document.querySelectorAll(".revele");
+      // ----- 6. Apparition au défilement -----
       var observateur = null;
       if ("IntersectionObserver" in window && !calme) {
         observateur = new IntersectionObserver(function (entrees) {
           entrees.forEach(function (entree) {
             if (!entree.isIntersecting) return;
             entree.target.classList.add("visible");
-            entree.target.querySelectorAll("[data-compteur]").forEach(compter);
             observateur.unobserve(entree.target);
           });
-        }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
-        aReveler.forEach(function (el) {
-          var frere = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
-          el.style.transitionDelay = Math.min(frere, 4) * 0.12 + "s";
-          observateur.observe(el);
-        });
-      } else {
-        aReveler.forEach(function (el) { el.classList.add("visible"); });
+        }, { threshold: 0.12, rootMargin: "0px 0px -30px 0px" });
       }
-
       function reveler(el, position) {
         if (observateur) {
-          el.style.transitionDelay = Math.min(position, 4) * 0.12 + "s";
+          el.style.transitionDelay = Math.min(position, 3) * 0.1 + "s";
           observateur.observe(el);
         } else {
           el.classList.add("visible");
         }
       }
+      document.querySelectorAll(".revele").forEach(function (el) {
+        var rang = el.parentElement ? Array.prototype.indexOf.call(el.parentElement.children, el) : 0;
+        reveler(el, rang);
+      });
 
-      // ----- Chargement de la liste des ebooks -----
+      // ----- 7. Chargement des ebooks -----
       var zone = document.getElementById("liste-ebooks");
       fetch("ebooks.json", { cache: "no-cache", credentials: "same-origin" })
         .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
         .then(function (ebooks) {
           if (!Array.isArray(ebooks)) throw new Error("format");
+          ebooks = ebooks.filter(function (e) { return e && e.nom; });
           ebooks.forEach(function (ebook, i) {
-            if (!ebook || !ebook.nom) return;
             var carte = creerCarte(ebook);
             zone.appendChild(carte);
-            reveler(carte, i);
+            reveler(carte, i % 3);
           });
-          var nombre = document.getElementById("nombre-ebooks");
-          nombre.setAttribute("data-compteur", String(zone.querySelectorAll(".carte").length));
-          nombre.textContent = String(zone.querySelectorAll(".carte").length);
-          if (nombre.closest(".visible")) compter(nombre);
+          remplirVitrine(ebooks);
           majProgression();
         })
         .catch(function () {
-          zone.appendChild(element("div", "erreur",
-            "Oups, impossible d'afficher les ebooks pour le moment. Recharge la page, ou écris-nous sur WhatsApp."));
+          zone.appendChild(element("div", "erreur", "Impossible d'afficher les ebooks pour le moment. Rechargez la page, ou écrivez-nous sur WhatsApp."));
         });
 
-      // ----- 6. Compteur de visites GoatCounter (sans cookie, sans donnée personnelle) -----
+      // ----- 8. Compteur de visites GoatCounter (sans cookie, sans donnée personnelle) -----
       var reglages = lireDonnees("reglages", {}) || {};
       var code = String(reglages.goatcounter || "").trim().toLowerCase();
       if (/^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
         var pixel = new Image(1, 1);
         pixel.referrerPolicy = "no-referrer";
-        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) +
-                    "&t=" + encodeURIComponent(document.title);
+        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) + "&t=" + encodeURIComponent(document.title);
       }
-
-      // ----- 7. Afficher le nombre de visites en haut du site -----
       if (/^[a-z0-9-]{2,50}$/.test(code) && reglages.afficherCompteur === true && window.fetch) {
         var minimum = Number(reglages.compteurMinimum) || 0;
         fetch("https://" + code + ".goatcounter.com/counter/TOTAL.json", { credentials: "omit", referrerPolicy: "no-referrer" })
@@ -1149,7 +774,7 @@
             document.getElementById("nombre-visites").textContent = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             document.getElementById("compteur-visites").hidden = false;
           })
-          .catch(function () { /* en cas de problème, le compteur reste simplement caché */ });
+          .catch(function () { /* en cas de problème, le compteur reste caché */ });
       }
     })();
   </script>
