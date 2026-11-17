@@ -15,7 +15,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-0mkQ7YGBV58H748/nx8HPU+HaHbE6UBVRnFgOHAV/TM='; script-src 'sha256-qhDz+dXmN7vFZ+faFfGEYrIb/IsMwMx1uXn2YcVMzeU='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-LyYwvoT+Q7JhxsPhbx/zc/iAzb1eCse8MzNkLNZ74ow='; script-src 'sha256-BLf561+0LRnULPO1LNtyDqDt7LCY0m8OCd/1grwKNnI='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -204,7 +204,7 @@
     .bouton-soleil:hover { transform: translateY(-3px); box-shadow: 0 16px 36px rgba(251, 191, 36, 0.5); }
     .bouton-contour { color: var(--creme); border: 2px solid rgba(255, 250, 242, 0.5); }
     .bouton-contour:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
-    .bouton-wa { width: 100%; margin-top: auto; border-radius: 18px; background: linear-gradient(135deg, var(--wa), var(--emeraude)); color: var(--blanc); box-shadow: 0 10px 24px rgba(5, 150, 105, 0.35); }
+    .bouton-wa { width: 100%; border-radius: 18px; background: linear-gradient(135deg, var(--wa), var(--emeraude)); color: var(--blanc); box-shadow: 0 10px 24px rgba(5, 150, 105, 0.35); }
     .bouton-wa:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(5, 150, 105, 0.45); }
 
     /* La petite souris qui invite à descendre */
@@ -342,6 +342,33 @@
       font-weight: 700;
     }
 
+    /* ===== LE CHOIX DU PAIEMENT DANS CHAQUE CARTE ===== */
+    .paiement { margin-top: auto; padding-top: 18px; border-top: 1px dashed #ecd3ae; }
+    .paiement-titre { margin: 0 0 12px; font-family: var(--titres); font-weight: 800; font-size: 1.05rem; color: var(--cacao); }
+    .option-titre { margin: 0 0 8px; font-weight: 800; font-size: 0.85rem; color: var(--texte-doux); }
+    .bouton-chariow { width: 100%; border-radius: 18px; background: var(--cacao); color: var(--soleil); box-shadow: 0 10px 24px rgba(35, 17, 10, 0.25); }
+    .bouton-chariow:hover { transform: translateY(-3px); }
+    .note { margin: 8px 0 0; font-size: 0.82rem; color: var(--texte-doux); text-align: center; }
+    .ou { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--texte-doux); font-weight: 800; font-size: 0.85rem; }
+    .ou::before, .ou::after { content: ""; flex: 1; height: 1px; background: #ecd3ae; }
+    .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .bouton-mm {
+      flex-direction: column;
+      gap: 2px;
+      min-height: 64px;
+      padding: 10px 8px;
+      border-radius: 18px;
+      color: var(--blanc);
+      font-size: 1rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .bouton-mm small { font-family: var(--corps); font-weight: 600; font-size: 0.75rem; opacity: 0.9; }
+    .bouton-mm:hover { transform: translateY(-3px); }
+    .moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); box-shadow: 0 10px 22px rgba(11, 61, 122, 0.3); }
+    .orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); box-shadow: 0 10px 22px rgba(230, 92, 0, 0.3); }
+    .confiance { margin: 14px 0 0; padding: 10px 12px; border-radius: 14px; background: #ecfdf5; color: #065f46; font-size: 0.82rem; font-weight: 600; text-align: center; }
+
     .erreur { background: var(--blanc); border-radius: 28px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
 
     /* ===== COMMENT ÇA MARCHE ===== */
@@ -468,6 +495,7 @@
     .pied .marque { margin: 0 0 6px; font-family: var(--titres); font-size: 1.8rem; font-weight: 800; color: var(--soleil); }
     .pied p { margin: 8px 0; }
     .numeros { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 18px 0; }
+    .numeros a small { font-weight: 600; opacity: 0.75; }
     .numeros a {
       display: inline-flex;
       align-items: center;
@@ -564,8 +592,8 @@
   <!-- ===== BANDE QUI DÉFILE (le texte est écrit deux fois pour une boucle sans fin) ===== -->
   <div class="bande-cadre" aria-hidden="true"><div class="bande">
     <div class="bande-piste">
-      <span>Budget malin</span><span>Épargne</span><span>Mafé</span><span>Riz gras</span><span>Tô sauce gombo</span><span>Jus de bissap</span><span>Commande sur WhatsApp</span>
-      <span>Budget malin</span><span>Épargne</span><span>Mafé</span><span>Riz gras</span><span>Tô sauce gombo</span><span>Jus de bissap</span><span>Commande sur WhatsApp</span>
+      <span>Budget malin</span><span>Épargne</span><span>Mafé</span><span>Riz gras</span><span>Tô sauce gombo</span><span>Jus de bissap</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
+      <span>Budget malin</span><span>Épargne</span><span>Mafé</span><span>Riz gras</span><span>Tô sauce gombo</span><span>Jus de bissap</span><span>Moov Money</span><span>Orange Money</span><span>Chariow</span>
     </div>
   </div></div>
 
@@ -576,7 +604,7 @@
         <div class="entete-section revele">
           <span class="eyebrow">Nos ebooks</span>
           <h2>Apprends, économise, <em>régale-toi.</em></h2>
-          <p>Choisis ton ebook et commande-le en un clic sur WhatsApp.</p>
+          <p>Choisis ton ebook, puis paie comme tu préfères : en ligne sur Chariow, ou par Mobile Money sur WhatsApp.</p>
         </div>
         <div class="grille" id="liste-ebooks">
           <noscript>
@@ -595,8 +623,8 @@
         </div>
         <div class="etapes">
           <div class="etape revele"><h3>Choisis ton ebook</h3><p>Regarde les ebooks et choisis celui qui te plaît.</p></div>
-          <div class="etape revele"><h3>Écris-nous sur WhatsApp</h3><p>Clique sur « Commander » : le message est déjà écrit, tu n'as qu'à l'envoyer.</p></div>
-          <div class="etape revele"><h3>Reçois ton ebook</h3><p>On te répond sur WhatsApp pour finaliser ta commande et t'envoyer ton ebook.</p></div>
+          <div class="etape revele"><h3>Choisis comment payer</h3><p>En ligne sur Chariow, ou par Moov Money ou Orange Money en nous écrivant sur WhatsApp.</p></div>
+          <div class="etape revele"><h3>Reçois ton ebook</h3><p>Sur Chariow, tu le reçois automatiquement. Sur WhatsApp, on te l'envoie dès que ton paiement est confirmé.</p></div>
         </div>
       </div>
     </section>
@@ -607,7 +635,7 @@
         <div class="chiffres">
           <div class="chiffre revele"><strong data-compteur="2">2</strong><span>ebooks pratiques</span></div>
           <div class="chiffre revele"><strong data-compteur="400">400</strong><span>recettes d'Afrique de l'Ouest</span></div>
-          <div class="chiffre revele"><strong data-compteur="100" data-suffixe=" %">100 %</strong><span>des commandes sur WhatsApp</span></div>
+          <div class="chiffre revele"><strong data-compteur="3">3</strong><span>façons de payer : Chariow, Moov Money, Orange Money</span></div>
         </div>
       </div>
     </section>
@@ -620,10 +648,11 @@
           <h2>Tu te poses <em>une question ?</em></h2>
         </div>
         <div class="faq">
-          <details class="revele"><summary>Comment je commande ?</summary><p>Clique sur le bouton vert « Commander sur WhatsApp » sous l'ebook. WhatsApp s'ouvre avec un message déjà prêt : il te suffit de l'envoyer.</p></details>
-          <details class="revele"><summary>Comment je reçois mon ebook ?</summary><p>Après ta commande, on t'explique sur WhatsApp comment finaliser, puis on t'envoie ton ebook.</p></details>
+          <details class="revele"><summary>Comment je peux payer ?</summary><p>Tu as deux choix. 1) En ligne sur Chariow : tu paies sur leur page sécurisée et tu reçois ton ebook automatiquement. 2) Par Mobile Money sur WhatsApp : choisis Moov Money (+226 03 07 88 05) ou Orange Money (+226 05 56 44 51), WhatsApp s'ouvre avec un message prêt, et on t'indique comment payer.</p></details>
+          <details class="revele"><summary>Comment je reçois mon ebook ?</summary><p>Sur Chariow, l'ebook t'est envoyé automatiquement après le paiement. Sur WhatsApp, on t'envoie le fichier dès que ton paiement est confirmé.</p></details>
+          <details class="revele"><summary>Est-ce que le paiement est sûr ?</summary><p>Oui. Ce site ne touche jamais à ton argent et ne te demande aucune information. Tu paies toi-même, dans ton application Moov Money ou Orange Money, ou sur la page sécurisée de Chariow. Nous ne te demanderons JAMAIS ton code secret. Paie uniquement aux numéros affichés sur ce site.</p></details>
           <details class="revele"><summary>Je peux le lire sur mon téléphone ?</summary><p>Oui ! Les ebooks se lisent directement sur ton téléphone, où tu veux, quand tu veux.</p></details>
-          <details class="revele"><summary>Mes informations sont-elles protégées ?</summary><p>Oui. Ce site ne te demande aucune information et ne garde aucune donnée personnelle. Tout se passe sur WhatsApp.</p></details>
+          <details class="revele"><summary>Mes informations sont-elles protégées ?</summary><p>Oui. Ce site ne te demande aucune information et ne garde aucune donnée personnelle.</p></details>
         </div>
       </div>
     </section>
@@ -643,8 +672,8 @@
     <p class="marque">Didy Digital</p>
     <p>Une question ? Écris-nous sur WhatsApp :</p>
     <div class="numeros">
-      <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05</a>
-      <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51</a>
+      <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>· Moov Money</small></a>
+      <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51 <small>· Orange Money</small></a>
     </div>
     <small>© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small>
   </footer>
@@ -687,6 +716,8 @@
     "apercu" (facultatif) : quelques exemples de contenu, affichés en petites étiquettes.
     "apercuTitre" (facultatif) : le titre au-dessus des étiquettes (par défaut "Au menu :").
     "illustration" (facultatif) : "mafe" ou "finance" affiche un dessin au lieu de l'icône.
+    "lienChariow" : colle ici le lien de la page de l'ebook sur Chariow (il doit commencer par https://).
+      Tant qu'il est vide "", le bouton Chariow ne s'affiche pas.
     Garde bien les guillemets " " autour de chaque texte.
     (Ce bloc contient seulement des données : tu peux le modifier sans toucher à la sécurité.)
   -->
@@ -699,6 +730,7 @@
       "icone": "💰",
       "couleur": "orange",
       "illustration": "finance",
+      "lienChariow": "",
       "apercuTitre": "Tu vas apprendre à :",
       "apercu": ["Faire ton budget", "Éviter les dépenses inutiles", "Épargner chaque mois", "Tenir jusqu'à la fin du mois"]
     },
@@ -709,6 +741,7 @@
       "icone": "🍲",
       "couleur": "vert",
       "illustration": "mafe",
+      "lienChariow": "",
       "apercu": ["Mafé", "Riz gras", "Tô sauce gombo", "Poulet bicyclette", "Attiéké poisson braisé", "Alloco", "Babenda", "Jus de bissap", "Dêguê"]
     }
   ]
@@ -720,6 +753,7 @@
       "use strict";
 
       // Numéros WhatsApp : indicatif 226 (Burkina Faso) + numéro, sans "+" ni espaces
+      // "1" = compte Moov Money, "2" = compte Orange Money
       var NUMEROS = { "1": "22603078805", "2": "22605564451" };
       var MESSAGE_GENERAL = "Bonjour Didy Digital ! J'aimerais avoir des informations sur vos ebooks.";
 
@@ -740,6 +774,21 @@
         if (classe) el.className = classe;
         if (texte) el.textContent = texte;
         return el;
+      }
+
+      // N'accepte que les liens sécurisés "https://" (bloque tout lien piégé du type "javascript:")
+      function lienSecurise(url) {
+        try {
+          var u = new URL(String(url || ""));
+          return u.protocol === "https:" ? u.href : null;
+        } catch (e) { return null; }
+      }
+
+      function lienExterne(classe) {
+        var a = element("a", classe);
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        return a;
       }
 
       function iconeWhatsApp() {
@@ -788,13 +837,40 @@
           contenu.appendChild(liste);
         }
 
-        var bouton = element("a", "bouton bouton-wa");
-        bouton.href = lienWhatsApp("Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + ").");
-        bouton.target = "_blank";
-        bouton.rel = "noopener noreferrer";
-        bouton.appendChild(iconeWhatsApp());
-        bouton.appendChild(element("span", "", "Commander sur WhatsApp"));
-        contenu.appendChild(bouton);
+        // ----- Le choix du paiement -----
+        var paiement = element("div", "paiement");
+        paiement.appendChild(element("div", "paiement-titre", "Comment veux-tu payer ?"));
+
+        // Option 1 : payer en ligne sur Chariow (seulement si un lien https:// est renseigné)
+        var chariow = lienSecurise(ebook.lienChariow);
+        if (chariow) {
+          paiement.appendChild(element("div", "option-titre", "Paiement en ligne"));
+          var boutonChariow = lienExterne("bouton bouton-chariow");
+          boutonChariow.href = chariow;
+          boutonChariow.appendChild(element("span", "", "🛒 Acheter sur Chariow"));
+          paiement.appendChild(boutonChariow);
+          paiement.appendChild(element("p", "note", "Page de paiement sécurisée · ebook reçu automatiquement"));
+          paiement.appendChild(element("div", "ou", "OU"));
+        }
+
+        // Option 2 : payer par Mobile Money en écrivant sur WhatsApp
+        paiement.appendChild(element("div", "option-titre", "Mobile Money via WhatsApp"));
+        var grille = element("div", "mm-grille");
+        [
+          { nom: "Moov Money", classe: "moov", numero: "1" },
+          { nom: "Orange Money", classe: "orange-money", numero: "2" }
+        ].forEach(function (moyen) {
+          var b = lienExterne("bouton bouton-mm " + moyen.classe);
+          b.href = lienWhatsApp(
+            "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix +
+            "). Je veux payer par " + moyen.nom + ".", moyen.numero);
+          b.appendChild(element("span", "", moyen.nom));
+          b.appendChild(element("small", "", "via WhatsApp"));
+          grille.appendChild(b);
+        });
+        paiement.appendChild(grille);
+        paiement.appendChild(element("p", "confiance", "🔒 Nous ne te demanderons jamais ton code secret."));
+        contenu.appendChild(paiement);
 
         carte.appendChild(contenu);
         zone.appendChild(carte);
