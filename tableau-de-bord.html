@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!--
+    ===== TABLEAU DE BORD DES VISITES DE DIDY DIGITAL =====
+    Cette page lit les chiffres de visites sur GoatCounter et les affiche.
+    Protection : elle n'exécute que son propre code, et ne peut contacter
+    que ton compteur GoatCounter (connect-src).
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-9/pRPXV9U1wllaRqND4hY3TzFo0D5PTgbVOLM2NmRlw='; script-src 'sha256-vmSb/raiiMWw7Vx6ldUiMo04+eug921CO2HxRbD3BHA='; font-src 'self'; connect-src https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <!-- Demande aux moteurs de recherche (Google…) de ne pas afficher cette page -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#23110a">
+  <title>Tableau de bord – Didy Digital</title>
+  <style>
+    @font-face { font-family: "Bricolage"; src: url("fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+    @font-face { font-family: "Jakarta"; src: url("fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+
+    :root {
+      --cacao: #23110a;
+      --terre: #c2410c;
+      --orange: #f97316;
+      --soleil: #fbbf24;
+      --emeraude: #059669;
+      --hibiscus: #e11d48;
+      --sable: #fdf4e3;
+      --creme: #fffaf2;
+      --texte-doux: #6b4a36;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Jakarta", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--sable);
+      color: var(--cacao);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 40px 16px 70px;
+      text-align: center;
+      color: var(--creme);
+      background-color: var(--cacao);
+      background-image: radial-gradient(circle at 15% 0%, rgba(249, 115, 22, 0.45), transparent 55%), radial-gradient(circle at 90% 100%, rgba(225, 29, 72, 0.4), transparent 55%);
+    }
+
+    .marque { margin: 0; color: var(--soleil); font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.8rem; }
+    h1 { margin: 8px 0 6px; font-family: "Bricolage", system-ui, sans-serif; font-size: clamp(2rem, 9vw, 2.8rem); line-height: 1.1; }
+    header p { margin: 0; color: #f3e3cf; }
+
+    main { max-width: 760px; margin: -44px auto 0; padding: 0 16px 48px; }
+
+    .principal {
+      padding: 28px 20px;
+      border-radius: 28px;
+      text-align: center;
+      color: var(--cacao);
+      background: linear-gradient(135deg, var(--soleil), var(--orange));
+      box-shadow: 0 18px 40px rgba(35, 17, 10, 0.2);
+    }
+    .principal span { display: block; font-weight: 700; }
+    .principal strong { display: block; margin-top: 4px; font-family: "Bricolage", system-ui, sans-serif; font-size: clamp(3.2rem, 18vw, 5rem); line-height: 1; }
+
+    .grille { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+
+    .bloc {
+      padding: 20px 16px;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(35, 17, 10, 0.08);
+      border-top: 5px solid var(--emeraude);
+    }
+    .bloc:nth-child(2) { border-top-color: var(--orange); }
+    .bloc:nth-child(3) { border-top-color: var(--hibiscus); }
+    .bloc:nth-child(4) { border-top-color: var(--soleil); }
+    .bloc span { display: block; color: var(--texte-doux); font-weight: 700; font-size: 0.9rem; }
+    .bloc strong { display: block; margin-top: 6px; font-family: "Bricolage", system-ui, sans-serif; font-size: 2.2rem; line-height: 1; }
+
+    .chargement { opacity: 0.4; }
+
+    .message { margin-top: 18px; padding: 16px; border-radius: 18px; font-weight: 600; text-align: center; }
+    .message.ok { background: #ecfdf5; color: #065f46; }
+    .message.erreur { background: #fff1f2; color: #9f1239; }
+    .cache { display: none; }
+
+    .actions { display: grid; gap: 12px; margin-top: 20px; }
+    .bouton {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 18px;
+      font-family: "Bricolage", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .bouton-sombre { background: var(--cacao); color: var(--soleil); }
+    .bouton-clair { background: #fff; color: var(--cacao); box-shadow: 0 6px 18px rgba(35, 17, 10, 0.08); }
+    .bouton:focus-visible { outline: 3px solid var(--soleil); outline-offset: 3px; }
+
+    .aide { margin-top: 28px; padding: 20px; border-radius: 22px; background: #fff; color: var(--texte-doux); font-size: 0.92rem; }
+    .aide h2 { margin: 0 0 8px; font-family: "Bricolage", system-ui, sans-serif; color: var(--cacao); font-size: 1.15rem; }
+    .aide ol { margin: 0; padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="marque">Didy Digital</p>
+    <h1>📊 Mes visites</h1>
+    <p>Le nombre de personnes qui ont visité ton site.</p>
+  </header>
+
+  <main>
+    <div class="principal">
+      <span>Visites depuis le début</span>
+      <strong id="total" class="chargement">…</strong>
+    </div>
+
+    <div class="grille">
+      <div class="bloc"><span>Aujourd'hui</span><strong id="jour" class="chargement">…</strong></div>
+      <div class="bloc"><span>7 derniers jours</span><strong id="semaine" class="chargement">…</strong></div>
+      <div class="bloc"><span>30 derniers jours</span><strong id="mois" class="chargement">…</strong></div>
+      <div class="bloc"><span>12 derniers mois</span><strong id="annee" class="chargement">…</strong></div>
+    </div>
+
+    <div id="message" class="message cache"></div>
+
+    <div class="actions">
+      <button class="bouton bouton-sombre" id="actualiser" type="button">🔄 Actualiser</button>
+      <a class="bouton bouton-clair" href="https://didyodg.goatcounter.com" target="_blank" rel="noopener noreferrer">Voir les détails sur GoatCounter</a>
+      <a class="bouton bouton-clair" href="./">← Retour au site</a>
+    </div>
+
+    <div class="aide">
+      <h2>Les chiffres ne s'affichent pas ?</h2>
+      <ol>
+        <li>Connecte-toi sur didyodg.goatcounter.com.</li>
+        <li>Va dans <strong>Settings</strong> (Paramètres).</li>
+        <li>Coche la case qui autorise les compteurs de visites sur ton site (« visitor counter »), puis enregistre.</li>
+        <li>Reviens ici et appuie sur « Actualiser ».</li>
+      </ol>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var ADRESSE = "https://didyodg.goatcounter.com/counter/TOTAL.json";
+
+      // Date du jour au format AAAA-MM-JJ (ex. 2026-11-17)
+      function aujourdHui() {
+        var d = new Date();
+        function deux(n) { return (n < 10 ? "0" : "") + n; }
+        return d.getFullYear() + "-" + deux(d.getMonth() + 1) + "-" + deux(d.getDate());
+      }
+
+      var PERIODES = [
+        { id: "total", debut: "" },
+        { id: "jour", debut: aujourdHui() },
+        { id: "semaine", debut: "week" },
+        { id: "mois", debut: "month" },
+        { id: "annee", debut: "year" }
+      ];
+
+      var message = document.getElementById("message");
+
+      function afficherMessage(texte, type) {
+        message.textContent = texte;
+        message.className = "message " + type;
+      }
+
+      // GoatCounter écrit "1,234" : on l'affiche à la française "1 234"
+      function enFrancais(valeur) {
+        return String(valeur).replace(/[^0-9]/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, " ") || "0";
+      }
+
+      function lire(periode) {
+        var url = ADRESSE + (periode.debut ? "?start=" + encodeURIComponent(periode.debut) : "");
+        return fetch(url, { credentials: "omit", cache: "no-store", referrerPolicy: "no-referrer" })
+          .then(function (reponse) {
+            // 404 = aucune visite enregistrée pour cette période
+            if (reponse.status === 404) return { count: "0" };
+            if (!reponse.ok) throw new Error("HTTP " + reponse.status);
+            return reponse.json();
+          })
+          .then(function (donnees) {
+            var el = document.getElementById(periode.id);
+            el.textContent = enFrancais(donnees && donnees.count);
+            el.classList.remove("chargement");
+          });
+      }
+
+      function actualiser() {
+        PERIODES.forEach(function (p) {
+          var el = document.getElementById(p.id);
+          el.textContent = "…";
+          el.classList.add("chargement");
+        });
+        afficherMessage("Chargement…", "ok");
+        Promise.all(PERIODES.map(lire))
+          .then(function () {
+            var heure = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+            afficherMessage("✅ Chiffres à jour (" + heure + ")", "ok");
+          })
+          .catch(function () {
+            PERIODES.forEach(function (p) {
+              var el = document.getElementById(p.id);
+              if (el.textContent === "…") el.textContent = "–";
+            });
+            afficherMessage("Impossible de lire les chiffres. Vérifie ta connexion internet et l'option « visitor counter » dans GoatCounter (voir l'aide ci-dessous).", "erreur");
+          });
+      }
+
+      document.getElementById("actualiser").addEventListener("click", actualiser);
+      actualiser();
+    })();
+  </script>
+</body>
+</html>
