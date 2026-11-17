@@ -1,0 +1,86 @@
+/* Ce fichier décide de l'APPARENCE du site : couleurs, tailles, espaces. */
+/* Tout ce qui est entre /* et */ est un commentaire. */
+
+/* Les couleurs principales : change-les ici pour changer tout le site */
+:root {
+  --couleur-principale: #4f46e5; /* violet-bleu */
+  --couleur-fond: #f7f7fb;       /* gris très clair */
+  --couleur-texte: #1f2937;      /* gris foncé */
+}
+
+/* Le style de toute la page */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--couleur-fond);
+  color: var(--couleur-texte);
+}
+
+/* L'en-tête en haut de la page */
+.entete {
+  background: var(--couleur-principale);
+  color: white;
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.entete h1 {
+  margin: 0 0 8px;
+}
+
+/* La zone centrale */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+/* La grille qui range les e-books côte à côte (et les empile sur téléphone) */
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Chaque carte d'e-book */
+.ebook {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+/* La grande icône qui sert de couverture */
+.couverture {
+  font-size: 64px;
+}
+
+/* Le prix */
+.prix {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--couleur-principale);
+}
+
+/* Le bouton "Acheter" */
+.bouton {
+  display: inline-block;
+  background: var(--couleur-principale);
+  color: white;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+}
+
+/* Quand on passe la souris sur le bouton */
+.bouton:hover {
+  opacity: 0.85;
+}
+
+/* Le pied de page */
+.pied {
+  text-align: center;
+  padding: 24px 16px;
+  color: #6b7280;
+}

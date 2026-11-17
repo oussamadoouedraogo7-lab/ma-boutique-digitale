@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <!--
+    ===== PROTECTION : POLITIQUE DE SÉCURITÉ DU CONTENU (CSP) =====
+    Cette ligne dit au navigateur : "n'exécute QUE le code de cette page".
+    - Aucun script ou style venant d'un autre site n'est accepté.
+    - Le style et le script de cette page sont reconnus grâce à leur
+      "empreinte" (sha256). Si quelqu'un les modifie en cachette, le navigateur
+      les bloque.
+    - Aucun formulaire ne peut envoyer de données (form-action 'none').
+    ATTENTION : si tu modifies le bloc <style> ou le grand <script> du bas,
+    leur empreinte change : il faudra la recalculer (demande-moi).
+    Tu peux en revanche modifier LA LISTE DES EBOOKS librement.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-rD/JXchkIIZQ3ieN8O/5DIHr91OCjOQA7Sub+kH1L3c='; script-src 'sha256-f4LdSuZu7iZqbJ1SNz5pJvjnj/5LXtXuRiQ5Ksl62w0='; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+
+  <!-- Ne transmet pas l'adresse de ton site quand un client clique sur un lien externe -->
+  <meta name="referrer" content="no-referrer">
+
+  <title>Didy Digital – Ebooks pratiques</title>
+  <meta name="description" content="Didy Digital : des ebooks simples et pratiques. Commande facilement sur WhatsApp.">
+  <!-- Couleur de la barre du navigateur sur téléphone Android -->
+  <meta name="theme-color" content="#e8590c">
+
+  <style>
+    /* ===== LES COULEURS DU SITE (inspirées de l'Afrique de l'Ouest) ===== */
+    :root {
+      --orange: #e8590c;
+      --orange-clair: #ff8c42;
+      --dore: #f2b705;
+      --vert: #1f8a4c;
+      --vert-whatsapp: #25d366;
+      --terre: #7a2e0e;
+      --creme: #fff8ee;
+      --texte: #2b1a10;
+      --texte-doux: #6b4f3a;
+      --blanc: #ffffff;
+      --ombre: 0 10px 30px rgba(122, 46, 14, 0.15);
+      --ombre-forte: 0 18px 40px rgba(122, 46, 14, 0.25);
+      --arrondi: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--creme);
+      color: var(--texte);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== EN-TÊTE ===== */
+    .entete {
+      position: relative;
+      overflow: hidden;
+      color: var(--blanc);
+      text-align: center;
+      padding: 64px 16px 96px;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(242, 183, 5, 0.55), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(31, 138, 76, 0.55), transparent 45%),
+        linear-gradient(135deg, var(--orange) 0%, var(--orange-clair) 55%, var(--dore) 100%);
+    }
+
+    /* Bande de motifs inspirés des tissus (kente / faso dan fani) */
+    .entete::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 18px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--vert) 0 22px,
+        var(--dore) 22px 44px,
+        var(--terre) 44px 66px,
+        var(--orange) 66px 88px
+      );
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      font-size: 36px;
+      margin-bottom: 16px;
+      animation: flotter 4s ease-in-out infinite;
+    }
+
+    .entete h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 9vw, 3.6rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 4px 16px rgba(122, 46, 14, 0.35);
+      animation: apparaitre 0.8s ease-out both;
+    }
+
+    .entete p {
+      max-width: 560px;
+      margin: 12px auto 0;
+      font-size: clamp(1.05rem, 4.2vw, 1.25rem);
+      opacity: 0.95;
+      animation: apparaitre 0.8s ease-out 0.15s both;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+      font-size: 0.95rem;
+      animation: apparaitre 0.8s ease-out 0.3s both;
+    }
+
+    /* ===== ZONE DES EBOOKS ===== */
+    main {
+      max-width: 1040px;
+      margin: -56px auto 0;
+      padding: 0 16px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .titre-section {
+      text-align: center;
+      margin: 0 0 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blanc);
+      text-shadow: 0 2px 8px rgba(122, 46, 14, 0.4);
+    }
+
+    .grille {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 24px;
+    }
+
+    /* ===== UNE CARTE D'EBOOK ===== */
+    .carte {
+      display: flex;
+      flex-direction: column;
+      background: var(--blanc);
+      border-radius: var(--arrondi);
+      box-shadow: var(--ombre);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .carte.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+    }
+
+    .carte.visible:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--ombre-forte);
+    }
+
+    .couverture {
+      position: relative;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 72px;
+    }
+
+    .couverture span {
+      filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25));
+      transition: transform 0.4s ease;
+    }
+
+    .carte:hover .couverture span { transform: scale(1.12) rotate(-6deg); }
+
+    /* Couverture avec un dessin de plats (au lieu d'une simple icône) */
+    .couverture.avec-illustration { height: 210px; }
+    .illustration { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+    /* La vapeur qui monte du plat */
+    .vapeur { animation: vapeur 3s ease-in-out infinite; opacity: 0; }
+    .vapeur.v2 { animation-delay: 1s; }
+    .vapeur.v3 { animation-delay: 2s; }
+
+    /* Les couleurs de couverture possibles (choisies dans la liste des ebooks) */
+    .theme-orange { background: linear-gradient(135deg, var(--orange), var(--dore)); }
+    .theme-vert   { background: linear-gradient(135deg, var(--vert), #7cc576); }
+    .theme-terre  { background: linear-gradient(135deg, var(--terre), var(--orange)); }
+    .theme-dore   { background: linear-gradient(135deg, var(--dore), #ffd966); }
+
+    .prix {
+      position: absolute;
+      right: 14px;
+      bottom: -18px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--blanc);
+      color: var(--orange);
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 16px rgba(122, 46, 14, 0.2);
+    }
+
+    .contenu {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 30px 22px 22px;
+    }
+
+    .contenu h3 {
+      margin: 0 0 10px;
+      font-size: 1.3rem;
+      line-height: 1.3;
+      color: var(--terre);
+    }
+
+    .contenu p {
+      margin: 0 0 22px;
+      color: var(--texte-doux);
+    }
+
+    /* Les petites étiquettes "Au menu" */
+    .apercu-titre { margin: 0 0 8px; font-weight: 700; font-size: 0.95rem; color: var(--vert); }
+    .apercu { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .apercu li {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: #fff1dc;
+      border: 1px solid #f6d29b;
+      color: var(--terre);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    /* ===== BOUTON VERT "COMMANDER SUR WHATSAPP" ===== */
+    .bouton-wa {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: auto;          /* le bouton reste toujours en bas de la carte */
+      min-height: 52px;          /* grand bouton, facile à toucher au doigt */
+      padding: 12px 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--vert-whatsapp), var(--vert));
+      color: var(--blanc);
+      font-weight: 700;
+      font-size: 1.05rem;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(31, 138, 76, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .bouton-wa:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(31, 138, 76, 0.45); }
+    .bouton-wa:active { transform: scale(0.97); }
+    .bouton-wa:focus-visible, .flottant:focus-visible { outline: 3px solid var(--dore); outline-offset: 3px; }
+
+    .bouton-wa svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+    /* ===== BOUTON WHATSAPP FLOTTANT ===== */
+    .flottant {
+      position: fixed;
+      right: 18px;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+      z-index: 10;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--vert-whatsapp);
+      color: var(--blanc);
+      box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5);
+      animation: pulsation 2.4s ease-in-out infinite;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .flottant svg { width: 32px; height: 32px; }
+
+    /* ===== POURQUOI NOUS ===== */
+    .avantages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 40px;
+    }
+
+    .avantage {
+      background: var(--blanc);
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(122, 46, 14, 0.08);
+      border-top: 4px solid var(--dore);
+    }
+
+    .avantage:nth-child(2) { border-top-color: var(--vert); }
+    .avantage:nth-child(3) { border-top-color: var(--orange); }
+
+    .avantage strong { display: block; font-size: 1.6rem; }
+    .avantage span { color: var(--texte-doux); font-size: 0.95rem; }
+
+    /* ===== PIED DE PAGE ===== */
+    .pied {
+      background: var(--terre);
+      color: #ffe8d1;
+      text-align: center;
+      padding: 36px 16px calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .pied h2 { margin: 0 0 8px; color: var(--dore); font-size: 1.3rem; }
+    .pied p { margin: 6px 0; }
+    .pied a { color: var(--blanc); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--dore); }
+    .pied small { display: block; margin-top: 18px; opacity: 0.7; }
+
+    .erreur { background: var(--blanc); border-radius: var(--arrondi); padding: 24px; text-align: center; box-shadow: var(--ombre); }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes apparaitre {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes flotter {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-8px); }
+    }
+
+    @keyframes vapeur {
+      0%   { opacity: 0;   transform: translateY(10px); }
+      40%  { opacity: 0.8; }
+      100% { opacity: 0;   transform: translateY(-16px); }
+    }
+
+    @keyframes pulsation {
+      0%, 100% { box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5), 0 0 0 0 rgba(37, 211, 102, 0.5); }
+      50%      { box-shadow: 0 10px 25px rgba(37, 211, 102, 0.5), 0 0 0 14px rgba(37, 211, 102, 0); }
+    }
+
+    /* Respecte les personnes qui ont désactivé les animations sur leur téléphone */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .carte { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== EN-TÊTE ===== -->
+  <header class="entete">
+    <div class="logo" aria-hidden="true">📚</div>
+    <h1>Didy Digital</h1>
+    <p>Bienvenue ! Des ebooks simples et pratiques pour apprendre, économiser et te régaler. Commande en un clic sur WhatsApp.</p>
+    <span class="badge">✨ Livraison rapide sur WhatsApp</span>
+  </header>
+
+  <!-- ===== LES EBOOKS (les cartes sont créées automatiquement à partir de la liste plus bas) ===== -->
+  <main>
+    <h2 class="titre-section">Nos ebooks</h2>
+    <div class="grille" id="liste-ebooks">
+      <noscript>
+        <div class="erreur">Active JavaScript pour voir les ebooks, ou écris-nous directement sur WhatsApp au +226 03 07 88 05.</div>
+      </noscript>
+    </div>
+
+    <div class="avantages">
+      <div class="avantage"><strong>⚡</strong><span>Reçu directement sur ton téléphone</span></div>
+      <div class="avantage"><strong>💬</strong><span>Commande simple par WhatsApp</span></div>
+      <div class="avantage"><strong>🌍</strong><span>Pensé pour l'Afrique de l'Ouest</span></div>
+    </div>
+  </main>
+
+  <!-- ===== BOUTON WHATSAPP FLOTTANT (le lien est ajouté par le script) ===== -->
+  <a class="flottant" id="bouton-flottant" target="_blank" rel="noopener noreferrer" aria-label="Nous écrire sur WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.93.95-3.48-.22-.36a9.43 9.43 0 1 1 7.99 4.42zm8.02-17.45A11.27 11.27 0 0 0 12.05.75C5.8.75.72 5.83.72 12.08c0 2 .52 3.95 1.51 5.67L.63 23.25l5.63-1.48a11.3 11.3 0 0 0 5.79 1.47c6.25 0 11.33-5.08 11.33-11.33 0-3.03-1.18-5.87-3.31-8z"/></svg>
+  </a>
+
+  <!-- ===== PIED DE PAGE ===== -->
+  <footer class="pied">
+    <h2>Contact</h2>
+    <p>Une question ? Écris-nous sur WhatsApp :</p>
+    <p><a id="lien-contact" target="_blank" rel="noopener noreferrer">+226 03 07 88 05</a></p>
+    <small>© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small>
+  </footer>
+
+  <!-- ===== DESSIN DES PLATS (riz gras, tô sauce gombo, alloco, jus de bissap) =====
+       Utilisé par l'ebook qui a "illustration": "plats" dans la liste ci-dessous. -->
+  <template id="illustration-plats">
+    <svg class="illustration" viewBox="0 0 400 210" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><pattern id="natte" width="16" height="16" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="16" height="16" fill="#d98a3d"/><rect width="8" height="16" fill="#cf7d31"/><rect y="7" width="16" height="2" fill="#e9a85c" opacity=".5"/></pattern><radialGradient id="vignette" cx="50%" cy="50%" r="70%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#3a1505" stop-opacity=".55"/></radialGradient><radialGradient id="riz" cx="40%" cy="35%" r="70%"><stop offset="0%" stop-color="#e8873a"/><stop offset="100%" stop-color="#b9541c"/></radialGradient><radialGradient id="sauce" cx="40%" cy="35%" r="70%"><stop offset="0%" stop-color="#6b9126"/><stop offset="100%" stop-color="#3f5f12"/></radialGradient><radialGradient id="bissap" cx="35%" cy="30%" r="75%"><stop offset="0%" stop-color="#b8204f"/><stop offset="100%" stop-color="#5e0b26"/></radialGradient></defs><rect width="400" height="210" fill="url(#natte)"/><ellipse cx="65" cy="60" rx="34" ry="32" fill="#3a1505" opacity=".3"/><circle cx="60" cy="52" r="34" fill="#fffaf0"/><circle cx="60" cy="52" r="28.6" fill="#f1e3c8"/><ellipse cx="62" cy="60" rx="24" ry="9" fill="#d9ceb1"/><ellipse cx="60" cy="52" rx="23" ry="17" fill="#f4eedd"/><ellipse cx="54" cy="45" rx="10" ry="6" fill="#fff" opacity=".8"/><ellipse cx="88" cy="150" rx="48" ry="46" fill="#3a1505" opacity=".3"/><circle cx="82" cy="142" r="47" fill="#8a4419"/><circle cx="82" cy="142" r="42" fill="#c97b3f"/><circle cx="82" cy="142" r="37" fill="url(#sauce)"/><path d="M58 132q14-12 30-4t22 4M60 156q16 8 30 0t20-6" stroke="#2f4a0c" stroke-width="3" fill="none" opacity=".6" stroke-linecap="round"/><circle cx="70" cy="128" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="70" cy="128" r="2" fill="#eef7d9"/><circle cx="92" cy="124" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="92" cy="124" r="2" fill="#eef7d9"/><circle cx="100" cy="146" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="100" cy="146" r="2" fill="#eef7d9"/><circle cx="78" cy="152" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="78" cy="152" r="2" fill="#eef7d9"/><circle cx="64" cy="144" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="64" cy="144" r="2" fill="#eef7d9"/><circle cx="88" cy="162" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="88" cy="162" r="2" fill="#eef7d9"/><circle cx="84" cy="138" r="6" fill="#a8d468" stroke="#5f8f24" stroke-width="1.5"/><circle cx="84" cy="138" r="2" fill="#eef7d9"/><circle cx="104" cy="130" r="3" fill="#d62828"/><circle cx="66" cy="160" r="2.5" fill="#d62828"/><ellipse cx="210" cy="116" rx="76" ry="72" fill="#3a1505" opacity=".3"/><circle cx="205" cy="108" r="76" fill="#fffaf0"/><circle cx="205" cy="108" r="63.8" fill="#f1e3c8"/><circle cx="205" cy="108" r="57" fill="url(#riz)"/><ellipse cx="223.6" cy="133.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(18 223.6 133.9)"/><ellipse cx="247.1" cy="136.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(14 247.1 136.3)"/><ellipse cx="216.8" cy="160.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(111 216.8 160.1)"/><ellipse cx="207.1" cy="144.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(108 207.1 144.2)"/><ellipse cx="192.5" cy="102.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(161 192.5 102.6)"/><ellipse cx="247.0" cy="93.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(149 247.0 93.7)"/><ellipse cx="239.9" cy="102.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(142 239.9 102.8)"/><ellipse cx="192.2" cy="158.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(138 192.2 158.3)"/><ellipse cx="198.1" cy="125.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(26 198.1 125.9)"/><ellipse cx="177.5" cy="75.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(24 177.5 75.3)"/><ellipse cx="243.3" cy="123.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(158 243.3 123.9)"/><ellipse cx="194.2" cy="85.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(80 194.2 85.0)"/><ellipse cx="238.9" cy="90.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(76 238.9 90.3)"/><ellipse cx="216.9" cy="133.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(20 216.9 133.2)"/><ellipse cx="163.1" cy="101.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(114 163.1 101.3)"/><ellipse cx="234.8" cy="104.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(131 234.8 104.3)"/><ellipse cx="206.6" cy="71.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(125 206.6 71.8)"/><ellipse cx="240.3" cy="99.4" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(142 240.3 99.4)"/><ellipse cx="235.1" cy="78.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(87 235.1 78.1)"/><ellipse cx="166.3" cy="81.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(116 166.3 81.9)"/><ellipse cx="217.2" cy="116.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(121 217.2 116.1)"/><ellipse cx="247.9" cy="126.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(165 247.9 126.6)"/><ellipse cx="187.2" cy="69.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(72 187.2 69.3)"/><ellipse cx="241.0" cy="77.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(5 241.0 77.1)"/><ellipse cx="171.6" cy="150.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(29 171.6 150.8)"/><ellipse cx="212.8" cy="146.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(33 212.8 146.6)"/><ellipse cx="166.4" cy="136.8" rx="3" ry="1.3" fill="#d97528" transform="rotate(20 166.4 136.8)"/><ellipse cx="186.4" cy="121.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(35 186.4 121.2)"/><ellipse cx="238.3" cy="69.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(106 238.3 69.8)"/><ellipse cx="182.2" cy="57.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(59 182.2 57.3)"/><ellipse cx="214.7" cy="127.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(168 214.7 127.5)"/><ellipse cx="178.1" cy="110.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(46 178.1 110.6)"/><ellipse cx="233.7" cy="108.7" rx="3" ry="1.3" fill="#d97528" transform="rotate(136 233.7 108.7)"/><ellipse cx="173.9" cy="94.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(176 173.9 94.2)"/><ellipse cx="254.4" cy="92.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(116 254.4 92.0)"/><ellipse cx="214.9" cy="55.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(100 214.9 55.8)"/><ellipse cx="177.2" cy="129.8" rx="3" ry="1.3" fill="#d97528" transform="rotate(162 177.2 129.8)"/><ellipse cx="217.9" cy="141.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(112 217.9 141.0)"/><ellipse cx="192.9" cy="127.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(26 192.9 127.0)"/><ellipse cx="205.5" cy="108.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(93 205.5 108.7)"/><ellipse cx="244.7" cy="126.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(157 244.7 126.8)"/><ellipse cx="182.2" cy="82.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(154 182.2 82.3)"/><ellipse cx="229.2" cy="131.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(119 229.2 131.6)"/><ellipse cx="190.3" cy="143.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(26 190.3 143.9)"/><ellipse cx="202.1" cy="59.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(177 202.1 59.6)"/><ellipse cx="227.3" cy="111.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(92 227.3 111.3)"/><ellipse cx="184.3" cy="102.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(135 184.3 102.3)"/><ellipse cx="185.9" cy="84.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(178 185.9 84.1)"/><ellipse cx="153.9" cy="102.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(91 153.9 102.1)"/><ellipse cx="156.8" cy="98.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(84 156.8 98.0)"/><ellipse cx="171.2" cy="78.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(61 171.2 78.8)"/><ellipse cx="201.8" cy="57.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(51 201.8 57.4)"/><ellipse cx="180.2" cy="139.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(7 180.2 139.7)"/><ellipse cx="156.0" cy="116.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(177 156.0 116.6)"/><ellipse cx="180.7" cy="144.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(93 180.7 144.1)"/><ellipse cx="217.7" cy="117.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(50 217.7 117.5)"/><ellipse cx="172.6" cy="111.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(0 172.6 111.5)"/><ellipse cx="182.8" cy="76.2" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(169 182.8 76.2)"/><ellipse cx="190.2" cy="120.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(122 190.2 120.5)"/><ellipse cx="156.7" cy="129.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(22 156.7 129.3)"/><ellipse cx="254.3" cy="99.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(118 254.3 99.1)"/><ellipse cx="238.5" cy="96.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(43 238.5 96.4)"/><ellipse cx="260.0" cy="117.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(119 260.0 117.6)"/><ellipse cx="235.5" cy="148.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(121 235.5 148.0)"/><ellipse cx="178.2" cy="144.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(140 178.2 144.7)"/><ellipse cx="225.2" cy="109.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(134 225.2 109.8)"/><ellipse cx="236.1" cy="145.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(54 236.1 145.2)"/><ellipse cx="207.2" cy="117.1" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(61 207.2 117.1)"/><ellipse cx="182.5" cy="151.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(107 182.5 151.5)"/><ellipse cx="252.4" cy="127.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(117 252.4 127.1)"/><ellipse cx="223.1" cy="66.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(107 223.1 66.2)"/><ellipse cx="241.7" cy="72.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(136 241.7 72.7)"/><ellipse cx="183.2" cy="106.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(46 183.2 106.6)"/><ellipse cx="212.1" cy="64.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(44 212.1 64.9)"/><ellipse cx="189.6" cy="93.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(142 189.6 93.7)"/><ellipse cx="199.3" cy="95.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(142 199.3 95.3)"/><ellipse cx="211.4" cy="69.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(14 211.4 69.6)"/><ellipse cx="200.3" cy="135.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(129 200.3 135.5)"/><ellipse cx="242.1" cy="114.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(113 242.1 114.6)"/><ellipse cx="236.5" cy="102.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(131 236.5 102.7)"/><ellipse cx="200.8" cy="132.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(136 200.8 132.6)"/><ellipse cx="154.7" cy="105.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(178 154.7 105.6)"/><ellipse cx="233.8" cy="79.5" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(143 233.8 79.5)"/><ellipse cx="220.5" cy="158.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(35 220.5 158.6)"/><ellipse cx="176.8" cy="130.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(18 176.8 130.6)"/><ellipse cx="163.7" cy="128.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(171 163.7 128.0)"/><ellipse cx="227.1" cy="129.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(164 227.1 129.4)"/><ellipse cx="233.3" cy="143.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(119 233.3 143.6)"/><ellipse cx="230.1" cy="100.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(124 230.1 100.3)"/><ellipse cx="193.8" cy="88.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(41 193.8 88.4)"/><ellipse cx="252.0" cy="106.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(86 252.0 106.2)"/><ellipse cx="182.4" cy="136.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(93 182.4 136.5)"/><ellipse cx="197.6" cy="105.4" rx="3" ry="1.3" fill="#d97528" transform="rotate(4 197.6 105.4)"/><ellipse cx="170.5" cy="104.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(131 170.5 104.2)"/><ellipse cx="246.7" cy="143.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(26 246.7 143.7)"/><ellipse cx="202.8" cy="124.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(69 202.8 124.1)"/><ellipse cx="225.7" cy="63.9" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(103 225.7 63.9)"/><ellipse cx="223.9" cy="97.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(126 223.9 97.5)"/><ellipse cx="244.7" cy="133.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(176 244.7 133.0)"/><ellipse cx="224.0" cy="93.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(4 224.0 93.3)"/><ellipse cx="219.2" cy="65.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(155 219.2 65.7)"/><ellipse cx="252.3" cy="129.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(116 252.3 129.1)"/><ellipse cx="211.0" cy="107.8" rx="3" ry="1.3" fill="#d97528" transform="rotate(68 211.0 107.8)"/><ellipse cx="247.5" cy="119.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(28 247.5 119.8)"/><ellipse cx="200.9" cy="163.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(51 200.9 163.0)"/><ellipse cx="167.7" cy="68.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(52 167.7 68.9)"/><ellipse cx="174.8" cy="108.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(69 174.8 108.0)"/><ellipse cx="237.8" cy="111.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(9 237.8 111.8)"/><ellipse cx="204.3" cy="101.1" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(48 204.3 101.1)"/><ellipse cx="206.1" cy="148.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(27 206.1 148.1)"/><ellipse cx="178.3" cy="71.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(139 178.3 71.2)"/><ellipse cx="165.0" cy="139.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(78 165.0 139.8)"/><ellipse cx="251.2" cy="102.9" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(50 251.2 102.9)"/><ellipse cx="191.3" cy="58.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(103 191.3 58.8)"/><ellipse cx="260.3" cy="101.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(3 260.3 101.7)"/><ellipse cx="204.1" cy="93.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(110 204.1 93.1)"/><ellipse cx="224.5" cy="119.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(129 224.5 119.5)"/><ellipse cx="195.9" cy="152.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(177 195.9 152.9)"/><ellipse cx="175.7" cy="115.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(68 175.7 115.6)"/><ellipse cx="201.9" cy="145.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(140 201.9 145.3)"/><ellipse cx="236.1" cy="114.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(55 236.1 114.8)"/><ellipse cx="238.4" cy="108.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(21 238.4 108.2)"/><ellipse cx="166.4" cy="107.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(63 166.4 107.3)"/><ellipse cx="244.8" cy="109.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(22 244.8 109.2)"/><ellipse cx="186.8" cy="97.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(5 186.8 97.0)"/><ellipse cx="184.0" cy="85.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(149 184.0 85.7)"/><ellipse cx="238.1" cy="64.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(168 238.1 64.3)"/><ellipse cx="216.2" cy="56.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(99 216.2 56.3)"/><ellipse cx="196.0" cy="59.9" rx="3" ry="1.3" fill="#d97528" transform="rotate(38 196.0 59.9)"/><ellipse cx="183.1" cy="87.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(11 183.1 87.7)"/><ellipse cx="193.9" cy="58.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(160 193.9 58.4)"/><ellipse cx="193.9" cy="73.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(35 193.9 73.0)"/><ellipse cx="206.0" cy="54.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(4 206.0 54.6)"/><ellipse cx="161.0" cy="82.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(21 161.0 82.3)"/><ellipse cx="211.6" cy="115.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(26 211.6 115.3)"/><ellipse cx="172.2" cy="118.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(160 172.2 118.3)"/><ellipse cx="197.5" cy="106.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(125 197.5 106.5)"/><ellipse cx="177.3" cy="115.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(128 177.3 115.7)"/><ellipse cx="249.5" cy="137.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(16 249.5 137.0)"/><ellipse cx="157.3" cy="115.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(67 157.3 115.9)"/><ellipse cx="206.1" cy="80.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(166 206.1 80.9)"/><ellipse cx="149.7" cy="110.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(19 149.7 110.1)"/><ellipse cx="189.3" cy="72.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(157 189.3 72.6)"/><ellipse cx="219.2" cy="150.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(37 219.2 150.2)"/><ellipse cx="186.3" cy="81.7" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(159 186.3 81.7)"/><ellipse cx="247.1" cy="111.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(124 247.1 111.3)"/><ellipse cx="191.3" cy="82.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(172 191.3 82.4)"/><ellipse cx="195.0" cy="70.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(118 195.0 70.1)"/><ellipse cx="209.1" cy="70.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(51 209.1 70.0)"/><ellipse cx="231.8" cy="124.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(4 231.8 124.1)"/><ellipse cx="231.7" cy="121.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(115 231.7 121.9)"/><ellipse cx="162.7" cy="144.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(19 162.7 144.4)"/><ellipse cx="231.9" cy="141.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(67 231.9 141.2)"/><ellipse cx="241.8" cy="148.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(71 241.8 148.5)"/><ellipse cx="189.8" cy="57.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(127 189.8 57.5)"/><ellipse cx="152.1" cy="112.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(40 152.1 112.6)"/><ellipse cx="201.6" cy="108.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(103 201.6 108.2)"/><ellipse cx="224.5" cy="131.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(96 224.5 131.8)"/><ellipse cx="221.9" cy="81.4" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(83 221.9 81.4)"/><ellipse cx="230.8" cy="66.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(50 230.8 66.9)"/><ellipse cx="243.5" cy="80.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(64 243.5 80.6)"/><ellipse cx="178.3" cy="129.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(19 178.3 129.3)"/><ellipse cx="174.7" cy="122.7" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(12 174.7 122.7)"/><ellipse cx="233.1" cy="117.5" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(162 233.1 117.5)"/><ellipse cx="205.2" cy="162.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(111 205.2 162.2)"/><ellipse cx="219.8" cy="145.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(109 219.8 145.2)"/><ellipse cx="225.0" cy="59.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(141 225.0 59.3)"/><ellipse cx="197.1" cy="67.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(105 197.1 67.3)"/><ellipse cx="205.6" cy="70.4" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(124 205.6 70.4)"/><ellipse cx="216.1" cy="102.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(43 216.1 102.5)"/><ellipse cx="183.6" cy="140.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(65 183.6 140.0)"/><ellipse cx="252.6" cy="100.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(103 252.6 100.8)"/><ellipse cx="190.8" cy="151.1" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(171 190.8 151.1)"/><ellipse cx="222.5" cy="138.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(19 222.5 138.5)"/><ellipse cx="226.2" cy="93.8" rx="3" ry="1.3" fill="#d97528" transform="rotate(140 226.2 93.8)"/><ellipse cx="226.8" cy="93.4" rx="3" ry="1.3" fill="#d97528" transform="rotate(109 226.8 93.4)"/><ellipse cx="212.4" cy="127.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(44 212.4 127.6)"/><ellipse cx="232.5" cy="125.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(94 232.5 125.7)"/><ellipse cx="179.2" cy="95.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(105 179.2 95.9)"/><ellipse cx="204.1" cy="73.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(96 204.1 73.4)"/><ellipse cx="205.4" cy="78.9" rx="3" ry="1.3" fill="#d97528" transform="rotate(71 205.4 78.9)"/><ellipse cx="177.9" cy="140.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(135 177.9 140.7)"/><ellipse cx="233.9" cy="74.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(23 233.9 74.3)"/><ellipse cx="205.3" cy="137.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(165 205.3 137.2)"/><ellipse cx="240.8" cy="97.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(32 240.8 97.3)"/><ellipse cx="202.5" cy="98.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(150 202.5 98.3)"/><ellipse cx="240.1" cy="125.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(119 240.1 125.4)"/><ellipse cx="205.5" cy="163.2" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(57 205.5 163.2)"/><ellipse cx="183.2" cy="104.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(179 183.2 104.9)"/><ellipse cx="209.2" cy="63.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(21 209.2 63.1)"/><ellipse cx="245.3" cy="118.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(59 245.3 118.2)"/><ellipse cx="246.1" cy="117.9" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(32 246.1 117.9)"/><ellipse cx="161.4" cy="100.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(178 161.4 100.2)"/><ellipse cx="244.7" cy="136.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(134 244.7 136.6)"/><ellipse cx="224.5" cy="158.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(57 224.5 158.8)"/><ellipse cx="254.8" cy="108.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(77 254.8 108.4)"/><ellipse cx="195.0" cy="163.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(165 195.0 163.0)"/><ellipse cx="207.5" cy="159.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(60 207.5 159.2)"/><ellipse cx="245.7" cy="115.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(166 245.7 115.6)"/><ellipse cx="235.8" cy="112.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(172 235.8 112.2)"/><ellipse cx="244.3" cy="130.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(170 244.3 130.0)"/><ellipse cx="180.0" cy="134.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(8 180.0 134.6)"/><ellipse cx="195.8" cy="62.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(174 195.8 62.2)"/><ellipse cx="240.2" cy="109.5" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(129 240.2 109.5)"/><ellipse cx="190.5" cy="108.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(79 190.5 108.4)"/><ellipse cx="221.9" cy="154.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(56 221.9 154.0)"/><ellipse cx="227.1" cy="89.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(159 227.1 89.5)"/><ellipse cx="220.1" cy="144.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(124 220.1 144.4)"/><ellipse cx="186.6" cy="76.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(37 186.6 76.8)"/><ellipse cx="255.7" cy="126.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(152 255.7 126.0)"/><ellipse cx="225.0" cy="114.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(47 225.0 114.8)"/><ellipse cx="233.2" cy="87.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(28 233.2 87.0)"/><ellipse cx="255.8" cy="84.7" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(48 255.8 84.7)"/><ellipse cx="227.2" cy="98.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(8 227.2 98.5)"/><ellipse cx="200.2" cy="77.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(84 200.2 77.1)"/><ellipse cx="233.9" cy="131.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(71 233.9 131.6)"/><ellipse cx="191.0" cy="115.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(143 191.0 115.7)"/><ellipse cx="219.5" cy="161.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(79 219.5 161.0)"/><ellipse cx="158.7" cy="128.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(121 158.7 128.9)"/><ellipse cx="181.1" cy="101.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(49 181.1 101.6)"/><ellipse cx="202.5" cy="76.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(7 202.5 76.3)"/><ellipse cx="205.6" cy="152.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(10 205.6 152.5)"/><ellipse cx="171.6" cy="115.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(65 171.6 115.7)"/><ellipse cx="227.8" cy="117.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(86 227.8 117.5)"/><ellipse cx="187.8" cy="137.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(11 187.8 137.0)"/><ellipse cx="199.0" cy="80.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(70 199.0 80.0)"/><ellipse cx="199.6" cy="77.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(162 199.6 77.9)"/><ellipse cx="255.0" cy="129.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(27 255.0 129.7)"/><ellipse cx="242.2" cy="97.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(64 242.2 97.6)"/><ellipse cx="226.2" cy="58.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(127 226.2 58.8)"/><ellipse cx="212.8" cy="85.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(177 212.8 85.3)"/><ellipse cx="166.5" cy="77.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(81 166.5 77.3)"/><ellipse cx="213.0" cy="70.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(20 213.0 70.8)"/><ellipse cx="173.9" cy="133.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(63 173.9 133.2)"/><ellipse cx="183.9" cy="79.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(141 183.9 79.1)"/><ellipse cx="227.0" cy="143.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(26 227.0 143.0)"/><ellipse cx="199.8" cy="163.4" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(53 199.8 163.4)"/><ellipse cx="187.6" cy="108.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(44 187.6 108.2)"/><ellipse cx="181.5" cy="121.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(172 181.5 121.5)"/><ellipse cx="178.6" cy="101.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(75 178.6 101.5)"/><ellipse cx="177.3" cy="95.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(65 177.3 95.6)"/><ellipse cx="220.1" cy="153.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(47 220.1 153.7)"/><ellipse cx="220.8" cy="130.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(48 220.8 130.8)"/><ellipse cx="179.6" cy="127.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(129 179.6 127.4)"/><ellipse cx="181.0" cy="75.2" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(167 181.0 75.2)"/><ellipse cx="242.1" cy="116.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(121 242.1 116.8)"/><ellipse cx="211.2" cy="160.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(95 211.2 160.2)"/><ellipse cx="202.0" cy="118.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(12 202.0 118.8)"/><ellipse cx="229.0" cy="103.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(49 229.0 103.9)"/><ellipse cx="167.5" cy="146.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(114 167.5 146.9)"/><ellipse cx="211.8" cy="65.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(27 211.8 65.0)"/><ellipse cx="193.8" cy="64.7" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(55 193.8 64.7)"/><ellipse cx="199.2" cy="117.2" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(52 199.2 117.2)"/><ellipse cx="259.4" cy="121.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(2 259.4 121.3)"/><ellipse cx="162.4" cy="135.4" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(47 162.4 135.4)"/><ellipse cx="243.9" cy="128.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(126 243.9 128.8)"/><ellipse cx="243.2" cy="124.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(101 243.2 124.0)"/><ellipse cx="230.8" cy="145.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(23 230.8 145.7)"/><ellipse cx="168.8" cy="135.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(104 168.8 135.1)"/><ellipse cx="177.5" cy="59.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(13 177.5 59.6)"/><ellipse cx="176.4" cy="95.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(106 176.4 95.3)"/><ellipse cx="228.8" cy="80.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(164 228.8 80.8)"/><ellipse cx="201.6" cy="83.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(1 201.6 83.4)"/><ellipse cx="225.4" cy="138.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(23 225.4 138.7)"/><ellipse cx="231.4" cy="84.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(41 231.4 84.0)"/><ellipse cx="224.1" cy="114.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(164 224.1 114.4)"/><ellipse cx="164.9" cy="138.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(159 164.9 138.4)"/><ellipse cx="200.7" cy="54.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(37 200.7 54.2)"/><ellipse cx="222.4" cy="136.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(17 222.4 136.1)"/><ellipse cx="186.6" cy="109.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(77 186.6 109.1)"/><ellipse cx="223.7" cy="101.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(80 223.7 101.0)"/><ellipse cx="216.6" cy="102.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(22 216.6 102.2)"/><ellipse cx="166.3" cy="71.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(163 166.3 71.5)"/><ellipse cx="213.7" cy="156.9" rx="3" ry="1.3" fill="#d97528" transform="rotate(157 213.7 156.9)"/><ellipse cx="229.6" cy="62.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(144 229.6 62.7)"/><ellipse cx="183.9" cy="123.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(40 183.9 123.4)"/><ellipse cx="229.8" cy="132.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(49 229.8 132.2)"/><ellipse cx="194.5" cy="103.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(170 194.5 103.7)"/><ellipse cx="242.9" cy="142.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(116 242.9 142.6)"/><ellipse cx="176.0" cy="78.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(166 176.0 78.3)"/><ellipse cx="173.5" cy="90.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(99 173.5 90.0)"/><ellipse cx="162.1" cy="122.9" rx="3" ry="1.3" fill="#d97528" transform="rotate(45 162.1 122.9)"/><ellipse cx="198.7" cy="102.2" rx="3" ry="1.3" fill="#d97528" transform="rotate(119 198.7 102.2)"/><ellipse cx="207.3" cy="80.9" rx="3" ry="1.3" fill="#d97528" transform="rotate(45 207.3 80.9)"/><ellipse cx="164.2" cy="137.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(32 164.2 137.5)"/><ellipse cx="182.8" cy="133.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(129 182.8 133.1)"/><ellipse cx="243.7" cy="118.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(21 243.7 118.1)"/><ellipse cx="184.0" cy="157.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(20 184.0 157.5)"/><ellipse cx="192.0" cy="107.7" rx="3" ry="1.3" fill="#d97528" transform="rotate(167 192.0 107.7)"/><ellipse cx="240.8" cy="149.2" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(157 240.8 149.2)"/><ellipse cx="224.0" cy="64.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(33 224.0 64.0)"/><ellipse cx="149.6" cy="110.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(175 149.6 110.8)"/><ellipse cx="250.1" cy="87.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(89 250.1 87.0)"/><ellipse cx="204.4" cy="151.7" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(157 204.4 151.7)"/><ellipse cx="216.8" cy="81.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(65 216.8 81.1)"/><ellipse cx="239.8" cy="88.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(151 239.8 88.9)"/><ellipse cx="176.3" cy="106.9" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(95 176.3 106.9)"/><ellipse cx="209.4" cy="117.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(162 209.4 117.8)"/><ellipse cx="181.8" cy="59.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(43 181.8 59.0)"/><ellipse cx="200.5" cy="157.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(12 200.5 157.6)"/><ellipse cx="176.6" cy="142.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(142 176.6 142.5)"/><ellipse cx="189.8" cy="70.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(64 189.8 70.5)"/><ellipse cx="166.7" cy="67.4" rx="3" ry="1.3" fill="#d97528" transform="rotate(95 166.7 67.4)"/><ellipse cx="233.8" cy="106.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(37 233.8 106.3)"/><ellipse cx="208.1" cy="74.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(58 208.1 74.5)"/><ellipse cx="204.0" cy="84.5" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(75 204.0 84.5)"/><ellipse cx="203.8" cy="158.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(169 203.8 158.7)"/><ellipse cx="199.4" cy="55.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(56 199.4 55.3)"/><ellipse cx="188.9" cy="93.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(106 188.9 93.6)"/><ellipse cx="236.8" cy="83.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(125 236.8 83.5)"/><ellipse cx="189.7" cy="86.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(13 189.7 86.1)"/><ellipse cx="203.2" cy="110.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(133 203.2 110.3)"/><ellipse cx="210.4" cy="141.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(77 210.4 141.0)"/><ellipse cx="217.2" cy="149.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(121 217.2 149.2)"/><ellipse cx="227.2" cy="110.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(38 227.2 110.0)"/><ellipse cx="239.6" cy="122.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(170 239.6 122.6)"/><ellipse cx="164.6" cy="136.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(2 164.6 136.6)"/><ellipse cx="210.7" cy="96.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(152 210.7 96.0)"/><ellipse cx="162.8" cy="123.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(126 162.8 123.6)"/><ellipse cx="227.9" cy="92.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(15 227.9 92.1)"/><ellipse cx="171.1" cy="130.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(40 171.1 130.7)"/><ellipse cx="207.4" cy="94.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(156 207.4 94.7)"/><ellipse cx="243.7" cy="92.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(105 243.7 92.9)"/><ellipse cx="185.5" cy="92.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(165 185.5 92.3)"/><ellipse cx="222.4" cy="66.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(130 222.4 66.7)"/><ellipse cx="195.3" cy="137.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(122 195.3 137.6)"/><ellipse cx="252.3" cy="109.9" rx="3" ry="1.3" fill="#d97528" transform="rotate(119 252.3 109.9)"/><ellipse cx="196.1" cy="94.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(57 196.1 94.8)"/><ellipse cx="201.0" cy="163.8" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(31 201.0 163.8)"/><ellipse cx="204.9" cy="75.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(13 204.9 75.6)"/><ellipse cx="177.8" cy="98.4" rx="3" ry="1.3" fill="#d97528" transform="rotate(175 177.8 98.4)"/><ellipse cx="155.8" cy="100.8" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(75 155.8 100.8)"/><ellipse cx="248.8" cy="98.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(21 248.8 98.2)"/><ellipse cx="257.3" cy="113.0" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(60 257.3 113.0)"/><ellipse cx="220.0" cy="157.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(83 220.0 157.1)"/><ellipse cx="186.2" cy="123.8" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(61 186.2 123.8)"/><ellipse cx="225.6" cy="80.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(120 225.6 80.3)"/><ellipse cx="167.2" cy="100.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(6 167.2 100.6)"/><ellipse cx="199.1" cy="71.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(78 199.1 71.4)"/><ellipse cx="166.4" cy="139.3" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(19 166.4 139.3)"/><ellipse cx="224.9" cy="145.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(6 224.9 145.1)"/><ellipse cx="191.5" cy="95.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(88 191.5 95.0)"/><ellipse cx="188.1" cy="55.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(10 188.1 55.3)"/><ellipse cx="192.1" cy="91.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(178 192.1 91.7)"/><ellipse cx="219.0" cy="112.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(93 219.0 112.2)"/><ellipse cx="229.0" cy="101.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(170 229.0 101.0)"/><ellipse cx="214.7" cy="97.4" rx="3" ry="1.3" fill="#d97528" transform="rotate(27 214.7 97.4)"/><ellipse cx="213.1" cy="134.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(8 213.1 134.6)"/><ellipse cx="251.3" cy="79.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(161 251.3 79.1)"/><ellipse cx="160.9" cy="114.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(25 160.9 114.4)"/><ellipse cx="174.8" cy="68.4" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(81 174.8 68.4)"/><ellipse cx="202.7" cy="140.4" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(65 202.7 140.4)"/><ellipse cx="256.5" cy="124.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(82 256.5 124.2)"/><ellipse cx="165.6" cy="78.6" rx="3" ry="1.3" fill="#d97528" transform="rotate(73 165.6 78.6)"/><ellipse cx="248.2" cy="116.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(7 248.2 116.5)"/><ellipse cx="210.3" cy="71.4" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(120 210.3 71.4)"/><ellipse cx="159.3" cy="96.9" rx="3" ry="1.3" fill="#e8893a" transform="rotate(23 159.3 96.9)"/><ellipse cx="195.2" cy="149.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(0 195.2 149.3)"/><ellipse cx="195.3" cy="147.4" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(1 195.3 147.4)"/><ellipse cx="232.2" cy="126.7" rx="3" ry="1.3" fill="#e8893a" transform="rotate(126 232.2 126.7)"/><ellipse cx="246.6" cy="96.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(66 246.6 96.5)"/><ellipse cx="228.1" cy="143.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(179 228.1 143.8)"/><ellipse cx="218.6" cy="131.3" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(125 218.6 131.3)"/><ellipse cx="188.8" cy="61.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(160 188.8 61.0)"/><ellipse cx="231.5" cy="126.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(22 231.5 126.0)"/><ellipse cx="182.9" cy="79.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(52 182.9 79.1)"/><ellipse cx="177.3" cy="121.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(128 177.3 121.5)"/><ellipse cx="228.0" cy="105.4" rx="3" ry="1.3" fill="#e8893a" transform="rotate(117 228.0 105.4)"/><ellipse cx="188.4" cy="96.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(165 188.4 96.9)"/><ellipse cx="196.0" cy="102.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(39 196.0 102.9)"/><ellipse cx="155.4" cy="124.0" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(82 155.4 124.0)"/><ellipse cx="183.6" cy="116.7" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(148 183.6 116.7)"/><ellipse cx="191.4" cy="131.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(129 191.4 131.2)"/><ellipse cx="197.2" cy="131.2" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(39 197.2 131.2)"/><ellipse cx="252.0" cy="100.5" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(154 252.0 100.5)"/><ellipse cx="226.5" cy="142.3" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(48 226.5 142.3)"/><ellipse cx="232.3" cy="100.0" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(42 232.3 100.0)"/><ellipse cx="249.1" cy="140.7" rx="3" ry="1.3" fill="#d97528" transform="rotate(38 249.1 140.7)"/><ellipse cx="220.5" cy="54.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(111 220.5 54.6)"/><ellipse cx="227.7" cy="126.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(71 227.7 126.6)"/><ellipse cx="185.6" cy="124.4" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(3 185.6 124.4)"/><ellipse cx="214.0" cy="73.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(128 214.0 73.8)"/><ellipse cx="189.1" cy="161.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(36 189.1 161.1)"/><ellipse cx="202.9" cy="79.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(62 202.9 79.7)"/><ellipse cx="156.7" cy="130.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(150 156.7 130.7)"/><ellipse cx="162.4" cy="131.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(170 162.4 131.0)"/><ellipse cx="239.7" cy="75.4" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(58 239.7 75.4)"/><ellipse cx="175.9" cy="72.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(110 175.9 72.1)"/><ellipse cx="183.3" cy="85.4" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(107 183.3 85.4)"/><ellipse cx="182.7" cy="124.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(64 182.7 124.2)"/><ellipse cx="153.7" cy="113.6" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(159 153.7 113.6)"/><ellipse cx="153.5" cy="102.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(167 153.5 102.1)"/><ellipse cx="237.0" cy="110.1" rx="3" ry="1.3" fill="#d97528" transform="rotate(27 237.0 110.1)"/><ellipse cx="194.5" cy="105.1" rx="3" ry="1.3" fill="#e8893a" transform="rotate(51 194.5 105.1)"/><ellipse cx="237.5" cy="131.9" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(116 237.5 131.9)"/><ellipse cx="196.6" cy="67.7" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(4 196.6 67.7)"/><ellipse cx="226.3" cy="68.6" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(87 226.3 68.6)"/><ellipse cx="239.0" cy="96.5" rx="3" ry="1.3" fill="#e8893a" transform="rotate(175 239.0 96.5)"/><ellipse cx="181.1" cy="105.9" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(157 181.1 105.9)"/><ellipse cx="236.3" cy="119.6" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(97 236.3 119.6)"/><ellipse cx="240.3" cy="111.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(107 240.3 111.0)"/><ellipse cx="184.8" cy="68.5" rx="3" ry="1.3" fill="#ffc27d" transform="rotate(67 184.8 68.5)"/><ellipse cx="198.9" cy="125.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(134 198.9 125.5)"/><ellipse cx="260.2" cy="106.0" rx="3" ry="1.3" fill="#d97528" transform="rotate(118 260.2 106.0)"/><ellipse cx="222.7" cy="126.7" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(162 222.7 126.7)"/><ellipse cx="189.6" cy="88.8" rx="3" ry="1.3" fill="#e8893a" transform="rotate(37 189.6 88.8)"/><ellipse cx="183.6" cy="82.5" rx="3" ry="1.3" fill="#d97528" transform="rotate(119 183.6 82.5)"/><ellipse cx="208.5" cy="52.2" rx="3" ry="1.3" fill="#e8893a" transform="rotate(120 208.5 52.2)"/><ellipse cx="224.7" cy="81.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(96 224.7 81.1)"/><ellipse cx="251.2" cy="103.0" rx="3" ry="1.3" fill="#e8893a" transform="rotate(123 251.2 103.0)"/><ellipse cx="204.5" cy="105.1" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(91 204.5 105.1)"/><ellipse cx="196.1" cy="134.3" rx="3" ry="1.3" fill="#d97528" transform="rotate(124 196.1 134.3)"/><ellipse cx="181.2" cy="80.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(39 181.2 80.2)"/><ellipse cx="237.9" cy="65.2" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(21 237.9 65.2)"/><ellipse cx="247.3" cy="79.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(135 247.3 79.6)"/><ellipse cx="170.8" cy="70.1" rx="3" ry="1.3" fill="#f2a65a" transform="rotate(168 170.8 70.1)"/><ellipse cx="210.7" cy="106.2" rx="3" ry="1.3" fill="#f6b46b" transform="rotate(64 210.7 106.2)"/><ellipse cx="166.5" cy="87.3" rx="3" ry="1.3" fill="#e8893a" transform="rotate(47 166.5 87.3)"/><ellipse cx="176.9" cy="148.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(53 176.9 148.6)"/><ellipse cx="218.8" cy="56.6" rx="3" ry="1.3" fill="#e8893a" transform="rotate(156 218.8 56.6)"/><g transform="rotate(-15 186 92)"><rect x="175" y="84" width="22" height="16" rx="6" fill="#6b2f12"/><rect x="178" y="86" width="14" height="6" rx="3" fill="#9c5226"/></g><g transform="rotate(20 222 98)"><rect x="211" y="90" width="22" height="16" rx="6" fill="#6b2f12"/><rect x="214" y="92" width="14" height="6" rx="3" fill="#9c5226"/></g><g transform="rotate(5 200 126)"><rect x="189" y="118" width="22" height="16" rx="6" fill="#6b2f12"/><rect x="192" y="120" width="14" height="6" rx="3" fill="#9c5226"/></g><g transform="rotate(-30 232 124)"><rect x="221" y="116" width="22" height="16" rx="6" fill="#6b2f12"/><rect x="224" y="118" width="14" height="6" rx="3" fill="#9c5226"/></g><circle cx="176" cy="112" r="9" fill="#c81d25"/><circle cx="176" cy="112" r="6.5" fill="#f25c54"/><circle cx="174" cy="111" r="1.2" fill="#ffd6a5"/><circle cx="178" cy="114" r="1.2" fill="#ffd6a5"/><circle cx="214" cy="84" r="9" fill="#c81d25"/><circle cx="214" cy="84" r="6.5" fill="#f25c54"/><circle cx="212" cy="83" r="1.2" fill="#ffd6a5"/><circle cx="216" cy="86" r="1.2" fill="#ffd6a5"/><circle cx="244" cy="106" r="9" fill="#c81d25"/><circle cx="244" cy="106" r="6.5" fill="#f25c54"/><circle cx="242" cy="105" r="1.2" fill="#ffd6a5"/><circle cx="246" cy="108" r="1.2" fill="#ffd6a5"/><circle cx="190" cy="138" r="9" fill="#c81d25"/><circle cx="190" cy="138" r="6.5" fill="#f25c54"/><circle cx="188" cy="137" r="1.2" fill="#ffd6a5"/><circle cx="192" cy="140" r="1.2" fill="#ffd6a5"/><circle cx="168" cy="96" r="6" fill="none" stroke="#fbf3e6" stroke-width="2"/><circle cx="204" cy="110" r="6" fill="none" stroke="#fbf3e6" stroke-width="2"/><circle cx="226" cy="140" r="6" fill="none" stroke="#fbf3e6" stroke-width="2"/><circle cx="238" cy="88" r="6" fill="none" stroke="#fbf3e6" stroke-width="2"/><circle cx="168.3" cy="78.3" r="2.3" fill="#5aa832"/><circle cx="237.1" cy="82.7" r="2.3" fill="#ff8c1a"/><circle cx="219.9" cy="151.3" r="2.3" fill="#ff8c1a"/><circle cx="225.3" cy="118.9" r="2.3" fill="#7cc243"/><circle cx="235.4" cy="135.5" r="2.3" fill="#5aa832"/><circle cx="207.6" cy="133.6" r="2.3" fill="#5aa832"/><circle cx="172.8" cy="95.9" r="2.3" fill="#7cc243"/><circle cx="226.0" cy="134.9" r="2.3" fill="#7cc243"/><circle cx="217.7" cy="129.3" r="2.3" fill="#ff8c1a"/><circle cx="251.4" cy="109.9" r="2.3" fill="#7cc243"/><circle cx="173.4" cy="94.9" r="2.3" fill="#ff8c1a"/><circle cx="178.4" cy="113.8" r="2.3" fill="#7cc243"/><circle cx="236.4" cy="100.1" r="2.3" fill="#5aa832"/><circle cx="191.4" cy="124.3" r="2.3" fill="#ff8c1a"/><circle cx="198.5" cy="102.6" r="2.3" fill="#ff8c1a"/><circle cx="247.9" cy="107.7" r="2.3" fill="#5aa832"/><circle cx="169.4" cy="111.4" r="2.3" fill="#5aa832"/><circle cx="203.2" cy="99.0" r="2.3" fill="#ff8c1a"/><circle cx="219.8" cy="118.0" r="2.3" fill="#ff8c1a"/><circle cx="175.1" cy="112.8" r="2.3" fill="#ff8c1a"/><circle cx="236.7" cy="88.5" r="2.3" fill="#7cc243"/><circle cx="175.9" cy="123.5" r="2.3" fill="#ff8c1a"/><circle cx="202.2" cy="119.1" r="2.3" fill="#7cc243"/><circle cx="167.6" cy="133.9" r="2.3" fill="#ff8c1a"/><circle cx="239.6" cy="72.5" r="2.3" fill="#7cc243"/><circle cx="177.1" cy="67.2" r="2.3" fill="#5aa832"/><ellipse cx="208" cy="78" rx="7" ry="3.5" fill="#3f8f2a" transform="rotate(-30 208 78)"/><ellipse cx="216" cy="76" rx="6" ry="3" fill="#57a83a" transform="rotate(25 216 76)"/><path class="vapeur v1" d="M186 70q-8-10 0-20t0-22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/><path class="vapeur v2" d="M206 70q-8-10 0-20t0-22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/><path class="vapeur v3" d="M226 70q-8-10 0-20t0-22" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/><ellipse cx="333" cy="148" rx="44" ry="42" fill="#3a1505" opacity=".3"/><circle cx="328" cy="140" r="44" fill="#fffaf0"/><circle cx="328" cy="140" r="37.0" fill="#f1e3c8"/><g transform="rotate(20 352.0 140.0)"><ellipse cx="352.0" cy="140.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="352.0" cy="139.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(65 345.0 157.0)"><ellipse cx="345.0" cy="157.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="345.0" cy="156.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(110 328.0 164.0)"><ellipse cx="328.0" cy="164.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="328.0" cy="163.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(155 311.0 157.0)"><ellipse cx="311.0" cy="157.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="311.0" cy="156.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(200 304.0 140.0)"><ellipse cx="304.0" cy="140.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="304.0" cy="139.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(245 311.0 123.0)"><ellipse cx="311.0" cy="123.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="311.0" cy="122.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(290 328.0 116.0)"><ellipse cx="328.0" cy="116.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="328.0" cy="115.0" rx="8" ry="5" fill="#ffc94a"/></g><g transform="rotate(335 345.0 123.0)"><ellipse cx="345.0" cy="123.0" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="345.0" cy="122.0" rx="8" ry="5" fill="#ffc94a"/></g><ellipse cx="328" cy="140" rx="12" ry="8" fill="#e08a12" stroke="#a85a0c" stroke-width="1.5"/><ellipse cx="328" cy="139" rx="8" ry="5" fill="#ffc94a"/><ellipse cx="345" cy="54" rx="26" ry="25" fill="#3a1505" opacity=".3"/><circle cx="340" cy="46" r="26" fill="#fdf6ee" opacity=".95"/><circle cx="340" cy="46" r="21" fill="url(#bissap)"/><ellipse cx="332" cy="38" rx="7" ry="4" fill="#fff" opacity=".35"/><ellipse cx="350" cy="40" rx="7" ry="3.5" fill="#3f8f2a" transform="rotate(-35 350 40)"/><line x1="344" y1="50" x2="368" y2="18" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/><path d="M262 30q14 4 22 18" stroke="#d62828" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M260 29l-5-4" stroke="#3f8f2a" stroke-width="3" stroke-linecap="round"/><path d="M140 196q10-6 24-2" stroke="#e63946" stroke-width="6" fill="none" stroke-linecap="round"/><circle cx="140" cy="28" r="14" fill="#7cb518"/><circle cx="140" cy="28" r="11" fill="#c5e478"/><line x1="140" y1="28" x2="150.0" y2="28.0" stroke="#7cb518" stroke-width="1"/><line x1="140" y1="28" x2="145.0" y2="36.7" stroke="#7cb518" stroke-width="1"/><line x1="140" y1="28" x2="135.0" y2="36.7" stroke="#7cb518" stroke-width="1"/><line x1="140" y1="28" x2="130.0" y2="28.0" stroke="#7cb518" stroke-width="1"/><line x1="140" y1="28" x2="135.0" y2="19.3" stroke="#7cb518" stroke-width="1"/><line x1="140" y1="28" x2="145.0" y2="19.3" stroke="#7cb518" stroke-width="1"/><ellipse cx="268" cy="186" rx="9" ry="4" fill="#3f8f2a" transform="rotate(20 268 186)"/><ellipse cx="282" cy="192" rx="9" ry="4" fill="#3f8f2a" transform="rotate(-20 282 192)"/><ellipse cx="118" cy="20" rx="9" ry="4" fill="#3f8f2a" transform="rotate(-40 118 20)"/><ellipse cx="380" cy="100" rx="9" ry="4" fill="#3f8f2a" transform="rotate(60 380 100)"/><ellipse cx="258" cy="170" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><ellipse cx="265" cy="176" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><ellipse cx="252" cy="180" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><ellipse cx="372" cy="186" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><ellipse cx="380" cy="192" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><ellipse cx="30" cy="110" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><ellipse cx="24" cy="118" rx="4" ry="2.6" fill="#e9c08a" stroke="#b07c42" stroke-width=".8"/><rect width="400" height="210" fill="url(#vignette)"/></svg>
+  </template>
+
+  <!--
+    =====================================================================
+    📚 LA LISTE DES EBOOKS : C'EST ICI QUE TU AJOUTES OU MODIFIES UN EBOOK
+    =====================================================================
+    Pour ajouter un ebook :
+      1. Copie un bloc { ... } (de l'accolade { jusqu'à l'accolade } ).
+      2. Mets une VIRGULE après le bloc précédent.
+      3. Colle et change le nom, le prix, la description, l'icône et la couleur.
+    Couleurs possibles pour "couleur" : "orange", "vert", "terre", "dore".
+    "apercu" (facultatif) : quelques exemples de contenu, affichés en petites étiquettes.
+    "illustration" (facultatif) : "plats" affiche le dessin de plats au lieu de l'icône.
+    Garde bien les guillemets " " autour de chaque texte.
+    (Ce bloc contient seulement des données : le navigateur ne l'exécute pas,
+    donc tu peux le modifier sans toucher à la sécurité.)
+  -->
+  <script type="application/json" id="donnees-ebooks">
+  [
+    {
+      "nom": "Gérer son argent quand on gagne peu",
+      "prix": "2 300 F CFA",
+      "description": "Tu gagnes peu et ton argent disparaît avant la fin du mois ? Ce guide simple et pratique t'apprend à organiser ton budget, à éviter les dépenses inutiles et à mettre de l'argent de côté, même avec un petit salaire.",
+      "icone": "💰",
+      "couleur": "orange"
+    },
+    {
+      "nom": "400 recettes du Burkina Faso et d'Afrique de l'Ouest",
+      "prix": "1 600 F CFA",
+      "description": "Découvre 400 recettes complètes du Burkina Faso et de toute l'Afrique de l'Ouest : plats traditionnels, sauces, boissons et douceurs, expliquées pas à pas.",
+      "icone": "🍲",
+      "couleur": "vert",
+      "illustration": "plats",
+      "apercu": ["Riz gras", "Tô sauce gombo", "Poulet bicyclette", "Attiéké poisson braisé", "Alloco", "Babenda", "Jus de bissap", "Dêguê"]
+    }
+  ]
+  </script>
+
+  <!-- ===== LE SCRIPT QUI FABRIQUE LES CARTES (ne pas modifier sans recalculer l'empreinte CSP) ===== -->
+  <script>
+    (function () {
+      "use strict";
+
+      // Numéro WhatsApp : indicatif 226 (Burkina Faso) + numéro, sans "+" ni espaces
+      var NUMERO_WHATSAPP = "22603078805";
+
+      // Fabrique un lien WhatsApp avec un message déjà écrit
+      function lienWhatsApp(message) {
+        return "https://wa.me/" + NUMERO_WHATSAPP + "?text=" + encodeURIComponent(message);
+      }
+
+      // Icône WhatsApp (dessinée en code, pas d'image externe)
+      function iconeWhatsApp() {
+        var ns = "http://www.w3.org/2000/svg";
+        var svg = document.createElementNS(ns, "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "currentColor");
+        svg.setAttribute("aria-hidden", "true");
+        var path = document.createElementNS(ns, "path");
+        path.setAttribute("d", document.querySelector("#bouton-flottant path").getAttribute("d"));
+        svg.appendChild(path);
+        return svg;
+      }
+
+      // Crée un élément HTML avec du texte.
+      // On utilise "textContent" (et jamais innerHTML) : le texte est affiché tel quel,
+      // aucun code caché ne peut s'exécuter.
+      function element(balise, classe, texte) {
+        var el = document.createElement(balise);
+        if (classe) el.className = classe;
+        if (texte) el.textContent = texte;
+        return el;
+      }
+
+      var COULEURS = ["orange", "vert", "terre", "dore"];
+      var zone = document.getElementById("liste-ebooks");
+      var ebooks;
+
+      try {
+        ebooks = JSON.parse(document.getElementById("donnees-ebooks").textContent);
+      } catch (e) {
+        zone.appendChild(element("div", "erreur",
+          "Oups, la liste des ebooks contient une erreur (virgule ou guillemet oublié ?)."));
+        ebooks = [];
+      }
+
+      ebooks.forEach(function (ebook) {
+        var carte = element("article", "carte");
+
+        var couleur = COULEURS.indexOf(ebook.couleur) >= 0 ? ebook.couleur : "orange";
+        var couverture = element("div", "couverture theme-" + couleur);
+        // Un dessin si l'ebook en demande un, sinon une grande icône
+        var modele = ebook.illustration ? document.getElementById("illustration-" + ebook.illustration) : null;
+        if (modele && modele.content) {
+          couverture.classList.add("avec-illustration");
+          couverture.appendChild(modele.content.cloneNode(true));
+        } else {
+          var icone = element("span", "", ebook.icone || "📘");
+          icone.setAttribute("aria-hidden", "true");
+          couverture.appendChild(icone);
+        }
+        couverture.appendChild(element("div", "prix", ebook.prix));
+        carte.appendChild(couverture);
+
+        var contenu = element("div", "contenu");
+        contenu.appendChild(element("h3", "", ebook.nom));
+        contenu.appendChild(element("p", "", ebook.description));
+
+        // Les étiquettes "Au menu" qui donnent un avant-goût du contenu
+        if (Array.isArray(ebook.apercu) && ebook.apercu.length) {
+          contenu.appendChild(element("div", "apercu-titre", "Au menu :"));
+          var liste = element("ul", "apercu");
+          ebook.apercu.forEach(function (nom) { liste.appendChild(element("li", "", String(nom))); });
+          contenu.appendChild(liste);
+        }
+
+        var bouton = element("a", "bouton-wa");
+        bouton.href = lienWhatsApp(
+          "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + ")."
+        );
+        bouton.target = "_blank";
+        bouton.rel = "noopener noreferrer";
+        bouton.appendChild(iconeWhatsApp());
+        bouton.appendChild(element("span", "", "Commander sur WhatsApp"));
+        contenu.appendChild(bouton);
+
+        carte.appendChild(contenu);
+        zone.appendChild(carte);
+      });
+
+      // Liens du bouton flottant et du pied de page
+      var messageGeneral = "Bonjour Didy Digital ! J'aimerais avoir des informations sur vos ebooks.";
+      document.getElementById("bouton-flottant").href = lienWhatsApp(messageGeneral);
+      document.getElementById("lien-contact").href = lienWhatsApp(messageGeneral);
+      document.getElementById("annee").textContent = new Date().getFullYear();
+
+      // Petite animation : les cartes apparaissent quand on fait défiler la page
+      var cartes = document.querySelectorAll(".carte");
+      if ("IntersectionObserver" in window) {
+        var observateur = new IntersectionObserver(function (entrees) {
+          entrees.forEach(function (entree) {
+            if (entree.isIntersecting) {
+              entree.target.classList.add("visible");
+              observateur.unobserve(entree.target);
+            }
+          });
+        }, { threshold: 0.15 });
+        cartes.forEach(function (c, i) {
+          c.style.transitionDelay = (i * 0.12) + "s";
+          observateur.observe(c);
+        });
+      } else {
+        cartes.forEach(function (c) { c.classList.add("visible"); });
+      }
+    })();
+  </script>
+</body>
+</html>
