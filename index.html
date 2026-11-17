@@ -15,7 +15,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-LyYwvoT+Q7JhxsPhbx/zc/iAzb1eCse8MzNkLNZ74ow='; script-src 'sha256-BLf561+0LRnULPO1LNtyDqDt7LCY0m8OCd/1grwKNnI='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-Ae9KuvqjIhi2aP0Wk8BalWtnsT/1WSMkfeKnKylLV6U='; script-src 'sha256-AhEbowk5RL8ZmEJ2RGaaRr+CK/orQULHMF69qn8mqT8='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -132,7 +132,7 @@
     }
     .forme.f1 { width: 70px; height: 70px; top: 14%; right: 12%; }
     .forme.f2 { width: 26px; height: 26px; top: 9%; left: 8%; background: var(--soleil); border: 0; animation-delay: -2s; }
-    .forme.f3 { width: 44px; height: 44px; bottom: 26%; right: 18%; border-radius: 12px; transform: rotate(45deg); border-color: rgba(5, 150, 105, 0.8); animation-delay: -4s; }
+    .forme.f3 { width: 44px; height: 44px; bottom: 17%; right: 9%; border-radius: 12px; transform: rotate(45deg); border-color: rgba(5, 150, 105, 0.8); animation-delay: -4s; }
 
     .hero-contenu { position: relative; z-index: 1; max-width: 720px; }
 
@@ -206,6 +206,24 @@
     .bouton-contour:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); }
     .bouton-wa { width: 100%; border-radius: 18px; background: linear-gradient(135deg, var(--wa), var(--emeraude)); color: var(--blanc); box-shadow: 0 10px 24px rgba(5, 150, 105, 0.35); }
     .bouton-wa:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(5, 150, 105, 0.45); }
+
+    /* Le compteur de visites visible par tous */
+    .compteur {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 22px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 250, 242, 0.25);
+      color: #f3e3cf;
+      font-weight: 600;
+      font-size: 0.95rem;
+      animation: monter 0.6s ease-out both;
+    }
+    .compteur strong { color: var(--soleil); font-family: var(--titres); font-size: 1.1rem; }
+    .compteur[hidden] { display: none; }
 
     /* La petite souris qui invite à descendre */
     .descendre {
@@ -580,6 +598,7 @@
         <a class="bouton bouton-soleil" href="#ebooks">Voir les ebooks ↓</a>
         <a class="bouton bouton-contour" data-whatsapp="1" target="_blank" rel="noopener noreferrer">Nous écrire</a>
       </div>
+      <div class="compteur" id="compteur-visites" hidden>👀 <strong id="nombre-visites">0</strong> visites sur le site</div>
     </div>
 
     <div class="descendre" aria-hidden="true"></div>
@@ -698,10 +717,15 @@
     "goatcounter" : ton code GoatCounter, pour compter les visites.
       Exemple : si ton tableau de bord est https://didydigital.goatcounter.com
       alors écris "didydigital". Laisse "" (vide) pour ne rien compter.
+    "afficherCompteur" : true pour montrer "👀 … visites" en haut du site, false pour le cacher.
+    "compteurMinimum" : le compteur ne s'affiche qu'à partir de ce nombre de visites
+      (ex. 100 pour attendre d'avoir 100 visites). 0 = toujours affiché.
   -->
   <script type="application/json" id="reglages">
   {
-    "goatcounter": "didyodg"
+    "goatcounter": "didyodg",
+    "afficherCompteur": true,
+    "compteurMinimum": 0
   }
   </script>
 
@@ -939,6 +963,20 @@
         pixel.referrerPolicy = "no-referrer";
         pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) +
                     "&t=" + encodeURIComponent(document.title);
+      }
+
+      // ----- 7. Afficher le nombre de visites en haut du site -----
+      if (/^[a-z0-9-]{2,50}$/.test(code) && reglages.afficherCompteur === true && window.fetch) {
+        var minimum = Number(reglages.compteurMinimum) || 0;
+        fetch("https://" + code + ".goatcounter.com/counter/TOTAL.json", { credentials: "omit", referrerPolicy: "no-referrer" })
+          .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+          .then(function (donnees) {
+            var n = parseInt(String(donnees && donnees.count).replace(/[^0-9]/g, ""), 10);
+            if (!(n > 0) || n < minimum) return;
+            document.getElementById("nombre-visites").textContent = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            document.getElementById("compteur-visites").hidden = false;
+          })
+          .catch(function () { /* en cas de problème, le compteur reste simplement caché */ });
       }
     })();
   </script>
