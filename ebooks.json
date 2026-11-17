@@ -4,15 +4,15 @@
     "nom": "Gérer son argent quand on gagne peu",
     "envie": "Mieux gérer mon argent",
     "prix": "2 300 F CFA",
-    "description": "Tu gagnes peu et ton argent disparaît avant la fin du mois ? Ce guide simple et pratique t'apprend à organiser ton budget, à éviter les dépenses inutiles et à mettre de l'argent de côté, même avec un petit salaire.",
+    "description": "Vous gagnez peu et votre argent disparaît avant la fin du mois ? Ce guide simple et pratique vous apprend à organiser votre budget, à éviter les dépenses inutiles et à mettre de l'argent de côté, même avec un petit salaire.",
     "icone": "💰",
     "couleur": "orange",
     "illustration": "finance",
     "image": "images/couverture-argent.jpg",
     "lienChariow": "https://tvqanrik.mychariow.shop/prd_6o0bkpc6/checkout",
-    "apercuTitre": "Tu vas apprendre à :",
+    "apercuTitre": "Vous allez apprendre à :",
     "apercu": [
-      "Faire ton budget",
+      "Faire votre budget",
       "Éviter les dépenses inutiles",
       "Épargner chaque mois",
       "Tenir jusqu'à la fin du mois"
@@ -23,7 +23,7 @@
     "nom": "400 recettes du Burkina Faso et d'Afrique de l'Ouest",
     "envie": "Cuisiner des plats d'Afrique de l'Ouest",
     "prix": "1 600 F CFA",
-    "description": "Découvre 400 recettes complètes du Burkina Faso et de toute l'Afrique de l'Ouest : plats traditionnels, sauces, boissons et douceurs, expliquées pas à pas.",
+    "description": "Découvrez 400 recettes complètes du Burkina Faso et de toute l'Afrique de l'Ouest : plats traditionnels, sauces, boissons et douceurs, expliqués pas à pas.",
     "icone": "🍲",
     "couleur": "vert",
     "illustration": "mafe",
@@ -39,6 +39,59 @@
       "Babenda",
       "Jus de bissap",
       "Dêguê"
+    ]
+  },
+  {
+    "id": "europe",
+    "nom": "Réussir en Europe : préparer son projet pas à pas",
+    "envie": "Préparer mon projet en Europe",
+    "prix": "2 900 F CFA",
+    "description": "Vous rêvez d'une nouvelle vie en Europe, mais vous ne savez pas par où commencer ? Ce guide pratique vous aide à préparer votre projet sérieusement, avec méthode et clarté : organiser vos recherches, comprendre chaque étape de votre démarche et avancer pas à pas, selon vos objectifs et votre situation.",
+    "icone": "✈️",
+    "couleur": "vert",
+    "lienChariow": "https://tvqanrik.mychariow.shop/prd_bkx38tzd/checkout",
+    "apercuTitre": "Vous allez apprendre à :",
+    "apercu": [
+      "Préparer votre projet avec méthode",
+      "Repérer les opportunités adaptées à votre situation",
+      "Comprendre chaque étape de votre démarche",
+      "Construire une vision claire de votre avenir"
+    ],
+    "motsCles": [
+      "europe",
+      "france",
+      "belgique",
+      "partir",
+      "voyage",
+      "etranger",
+      "immigrer",
+      "immigration",
+      "etudier"
+    ]
+  },
+  {
+    "id": "fumer",
+    "nom": "Arrêter de fumer : le programme de 21 jours pour reprendre le contrôle",
+    "envie": "Arrêter de fumer",
+    "prix": "1 200 F CFA",
+    "description": "Vous voulez arrêter la cigarette, mais les envies reviennent toujours ? Ce guide vous propose un programme simple sur 21 jours pour mieux gérer les envies, repérer vos habitudes liées au tabac et avancer pas à pas vers une vie sans cigarette. Une méthode pratique, à suivre à votre rythme.",
+    "icone": "🚭",
+    "couleur": "hibiscus",
+    "lienChariow": "https://tvqanrik.mychariow.shop/prd_sq3bihhg/checkout",
+    "apercuTitre": "Dans ce guide :",
+    "apercu": [
+      "Un programme organisé sur 21 jours",
+      "Des astuces pour réduire les envies",
+      "Repérer vos habitudes liées au tabac",
+      "Avancer pas à pas vers une vie sans cigarette"
+    ],
+    "motsCles": [
+      "fumer",
+      "fume",
+      "cigarette",
+      "tabac",
+      "arreter",
+      "nicotine"
     ]
   }
 ]

@@ -28,6 +28,11 @@ Photo de profil → **Settings** → **Emails** → coche **« Keep my email add
       Liens qui ouvrent Didy directement sur un ebook :
       - Argent : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=argent
       - Recettes : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=recettes
+      - Europe : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=europe
+      - Fumer : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=fumer
+- [ ] Ajouter les photos de couverture « Réussir en Europe » et « Arrêter de fumer » dans le dossier images
+      (elles ne sont pas encore arrivées sur GitHub).
+- [ ] Mettre « 400 recettes… » sur Chariow et envoyer le lien.
 
 - [ ] Mettre les 2 ebooks sur **Chariow** et ajouter les liens avec la page « Gérer mes ebooks ».
 - [ ] Dans **GoatCounter** → Settings : cocher l'option du compteur de visites.

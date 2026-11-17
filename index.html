@@ -15,7 +15,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-s0rJFPRIMUp4UY7O1EUmvv+8KSXKaCpBAmp9nGf23rY='; script-src 'sha256-HELbR0irzlztuwOzo1Q+qhThjmXdWI6RzL/W37BRdDg='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-BjQ0Ta2esZTHacjICpy6UnFVYF62qFOGMvd2xj+l86A='; script-src 'sha256-The0ko9zKByEGeYjW+HWsGdgQAfGBgF9+wcwlUVOduE='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -399,6 +399,8 @@
     .apercu-titre { margin: 0 0 10px; font-weight: 800; font-size: 0.9rem; color: var(--emeraude); }
     .apercu { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-wrap: wrap; gap: 8px; }
     .apercu li {
+      max-width: 100%;
+      overflow-wrap: anywhere;
       padding: 6px 13px;
       border-radius: 999px;
       background: var(--sable);
@@ -943,7 +945,7 @@
 
         // ----- Le choix du paiement -----
         var paiement = element("div", "paiement");
-        paiement.appendChild(element("div", "paiement-titre", "Comment veux-tu payer ?"));
+        paiement.appendChild(element("div", "paiement-titre", "Comment souhaitez-vous payer ?"));
 
         // Option 1 : payer en ligne sur Chariow (seulement si un lien https:// est renseigné)
         var chariow = lienSecurise(ebook.lienChariow);
@@ -973,7 +975,7 @@
           grille.appendChild(b);
         });
         paiement.appendChild(grille);
-        paiement.appendChild(element("p", "confiance", "🔒 Nous ne te demanderons jamais ton code secret."));
+        paiement.appendChild(element("p", "confiance", "🔒 Nous ne vous demanderons jamais votre code secret."));
         contenu.appendChild(paiement);
 
         carte.appendChild(contenu);

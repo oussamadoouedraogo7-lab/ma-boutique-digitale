@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-r88t8AUwTVx5OPVuL2kslyx47jSlwPMx2LpFiPvbKfc='; script-src 'sha256-ShVW64zln0f6BZ4m57U/AayE3PgEzXDKsuZZjeaPy6I='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-r88t8AUwTVx5OPVuL2kslyx47jSlwPMx2LpFiPvbKfc='; script-src 'sha256-Puem4xGIZB/t2EnraeZmpJldsB2VhqwbuXAjB3KkbNM='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -441,7 +441,9 @@
         if (enModification >= 0) {
           // On garde les informations que le formulaire ne montre pas (ex. "id")
           var ancien = ebooks[enModification] || {};
-          if (ancien.id) e.id = ancien.id;
+          Object.keys(ancien).forEach(function (cle) {
+            if (CHAMPS.indexOf(cle) < 0 && !(cle in e)) e[cle] = ancien[cle];
+          });
           ebooks[enModification] = e;
           message("message-form", "✅ Modifications enregistrées dans la liste. Passe à l'étape 3.", "ok");
         } else {
