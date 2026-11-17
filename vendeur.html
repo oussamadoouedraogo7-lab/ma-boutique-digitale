@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-CUWB/UlX8vbqUh2XbiXaZj4/8YbID1r3DZR1QVXTOr0='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-OnaNOBCHv7DJQ1D5/4N5IXVFDQcbyXinO1VOTpcIsZs='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#23110a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -612,6 +612,7 @@
           // Si le lien demande un ebook précis, la discussion commence directement sur lui
           var demande = "";
           try { demande = String(new URLSearchParams(location.search).get("ebook") || "").toLowerCase().slice(0, 40); } catch (e) { demande = ""; }
+          if (!demande) demande = String(location.hash || "").replace(/^#/, "").toLowerCase().slice(0, 40);
           var cible = null;
           ebooks.forEach(function (e) { if (!cible && demande && codeEbook(e) === demande) cible = e; });
           if (cible) {
