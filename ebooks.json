@@ -51,7 +51,7 @@
     "couleur": "vert",
     "image": "images/couverture-europe.jpg",
     "imageEntiere": true,
-    "lienChariow": "",
+    "lienChariow": "https://tvqanrik.mychariow.shop/prd_k7vhgpfx/checkout",
     "apercuTitre": "Vous allez apprendre à :",
     "apercu": [
       "Préparer votre projet avec méthode",
@@ -69,6 +69,41 @@
       "immigrer",
       "immigration",
       "etudier"
+    ]
+  },
+  {
+    "id": "business",
+    "nom": "Les Secrets de Réussite d'un Business en Ligne",
+    "envie": "Lancer mon business en ligne",
+    "prix": "2 550 F CFA",
+    "description": "Vous voulez gagner de l'argent sur internet, mais vous ne savez pas par où commencer ? Ce guide vous accompagne pas à pas, de l'idée à vos premières ventes : choisir une idée qui répond à un vrai besoin, créer une offre simple et votre premier produit digital, puis le faire connaître sur TikTok, Facebook et WhatsApp. Vous découvrez aussi les erreurs à éviter quand on débute, et un plan d'action de 30 jours pour passer enfin à l'action.",
+    "icone": "💼",
+    "couleur": "vert",
+    "image": "images/couverture-business.jpg",
+    "imageEntiere": true,
+    "lienChariow": "https://tvqanrik.mychariow.shop/prd_bkx38tzd/checkout",
+    "apercuTitre": "Vous allez apprendre à :",
+    "apercu": [
+      "Choisir une idée de business qui répond à un vrai besoin",
+      "Créer une offre simple et votre premier produit digital",
+      "Attirer des clients avec TikTok, Facebook et WhatsApp",
+      "Construire une page de vente efficace",
+      "Répondre aux objections et suivre vos résultats",
+      "Suivre un plan d'action de 30 jours"
+    ],
+    "motsCles": [
+      "business",
+      "entreprise",
+      "internet",
+      "en ligne",
+      "vendre",
+      "vente",
+      "tiktok",
+      "facebook",
+      "produit",
+      "digital",
+      "entrepreneur",
+      "gagner"
     ]
   },
   {
