@@ -21,6 +21,11 @@ Photo de profil → **Settings** → **Emails** → coche **« Keep my email add
 
 ## 2. Ensuite
 
+- [ ] Envoyer le lien de ta **boutique Chariow** (et de chaque ebook) pour que l'assistante Didy
+      envoie les clients acheter sur Chariow.
+- [ ] Une fois le site en ligne, partager le lien de l'assistante **Didy** :
+      https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html
+
 - [ ] Mettre les 2 ebooks sur **Chariow** et ajouter les liens avec la page « Gérer mes ebooks ».
 - [ ] Dans **GoatCounter** → Settings : cocher l'option du compteur de visites.
 - [ ] Dire si on supprime les grandes photos d'origine (`images/*.png`) ou si on les garde.

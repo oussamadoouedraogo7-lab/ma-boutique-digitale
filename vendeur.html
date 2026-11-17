@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
+  <!--
+    ===== DIDY : L'ASSISTANTE DE VENTE AUTOMATIQUE DE DIDY DIGITAL =====
+    Un robot de discussion qui accueille le client, lui conseille un ebook
+    et l'envoie payer sur Chariow (ou par Mobile Money sur WhatsApp).
+    Ses réponses sont préparées à l'avance : il n'y a pas d'intelligence
+    artificielle, pas de serveur, pas de mot de passe.
+    SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
+    reste dans son téléphone et n'est envoyé nulle part.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-IfpUOoa5LAzT5SBCW9YoIpFcQHUvJ5r1L3vNs86XaVA='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#23110a">
+  <title>Didy – Assistante de vente | Didy Digital</title>
+  <meta name="description" content="Discute avec Didy, l'assistante de Didy Digital : elle t'aide à choisir ton ebook et à l'acheter en quelques secondes.">
+  <link rel="preload" href="fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <style>
+    @font-face { font-family: "Bricolage"; src: url("fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+    @font-face { font-family: "Jakarta"; src: url("fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+
+    :root {
+      --cacao: #23110a;
+      --cacao-2: #3a1d10;
+      --terre: #c2410c;
+      --orange: #f97316;
+      --soleil: #fbbf24;
+      --emeraude: #059669;
+      --hibiscus: #e11d48;
+      --wa: #25d366;
+      --sable: #fdf4e3;
+      --creme: #fffaf2;
+      --texte-doux: #6b4a36;
+      --bord: #ecd3ae;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: "Jakarta", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--cacao);
+      background-color: var(--sable);
+      background-image:
+        linear-gradient(45deg, rgba(194, 65, 12, 0.04) 25%, transparent 25%, transparent 75%, rgba(194, 65, 12, 0.04) 75%),
+        linear-gradient(-45deg, rgba(194, 65, 12, 0.04) 25%, transparent 25%, transparent 75%, rgba(194, 65, 12, 0.04) 75%);
+      background-size: 36px 36px;
+    }
+
+    .appli {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ===== EN-TÊTE ===== */
+    .entete {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      padding-top: calc(12px + env(safe-area-inset-top));
+      color: var(--creme);
+      background: var(--cacao);
+      background-image: radial-gradient(circle at 0% 0%, rgba(249, 115, 22, 0.5), transparent 60%);
+      box-shadow: 0 4px 16px rgba(35, 17, 10, 0.25);
+      z-index: 2;
+    }
+    .avatar {
+      position: relative;
+      flex-shrink: 0;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      background: linear-gradient(135deg, var(--soleil), var(--orange));
+    }
+    .avatar::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 1px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--wa);
+      border: 2px solid var(--cacao);
+    }
+    .entete h1 { margin: 0; font-family: "Bricolage", system-ui, sans-serif; font-size: 1.15rem; line-height: 1.2; }
+    .entete p { margin: 0; font-size: 0.8rem; color: #f3e3cf; }
+
+    /* ===== LES MESSAGES ===== */
+    .fil {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 12px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
+    }
+
+    /* Les messages gardent leur taille (ils ne doivent pas être écrasés) */
+    .fil > * { flex-shrink: 0; }
+
+    .bulle {
+      max-width: 86%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      line-height: 1.5;
+      font-size: 0.98rem;
+      overflow-wrap: anywhere;
+      white-space: pre-line;
+      animation: entrer 0.35s ease-out both;
+    }
+    .bulle.robot { align-self: flex-start; background: #fff; border-bottom-left-radius: 6px; box-shadow: 0 2px 8px rgba(35, 17, 10, 0.07); }
+    .bulle.client { align-self: flex-end; background: var(--cacao); color: var(--creme); border-bottom-right-radius: 6px; }
+    .bulle strong { color: var(--terre); }
+    .bulle.client strong { color: var(--soleil); }
+
+    .ecrit { display: inline-flex; gap: 4px; padding: 14px 16px; }
+    .ecrit span { width: 7px; height: 7px; border-radius: 50%; background: #c9b39a; animation: points 1s ease-in-out infinite; }
+    .ecrit span:nth-child(2) { animation-delay: 0.15s; }
+    .ecrit span:nth-child(3) { animation-delay: 0.3s; }
+
+    /* Fiche d'un ebook dans la discussion */
+    .fiche {
+      align-self: flex-start;
+      width: min(100%, 340px);
+      overflow: hidden;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 8px 22px rgba(35, 17, 10, 0.12);
+      animation: entrer 0.4s ease-out both;
+    }
+    .fiche-image {
+      position: relative;
+      height: 170px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      background: linear-gradient(135deg, var(--orange), var(--soleil));
+    }
+    .fiche-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .fiche-prix {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 12px;
+      background: var(--cacao);
+      color: var(--soleil);
+      font-family: "Bricolage", system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+    .fiche-texte { padding: 14px 16px 16px; }
+    .fiche h2 { margin: 0 0 6px; font-family: "Bricolage", system-ui, sans-serif; font-size: 1.1rem; line-height: 1.25; }
+    .fiche p { margin: 0 0 10px; color: var(--texte-doux); font-size: 0.92rem; }
+    .etiquettes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+    .etiquettes li { padding: 4px 10px; border-radius: 999px; background: var(--sable); border: 1px solid var(--bord); font-size: 0.8rem; font-weight: 700; }
+
+    /* Gros boutons-liens dans la discussion (Chariow, WhatsApp) */
+    .liens { align-self: flex-start; display: grid; gap: 8px; width: min(100%, 340px); animation: entrer 0.35s ease-out both; }
+    .lien {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 52px;
+      padding: 10px 16px;
+      border-radius: 16px;
+      font-family: "Bricolage", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: 1.02rem;
+      text-align: center;
+      text-decoration: none;
+      color: #fff;
+    }
+    .lien.chariow { background: var(--cacao); color: var(--soleil); box-shadow: 0 8px 20px rgba(35, 17, 10, 0.25); }
+    .lien.moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); }
+    .lien.orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); }
+    .lien.wa { background: linear-gradient(135deg, var(--wa), var(--emeraude)); }
+    .lien:focus-visible, .choix button:focus-visible, .saisie button:focus-visible { outline: 3px solid var(--soleil); outline-offset: 3px; }
+
+    /* ===== EN BAS : CHOIX RAPIDES + ZONE D'ÉCRITURE ===== */
+    .bas {
+      padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(253, 244, 227, 0.96);
+      border-top: 1px solid var(--bord);
+    }
+    .choix { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    .choix:empty { display: none; }
+    .choix button {
+      min-height: 44px;
+      padding: 8px 14px;
+      border: 2px solid var(--orange);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--terre);
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      animation: entrer 0.3s ease-out both;
+    }
+    .choix button:active { background: var(--orange); color: #fff; }
+
+    .saisie { display: flex; gap: 8px; }
+    .saisie input {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+      padding: 10px 16px;
+      border: 2px solid var(--bord);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--cacao);
+      font: inherit;
+      font-size: 1rem;
+    }
+    .saisie input:focus { outline: none; border-color: var(--orange); }
+    .saisie button {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    @keyframes entrer { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    @keyframes points { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(-3px); } }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="appli">
+    <header class="entete">
+      <div class="avatar" aria-hidden="true">🤖</div>
+      <div>
+        <h1>Didy · Assistante de Didy Digital</h1>
+        <p>Assistante automatique · disponible 24h/24</p>
+      </div>
+    </header>
+
+    <main class="fil" id="fil" aria-live="polite"></main>
+
+    <div class="bas">
+      <div class="choix" id="choix"></div>
+      <form class="saisie" id="saisie" autocomplete="off">
+        <input id="message" type="text" maxlength="200" placeholder="Écris ta question ici…" aria-label="Ton message">
+        <button type="submit" aria-label="Envoyer">➤</button>
+      </form>
+    </div>
+  </div>
+
+  <noscript>Active JavaScript pour discuter avec Didy, ou écris-nous sur WhatsApp au +226 03 07 88 05.</noscript>
+
+  <!--
+    ⚙️ RÉGLAGES DE L'ASSISTANTE (tu peux les modifier sans risque)
+    "boutiqueChariow" : le lien de ta boutique Chariow (doit commencer par https://).
+    "goatcounter"     : ton code GoatCounter pour compter les visites de l'assistante.
+    Les ebooks, leurs prix et leurs liens Chariow sont lus dans ebooks.json.
+  -->
+  <script type="application/json" id="reglages">
+  {
+    "boutiqueChariow": "",
+    "goatcounter": "didyodg"
+  }
+  </script>
+
+  <script>
+    (function () {
+      "use strict";
+
+      // "1" = Moov Money, "2" = Orange Money
+      var NUMEROS = { "1": "22603078805", "2": "22605564451" };
+      var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      var fil = document.getElementById("fil");
+      var zoneChoix = document.getElementById("choix");
+      var ebooks = [];
+      var reglages = {};
+      try { reglages = JSON.parse(document.getElementById("reglages").textContent) || {}; } catch (e) { reglages = {}; }
+
+      // ---------- Petits outils ----------
+      function element(balise, classe, texte) {
+        var el = document.createElement(balise);
+        if (classe) el.className = classe;
+        if (texte) el.textContent = texte;
+        return el;
+      }
+      function lienSecurise(url) {
+        try { var u = new URL(String(url || "")); return u.protocol === "https:" ? u.href : null; }
+        catch (e) { return null; }
+      }
+      function cheminPhoto(c) {
+        c = String(c || "").trim();
+        return /^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(c) ? c : null;
+      }
+      function lienWhatsApp(message, quel) {
+        return "https://wa.me/" + (NUMEROS[quel] || NUMEROS["1"]) + "?text=" + encodeURIComponent(message);
+      }
+      function sansAccents(t) {
+        return String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+      }
+      function enBas() { fil.scrollTop = fil.scrollHeight; }
+
+      // Construit un texte où les morceaux entre ** ** sont en gras (sans jamais utiliser innerHTML)
+      function texteRiche(conteneur, texte) {
+        String(texte).split("**").forEach(function (morceau, i) {
+          if (!morceau) return;
+          conteneur.appendChild(i % 2 ? element("strong", "", morceau) : document.createTextNode(morceau));
+        });
+        return conteneur;
+      }
+
+      // ---------- File d'attente : les messages du robot arrivent un par un ----------
+      var file = Promise.resolve();
+      function plusTard(fonction) { file = file.then(fonction); return file; }
+      function attendre(ms) { return new Promise(function (r) { window.setTimeout(r, calme ? 0 : ms); }); }
+
+      function robot(texte) {
+        return plusTard(function () {
+          var ecrit = element("div", "bulle robot ecrit");
+          ecrit.setAttribute("aria-label", "Didy écrit…");
+          for (var i = 0; i < 3; i++) ecrit.appendChild(element("span"));
+          fil.appendChild(ecrit); enBas();
+          return attendre(Math.min(450 + String(texte).length * 12, 1500)).then(function () {
+            fil.removeChild(ecrit);
+            fil.appendChild(texteRiche(element("div", "bulle robot"), texte));
+            enBas();
+          });
+        });
+      }
+      function robotBloc(construire) {
+        return plusTard(function () {
+          return attendre(300).then(function () { fil.appendChild(construire()); enBas(); });
+        });
+      }
+      function client(texte) {
+        fil.appendChild(element("div", "bulle client", texte));
+        enBas();
+      }
+      function choix(liste) {
+        plusTard(function () {
+          zoneChoix.textContent = "";
+          liste.forEach(function (c) {
+            var b = element("button", "", c.texte);
+            b.type = "button";
+            b.addEventListener("click", function () {
+              zoneChoix.textContent = "";
+              client(c.texte);
+              c.action();
+            });
+            zoneChoix.appendChild(b);
+          });
+          enBas();
+        });
+      }
+
+      // ---------- Les blocs affichés ----------
+      function fiche(ebook) {
+        var f = element("article", "fiche");
+        var img = element("div", "fiche-image");
+        var photo = cheminPhoto(ebook.image);
+        if (photo) {
+          var i = element("img");
+          i.src = photo; i.alt = String(ebook.nom || ""); i.decoding = "async";
+          i.addEventListener("load", enBas);
+          img.appendChild(i);
+        } else {
+          img.appendChild(element("span", "", ebook.icone || "📘"));
+        }
+        img.appendChild(element("div", "fiche-prix", ebook.prix));
+        f.appendChild(img);
+        var t = element("div", "fiche-texte");
+        t.appendChild(element("h2", "", ebook.nom));
+        t.appendChild(element("p", "", ebook.description));
+        if (Array.isArray(ebook.apercu) && ebook.apercu.length) {
+          var ul = element("ul", "etiquettes");
+          ebook.apercu.slice(0, 6).forEach(function (x) { ul.appendChild(element("li", "", String(x))); });
+          t.appendChild(ul);
+        }
+        f.appendChild(t);
+        return f;
+      }
+      function blocLiens(liens) {
+        var div = element("div", "liens");
+        liens.forEach(function (l) {
+          var a = element("a", "lien " + l.classe, l.texte);
+          a.href = l.href;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          div.appendChild(a);
+        });
+        return div;
+      }
+      function liensMobileMoney(ebook) {
+        var debut = ebook
+          ? "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par "
+          : "Bonjour Didy Digital ! J'aimerais acheter un ebook. Je veux payer par ";
+        return [
+          { classe: "moov", texte: "Payer par Moov Money (WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1") },
+          { classe: "orange-money", texte: "Payer par Orange Money (WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2") }
+        ];
+      }
+
+      // ---------- Les étapes de la discussion ----------
+      function menu() {
+        var liste = ebooks.map(function (e) {
+          return { texte: (e.icone ? e.icone + " " : "") + (e.envie || e.nom), action: function () { presenter(e); } };
+        });
+        if (ebooks.length > 1) liste.push({ texte: "📚 Voir tous les ebooks", action: tous });
+        liste.push({ texte: "❓ J'ai une question", action: questions });
+        choix(liste);
+      }
+
+      function accueil() {
+        robot("Bonjour et bienvenue chez **Didy Digital** ! 👋");
+        robot("Je suis **Didy**, l'assistante automatique de la boutique. Je t'aide à trouver le bon ebook et à l'acheter en quelques secondes.");
+        if (!ebooks.length) {
+          robot("Oups, je n'arrive pas à afficher les ebooks pour le moment. Écris-nous directement sur WhatsApp 🙏");
+          robotBloc(function () { return blocLiens([{ classe: "wa", texte: "💬 Écrire sur WhatsApp", href: lienWhatsApp("Bonjour Didy Digital ! J'aimerais acheter un ebook.", "1") }]); });
+          return;
+        }
+        robot("Dis-moi : qu'est-ce qui t'intéresse aujourd'hui ?");
+        menu();
+      }
+
+      function presenter(e) {
+        robot("Excellent choix ! Voici l'ebook qu'il te faut 👇");
+        robotBloc(function () { return fiche(e); });
+        robot("Il coûte **" + e.prix + "**. Tu le lis directement sur ton téléphone.");
+        choix([
+          { texte: "🛒 Je l'achète", action: function () { acheter(e); } },
+          { texte: "🤔 J'ai une question", action: questions },
+          { texte: "↩ Voir les autres ebooks", action: function () { robot("Pas de souci ! Voici ce que je te propose :"); menu(); } }
+        ]);
+      }
+
+      function tous() {
+        robot("Voici tous nos ebooks 📚");
+        ebooks.forEach(function (e) { robotBloc(function () { return fiche(e); }); });
+        robot("Lequel te tente ?");
+        choix(ebooks.map(function (e) {
+          return { texte: "🛒 " + e.nom, action: function () { acheter(e); } };
+        }).concat([{ texte: "❓ J'ai une question", action: questions }]));
+      }
+
+      function acheter(e) {
+        var chariow = lienSecurise(e.lienChariow) || lienSecurise(reglages.boutiqueChariow);
+        if (chariow) {
+          robot("Super ! 🎉 Pour l'acheter, touche le bouton ci-dessous : tu paies sur **Chariow**, une page de paiement sécurisée.");
+          robot("Dès que ton paiement est validé, **tu reçois ton ebook automatiquement**, même la nuit.");
+          robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Acheter « " + e.nom + " » sur Chariow", href: chariow }]); });
+          robot("Tu préfères payer par Mobile Money en nous écrivant ? C'est possible aussi :");
+          robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
+        } else {
+          robot("Super ! 🎉 Choisis ton moyen de paiement. WhatsApp va s'ouvrir avec un message déjà écrit : tu n'as plus qu'à l'envoyer.");
+          robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
+          robot("On te répond, tu paies, et on t'envoie ton ebook dès que le paiement est confirmé.");
+        }
+        robot("🔒 Rappel : on ne te demandera **jamais** ton code secret Mobile Money.");
+        choix([
+          { texte: "📚 Voir d'autres ebooks", action: function () { robot("Avec plaisir !"); menu(); } },
+          { texte: "❓ J'ai une question", action: questions }
+        ]);
+      }
+
+      var REPONSES = {
+        recevoir: function () {
+          robot("Sur **Chariow**, tu reçois l'ebook **automatiquement** juste après le paiement.");
+          robot("Si tu paies par **Moov Money** ou **Orange Money** sur WhatsApp, on t'envoie le fichier dès que ton paiement est confirmé.");
+        },
+        payer: function () {
+          robot("Tu as plusieurs choix 💳 : payer en ligne sur **Chariow**, ou payer par **Moov Money** ou **Orange Money** en nous écrivant sur WhatsApp.");
+        },
+        securite: function () {
+          robot("Oui, c'est sûr 🔒. Tu paies toi-même, dans ton application Mobile Money ou sur la page sécurisée de Chariow.");
+          robot("On ne te demandera **jamais** ton code secret. Paie uniquement aux numéros officiels : **+226 03 07 88 05** (Moov) et **+226 05 56 44 51** (Orange).");
+        },
+        lire: function () {
+          robot("Oui ! 📱 Les ebooks se lisent directement sur ton téléphone, où tu veux, quand tu veux.");
+        },
+        prix: function () {
+          robot("Voici nos prix 👇");
+          robot(ebooks.map(function (e) { return "• " + e.nom + " : **" + e.prix + "**"; }).join("\n"));
+        },
+        cher: function () {
+          robot("Je comprends 🙏 Un ebook, c'est un petit prix pour un savoir que tu gardes et que tu peux relire quand tu veux.");
+          robot("Si tu veux en parler, écris-nous sur WhatsApp, on te répondra avec plaisir.");
+        },
+        humain: function () {
+          robot("Bien sûr ! Écris-nous sur WhatsApp, une vraie personne te répondra 😊");
+          robotBloc(function () {
+            return blocLiens([{ classe: "wa", texte: "💬 Écrire sur WhatsApp", href: lienWhatsApp("Bonjour Didy Digital ! J'ai une question sur vos ebooks.", "1") }]);
+          });
+        }
+      };
+
+      function apresReponse() {
+        choix([
+          { texte: "🛒 Choisir un ebook", action: function () { robot("Super ! Qu'est-ce qui t'intéresse ?"); menu(); } },
+          { texte: "❓ Autre question", action: questions },
+          { texte: "💬 Parler à une personne", action: function () { REPONSES.humain(); apresReponse(); } }
+        ]);
+      }
+
+      function questions() {
+        robot("Bien sûr ! Choisis ta question, ou écris-la en bas 👇");
+        choix([
+          { texte: "📥 Comment je reçois l'ebook ?", action: function () { REPONSES.recevoir(); apresReponse(); } },
+          { texte: "💳 Comment payer ?", action: function () { REPONSES.payer(); apresReponse(); } },
+          { texte: "🔒 C'est sûr ?", action: function () { REPONSES.securite(); apresReponse(); } },
+          { texte: "📱 Je peux lire sur mon téléphone ?", action: function () { REPONSES.lire(); apresReponse(); } },
+          { texte: "💬 Parler à une personne", action: function () { REPONSES.humain(); apresReponse(); } }
+        ]);
+      }
+
+      // ---------- Quand le client écrit lui-même ----------
+      function comprendre(texte) {
+        var t = sansAccents(texte);
+        function a(mots) { return mots.some(function (m) { return t.indexOf(m) >= 0; }); }
+
+        if (a(["merci", "cool", "super", "top"])) { robot("Avec plaisir ! 😊 Je suis là si tu as besoin."); return apresReponse(); }
+        if (a(["bonjour", "bonsoir", "salut", "hello", "coucou", "slt", "bjr"])) { robot("Bonjour à toi ! 👋 Qu'est-ce qui t'intéresse ?"); return menu(); }
+        if (a(["trop cher", "cher", "reduction", "promo", "remise"])) { REPONSES.cher(); return apresReponse(); }
+        if (a(["prix", "combien", "cout", "tarif", "fcfa", "f cfa"])) { REPONSES.prix(); return apresReponse(); }
+        if (a(["arnaque", "securi", "confiance", "fiable", "vrai"])) { REPONSES.securite(); return apresReponse(); }
+        if (a(["recevoir", "recoit", "livraison", "livrer", "envoi", "telecharg", "fichier"])) { REPONSES.recevoir(); return apresReponse(); }
+        if (a(["payer", "paiement", "moov", "orange", "money", "chariow", "carte", "acheter", "commander"])) { REPONSES.payer(); return apresReponse(); }
+        if (a(["telephone", "lire", "pdf", "android", "portable"])) { REPONSES.lire(); return apresReponse(); }
+        if (a(["humain", "personne", "parler", "whatsapp", "appeler", "numero", "contact"])) { REPONSES.humain(); return apresReponse(); }
+
+        // Le client parle d'un thème d'un ebook ?
+        var meilleur = null, score = 0;
+        ebooks.forEach(function (e) {
+          var mots = sansAccents([e.nom, e.envie, (e.apercu || []).join(" "), (e.motsCles || []).join(" ")].join(" "))
+            .split(/[^a-z0-9]+/).filter(function (m) { return m.length >= 4; });
+          var s = mots.filter(function (m) { return t.indexOf(m) >= 0; }).length;
+          if (s > score) { score = s; meilleur = e; }
+        });
+        if (meilleur) return presenter(meilleur);
+
+        robot("Je suis un robot, je comprends mieux quand tu touches les boutons 😅");
+        robot("Tu peux aussi écrire à une vraie personne sur WhatsApp.");
+        apresReponse();
+      }
+
+      document.getElementById("saisie").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        var champ = document.getElementById("message");
+        var texte = String(champ.value || "").trim().slice(0, 200);
+        if (!texte) return;
+        champ.value = "";
+        zoneChoix.textContent = "";
+        client(texte);
+        comprendre(texte);
+      });
+
+      // ---------- Démarrage : lecture des ebooks, puis bonjour ----------
+      fetch("ebooks.json", { cache: "no-cache", credentials: "same-origin" })
+        .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+        .then(function (d) { ebooks = (Array.isArray(d) ? d : []).filter(function (e) { return e && e.nom && e.prix; }); })
+        .catch(function () { ebooks = []; })
+        .then(accueil);
+
+      // ---------- Compteur de visites (GoatCounter, sans cookie) ----------
+      var code = String(reglages.goatcounter || "").trim().toLowerCase();
+      if (/^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
+        var pixel = new Image(1, 1);
+        pixel.referrerPolicy = "no-referrer";
+        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) + "&t=" + encodeURIComponent(document.title);
+      }
+    })();
+  </script>
+</body>
+</html>

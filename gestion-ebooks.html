@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-Uge+de4WRxKIQ03FtZ7SzW5/QyNT+ueGCBZcUuNoVr8='; script-src 'sha256-6O2m4wESHymGixEO7yxKHnwZC350Z581UxUm9GViVyI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-Uge+de4WRxKIQ03FtZ7SzW5/QyNT+ueGCBZcUuNoVr8='; script-src 'sha256-q2QQdNHrr9Au5I52FBL4VVKqjxF/UHRgJHgdRWVb0fo='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -177,6 +177,9 @@
         <label for="nom">Titre de l'ebook *</label>
         <input id="nom" maxlength="120" placeholder="Ex. : Réussir son petit commerce">
 
+        <label for="envie">Ce que le client cherche <span>(facultatif, pour l'assistante Didy)</span></label>
+        <input id="envie" maxlength="60" placeholder="Ex. : Mieux gérer mon argent">
+
         <label for="prix">Prix *</label>
         <input id="prix" maxlength="40" placeholder="Ex. : 2 000 F CFA">
 
@@ -262,7 +265,7 @@
 
       var COULEURS = ["orange", "vert", "hibiscus", "soleil", "terre", "cacao"];
       var DESSINS = ["", "finance", "mafe"];
-      var CHAMPS = ["nom", "prix", "description", "apercuTitre", "apercu", "icone", "couleur", "illustration", "image", "lienChariow"];
+      var CHAMPS = ["nom", "envie", "prix", "description", "apercuTitre", "apercu", "icone", "couleur", "illustration", "image", "lienChariow"];
 
       function $(id) { return document.getElementById(id); }
 
@@ -368,6 +371,8 @@
         if (!e.nom || !e.prix || !e.description) {
           throw new Error("Remplis le titre, le prix et la description.");
         }
+        var envie = texte($("envie").value, 60);
+        if (envie) e.envie = envie;
         var icone = texte($("icone").value, 8);
         if (icone) e.icone = icone;
 
