@@ -77,6 +77,8 @@
     "description": "Vous voulez arrêter la cigarette, mais les envies reviennent toujours ? Ce guide vous propose un programme simple sur 21 jours pour mieux gérer les envies, repérer vos habitudes liées au tabac et avancer pas à pas vers une vie sans cigarette. Une méthode pratique, à suivre à votre rythme.",
     "icone": "🚭",
     "couleur": "hibiscus",
+    "image": "images/couverture-fumer.jpg",
+    "imageEntiere": true,
     "lienChariow": "https://tvqanrik.mychariow.shop/prd_sq3bihhg/checkout",
     "apercuTitre": "Dans ce guide :",
     "apercu": [

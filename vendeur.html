@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-OnaNOBCHv7DJQ1D5/4N5IXVFDQcbyXinO1VOTpcIsZs='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-49vQoe3cXv0FoR+KJMXLVM8KHCQFTG0BAgpXW8AHV5Q='; script-src 'sha256-5j+x/f6OUNL4cjb5rAlp0YR4upKy5dqnP6gMkHmsZqk='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#23110a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -154,6 +154,8 @@
       background: linear-gradient(135deg, var(--orange), var(--soleil));
     }
     .fiche-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .fiche-image img.entiere { object-fit: contain; padding: 6px 0; }
+    .fiche-image.claire { background: #f4f4f4; }
     .fiche-prix {
       position: absolute;
       right: 10px;
@@ -391,7 +393,8 @@
         var img = element("div", "fiche-image");
         var photo = cheminPhoto(ebook.image);
         if (photo) {
-          var i = element("img");
+          var i = element("img", ebook.imageEntiere === true ? "entiere" : "");
+          if (ebook.imageEntiere === true) img.classList.add("claire");
           i.src = photo; i.alt = String(ebook.nom || ""); i.decoding = "async";
           i.addEventListener("load", enBas);
           img.appendChild(i);
