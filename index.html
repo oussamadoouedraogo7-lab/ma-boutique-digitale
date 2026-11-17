@@ -15,7 +15,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-OworZd3MYxVpEYLecvjP+kSNg0xZ0N3/qHq1Hf/P2Y4='; script-src 'sha256-J8QyK8aFULG2jILsUtSYnfmZjDlVlCNN0VFIOmHpcuI='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-s0rJFPRIMUp4UY7O1EUmvv+8KSXKaCpBAmp9nGf23rY='; script-src 'sha256-HELbR0irzlztuwOzo1Q+qhThjmXdWI6RzL/W37BRdDg='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -408,6 +408,23 @@
       font-weight: 700;
     }
 
+    /* Lien invisible sur toute la couverture (ouvre Didy) */
+    .couverture-lien { position: absolute; inset: 0; z-index: 1; border-radius: 28px 28px 0 0; }
+    .couverture-lien:focus-visible { outline: 3px solid var(--soleil); outline-offset: -3px; }
+    .couverture .prix { z-index: 2; }
+
+    /* Bouton "Discuter avec Didy" */
+    .bouton-didy {
+      width: 100%;
+      margin: 0 0 22px;
+      border-radius: 18px;
+      background: var(--sable);
+      color: var(--terre);
+      border: 2px solid var(--orange);
+      font-size: 1rem;
+    }
+    .bouton-didy:hover { background: var(--orange); color: var(--blanc); transform: translateY(-2px); }
+
     /* ===== LE CHOIX DU PAIEMENT DANS CHAQUE CARTE ===== */
     .paiement { margin-top: auto; padding-top: 18px; border-top: 1px dashed #ecd3ae; }
     .paiement-titre { margin: 0 0 12px; font-family: var(--titres); font-weight: 800; font-size: 1.05rem; color: var(--cacao); }
@@ -646,7 +663,7 @@
       <p>Bienvenue ! Des ebooks simples et pratiques pour apprendre, progresser et réussir au quotidien. À lire directement sur ton téléphone.</p>
       <div class="actions">
         <a class="bouton bouton-soleil" href="#ebooks">Voir les ebooks ↓</a>
-        <a class="bouton bouton-contour" data-whatsapp="1" target="_blank" rel="noopener noreferrer">Nous écrire</a>
+        <a class="bouton bouton-contour" href="vendeur.html">💬 Discuter avec Didy</a>
       </div>
       <div class="compteur" id="compteur-visites" hidden>👀 <strong id="nombre-visites">0</strong> visites sur le site</div>
     </div>
@@ -853,7 +870,16 @@
         return /^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(c) ? c : null;
       }
 
+      // Le "code" de l'ebook pour ouvrir Didy directement sur lui (ex. vendeur.html?ebook=argent)
+      function codeEbook(e) {
+        var id = String(e.id || "").trim().toLowerCase();
+        if (/^[a-z0-9-]{1,40}$/.test(id)) return id;
+        return String(e.nom || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+      }
+
       function creerCarte(ebook) {
+        var lienDidy = "vendeur.html?ebook=" + encodeURIComponent(codeEbook(ebook));
         var carte = element("article", "carte revele");
 
         var couleur = COULEURS[ebook.couleur] || "orange";
@@ -879,6 +905,11 @@
         }
         couverture.appendChild(cadre);
         couverture.appendChild(element("div", "prix", ebook.prix));
+        // Toucher la couverture ouvre la discussion avec Didy sur cet ebook
+        var lienCouverture = element("a", "couverture-lien");
+        lienCouverture.href = lienDidy;
+        lienCouverture.setAttribute("aria-label", "Discuter avec Didy de l'ebook « " + ebook.nom + " »");
+        couverture.appendChild(lienCouverture);
         carte.appendChild(couverture);
 
         // Quand on touche la couverture : léger zoom et ombre colorée
@@ -897,6 +928,11 @@
         var contenu = element("div", "contenu");
         contenu.appendChild(element("h3", "", ebook.nom));
         contenu.appendChild(element("p", "", ebook.description));
+
+        var boutonDidy = element("a", "bouton bouton-didy");
+        boutonDidy.href = lienDidy;
+        boutonDidy.appendChild(element("span", "", "💬 Discuter avec Didy de cet ebook"));
+        contenu.appendChild(boutonDidy);
 
         if (Array.isArray(ebook.apercu) && ebook.apercu.length) {
           contenu.appendChild(element("div", "apercu-titre", ebook.apercuTitre || "Au menu :"));

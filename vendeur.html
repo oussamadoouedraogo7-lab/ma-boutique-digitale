@@ -12,11 +12,11 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-1EMKn9I3g+Pw9uyZtKhI0lNli1euwOk4RxuzWBmR4C4='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2FgeGEDX5mxwzhRtYoAGhvhbGHuXPJiDt+P7O2nQjQ8='; script-src 'sha256-CUWB/UlX8vbqUh2XbiXaZj4/8YbID1r3DZR1QVXTOr0='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#23110a">
   <title>Didy – Assistante de vente | Didy Digital</title>
-  <meta name="description" content="Discute avec Didy, l'assistante de Didy Digital : elle t'aide à choisir ton ebook et à l'acheter en quelques secondes.">
+  <meta name="description" content="Discutez avec Didy, l'assistante de Didy Digital : elle vous aide à choisir votre ebook et à l'acheter en quelques secondes.">
   <link rel="preload" href="fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
   <style>
     @font-face { font-family: "Bricolage"; src: url("fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
@@ -267,7 +267,7 @@
     <div class="bas">
       <div class="choix" id="choix"></div>
       <form class="saisie" id="saisie" autocomplete="off">
-        <input id="message" type="text" maxlength="200" placeholder="Écris ta question ici…" aria-label="Ton message">
+        <input id="message" type="text" maxlength="200" placeholder="Écrivez votre question ici…" aria-label="Votre message">
         <button type="submit" aria-label="Envoyer">➤</button>
       </form>
     </div>
@@ -427,9 +427,27 @@
           ? "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par "
           : "Bonjour Didy Digital ! J'aimerais acheter un ebook. Je veux payer par ";
         return [
-          { classe: "moov", texte: "Payer par Moov Money (WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1") },
-          { classe: "orange-money", texte: "Payer par Orange Money (WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2") }
+          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1") },
+          { classe: "orange-money", texte: "Payer par Orange Money (via WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2") }
         ];
+      }
+
+      // "Bonjour" la journée, "Bonsoir" à partir de 18 h
+      function salutation() {
+        var h = new Date().getHours();
+        return (h >= 18 || h < 4) ? "Bonsoir" : "Bonjour";
+      }
+
+      // Ce qui donne envie d'acheter tout de suite (sans rien inventer)
+      function argumenter(e) {
+        if (Array.isArray(e.apercu) && e.apercu.length) {
+          // Sans titre, c'est le même que sur le site : "Au menu"
+          var titre = String(e.apercuTitre || "Au menu :").replace(/\s*:\s*$/, "");
+          if (/^tu vas apprendre/i.test(titre)) titre = "Avec cet ebook, vous allez apprendre à";
+          if (/^au menu/i.test(titre)) titre = "Au menu, entre autres";
+          robot(titre + " :\n" + e.apercu.slice(0, 5).map(function (x) { return "✅ " + x; }).join("\n"));
+        }
+        robot("Tout cela pour seulement **" + e.prix + "** 💛 Vous le recevez sur votre téléphone et vous pouvez commencer **dès aujourd'hui**.");
       }
 
       // ---------- Les étapes de la discussion ----------
@@ -438,87 +456,87 @@
           return { texte: (e.icone ? e.icone + " " : "") + (e.envie || e.nom), action: function () { presenter(e); } };
         });
         if (ebooks.length > 1) liste.push({ texte: "📚 Voir tous les ebooks", action: tous });
-        liste.push({ texte: "❓ J'ai une question", action: questions });
+        liste.push({ texte: "❓ Poser une question", action: questions });
         choix(liste);
       }
 
       function accueil() {
-        robot("Bonjour et bienvenue chez **Didy Digital** ! 👋");
-        robot("Je suis **Didy**, l'assistante automatique de la boutique. Je t'aide à trouver le bon ebook et à l'acheter en quelques secondes.");
+        robot(salutation() + " et bienvenue chez **Didy Digital** 🙏");
+        robot("C'est un plaisir de vous accueillir. Je suis **Didy**, l'assistante automatique de la boutique. Je suis là pour vous aider à trouver l'ebook qui vous correspond, et à l'avoir sur votre téléphone en quelques minutes.");
         if (!ebooks.length) {
-          robot("Oups, je n'arrive pas à afficher les ebooks pour le moment. Écris-nous directement sur WhatsApp 🙏");
+          robot("Toutes nos excuses, je n'arrive pas à afficher les ebooks pour le moment. Écrivez-nous directement sur WhatsApp, nous vous répondrons avec plaisir 🙏");
           robotBloc(function () { return blocLiens([{ classe: "wa", texte: "💬 Écrire sur WhatsApp", href: lienWhatsApp("Bonjour Didy Digital ! J'aimerais acheter un ebook.", "1") }]); });
           return;
         }
-        robot("Dis-moi : qu'est-ce qui t'intéresse aujourd'hui ?");
+        robot("Dites-moi, qu'est-ce qui vous ferait plaisir aujourd'hui ?");
         menu();
       }
 
       function presenter(e) {
-        robot("Excellent choix ! Voici l'ebook qu'il te faut 👇");
+        robot("Excellent choix 👌 Voici l'ebook qu'il vous faut :");
         robotBloc(function () { return fiche(e); });
-        robot("Il coûte **" + e.prix + "**. Tu le lis directement sur ton téléphone.");
+        argumenter(e);
         choix([
-          { texte: "🛒 Je l'achète", action: function () { acheter(e); } },
+          { texte: "🛒 Je l'achète maintenant", action: function () { acheter(e); } },
           { texte: "🤔 J'ai une question", action: questions },
-          { texte: "↩ Voir les autres ebooks", action: function () { robot("Pas de souci ! Voici ce que je te propose :"); menu(); } }
+          { texte: "↩ Voir les autres ebooks", action: function () { robot("Bien sûr ! Voici ce que je vous propose :"); menu(); } }
         ]);
       }
 
       function tous() {
-        robot("Voici tous nos ebooks 📚");
+        robot("Avec plaisir ! Voici tous nos ebooks 📚");
         ebooks.forEach(function (e) { robotBloc(function () { return fiche(e); }); });
-        robot("Lequel te tente ?");
+        robot("Lequel vous fait envie ?");
         choix(ebooks.map(function (e) {
           return { texte: "🛒 " + e.nom, action: function () { acheter(e); } };
-        }).concat([{ texte: "❓ J'ai une question", action: questions }]));
+        }).concat([{ texte: "❓ Poser une question", action: questions }]));
       }
 
       function acheter(e) {
         var chariow = lienSecurise(e.lienChariow) || lienSecurise(reglages.boutiqueChariow);
         if (chariow) {
-          robot("Super ! 🎉 Pour l'acheter, touche le bouton ci-dessous : tu paies sur **Chariow**, une page de paiement sécurisée.");
-          robot("Dès que ton paiement est validé, **tu reçois ton ebook automatiquement**, même la nuit.");
+          robot("Merci pour votre confiance 🙏 Pour l'acheter, touchez le bouton ci-dessous : vous payez sur **Chariow**, une page de paiement sécurisée (Mobile Money ou carte).");
+          robot("Dès que votre paiement est validé, **vous recevez votre ebook automatiquement**, même la nuit.");
           robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Acheter « " + e.nom + " » sur Chariow", href: chariow }]); });
-          robot("Tu préfères payer par Mobile Money en nous écrivant ? C'est possible aussi :");
+          robot("Vous préférez payer par Mobile Money en nous écrivant ? C'est possible aussi :");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
         } else {
-          robot("Super ! 🎉 Choisis ton moyen de paiement. WhatsApp va s'ouvrir avec un message déjà écrit : tu n'as plus qu'à l'envoyer.");
+          robot("Merci pour votre confiance 🙏 Choisissez votre moyen de paiement. WhatsApp va s'ouvrir avec un message déjà écrit : vous n'avez plus qu'à l'envoyer.");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
-          robot("On te répond, tu paies, et on t'envoie ton ebook dès que le paiement est confirmé.");
+          robot("Nous vous répondons, vous payez, et nous vous envoyons votre ebook dès que le paiement est confirmé.");
         }
-        robot("🔒 Rappel : on ne te demandera **jamais** ton code secret Mobile Money.");
+        robot("🔒 Pour votre sécurité : nous ne vous demanderons **jamais** votre code secret Mobile Money.");
         choix([
           { texte: "📚 Voir d'autres ebooks", action: function () { robot("Avec plaisir !"); menu(); } },
-          { texte: "❓ J'ai une question", action: questions }
+          { texte: "❓ Poser une question", action: questions }
         ]);
       }
 
       var REPONSES = {
         recevoir: function () {
-          robot("Sur **Chariow**, tu reçois l'ebook **automatiquement** juste après le paiement.");
-          robot("Si tu paies par **Moov Money** ou **Orange Money** sur WhatsApp, on t'envoie le fichier dès que ton paiement est confirmé.");
+          robot("Sur **Chariow**, vous recevez l'ebook **automatiquement** juste après le paiement.");
+          robot("Si vous payez par **Moov Money** ou **Orange Money** sur WhatsApp, nous vous envoyons le fichier dès que votre paiement est confirmé.");
         },
         payer: function () {
-          robot("Tu as plusieurs choix 💳 : payer en ligne sur **Chariow**, ou payer par **Moov Money** ou **Orange Money** en nous écrivant sur WhatsApp.");
+          robot("Vous avez le choix 💳 : payer en ligne sur **Chariow**, ou payer par **Moov Money** ou **Orange Money** en nous écrivant sur WhatsApp.");
         },
         securite: function () {
-          robot("Oui, c'est sûr 🔒. Tu paies toi-même, dans ton application Mobile Money ou sur la page sécurisée de Chariow.");
-          robot("On ne te demandera **jamais** ton code secret. Paie uniquement aux numéros officiels : **+226 03 07 88 05** (Moov) et **+226 05 56 44 51** (Orange).");
+          robot("Oui, vous pouvez être tranquille 🔒. Vous payez vous-même, dans votre application Mobile Money ou sur la page sécurisée de Chariow.");
+          robot("Nous ne vous demanderons **jamais** votre code secret. Payez uniquement à nos numéros officiels : **+226 03 07 88 05** (Moov) et **+226 05 56 44 51** (Orange).");
         },
         lire: function () {
-          robot("Oui ! 📱 Les ebooks se lisent directement sur ton téléphone, où tu veux, quand tu veux.");
+          robot("Oui ! 📱 Les ebooks se lisent directement sur votre téléphone, où vous voulez, quand vous voulez.");
         },
         prix: function () {
           robot("Voici nos prix 👇");
           robot(ebooks.map(function (e) { return "• " + e.nom + " : **" + e.prix + "**"; }).join("\n"));
         },
         cher: function () {
-          robot("Je comprends 🙏 Un ebook, c'est un petit prix pour un savoir que tu gardes et que tu peux relire quand tu veux.");
-          robot("Si tu veux en parler, écris-nous sur WhatsApp, on te répondra avec plaisir.");
+          robot("Je vous comprends 🙏 Un ebook, c'est un petit prix pour un savoir que vous gardez et que vous pouvez relire autant de fois que vous voulez.");
+          robot("Si vous souhaitez en parler, écrivez-nous sur WhatsApp, nous vous répondrons avec plaisir.");
         },
         humain: function () {
-          robot("Bien sûr ! Écris-nous sur WhatsApp, une vraie personne te répondra 😊");
+          robot("Bien sûr ! Écrivez-nous sur WhatsApp, une vraie personne vous répondra avec plaisir 😊");
           robotBloc(function () {
             return blocLiens([{ classe: "wa", texte: "💬 Écrire sur WhatsApp", href: lienWhatsApp("Bonjour Didy Digital ! J'ai une question sur vos ebooks.", "1") }]);
           });
@@ -527,19 +545,19 @@
 
       function apresReponse() {
         choix([
-          { texte: "🛒 Choisir un ebook", action: function () { robot("Super ! Qu'est-ce qui t'intéresse ?"); menu(); } },
+          { texte: "🛒 Choisir un ebook", action: function () { robot("Avec plaisir ! Qu'est-ce qui vous intéresse ?"); menu(); } },
           { texte: "❓ Autre question", action: questions },
           { texte: "💬 Parler à une personne", action: function () { REPONSES.humain(); apresReponse(); } }
         ]);
       }
 
       function questions() {
-        robot("Bien sûr ! Choisis ta question, ou écris-la en bas 👇");
+        robot("Bien sûr, je vous écoute 😊 Choisissez votre question, ou écrivez-la en bas.");
         choix([
           { texte: "📥 Comment je reçois l'ebook ?", action: function () { REPONSES.recevoir(); apresReponse(); } },
           { texte: "💳 Comment payer ?", action: function () { REPONSES.payer(); apresReponse(); } },
           { texte: "🔒 C'est sûr ?", action: function () { REPONSES.securite(); apresReponse(); } },
-          { texte: "📱 Je peux lire sur mon téléphone ?", action: function () { REPONSES.lire(); apresReponse(); } },
+          { texte: "📱 Se lit sur téléphone ?", action: function () { REPONSES.lire(); apresReponse(); } },
           { texte: "💬 Parler à une personne", action: function () { REPONSES.humain(); apresReponse(); } }
         ]);
       }
@@ -549,8 +567,8 @@
         var t = sansAccents(texte);
         function a(mots) { return mots.some(function (m) { return t.indexOf(m) >= 0; }); }
 
-        if (a(["merci", "cool", "super", "top"])) { robot("Avec plaisir ! 😊 Je suis là si tu as besoin."); return apresReponse(); }
-        if (a(["bonjour", "bonsoir", "salut", "hello", "coucou", "slt", "bjr"])) { robot("Bonjour à toi ! 👋 Qu'est-ce qui t'intéresse ?"); return menu(); }
+        if (a(["merci", "cool", "super", "top"])) { robot("C'est moi qui vous remercie 🙏 Je reste là si vous avez besoin."); return apresReponse(); }
+        if (a(["bonjour", "bonsoir", "salut", "hello", "coucou", "slt", "bjr"])) { robot(salutation() + " 🙏 Ravie de vous accueillir. Qu'est-ce qui vous intéresse ?"); return menu(); }
         if (a(["trop cher", "cher", "reduction", "promo", "remise"])) { REPONSES.cher(); return apresReponse(); }
         if (a(["prix", "combien", "cout", "tarif", "fcfa", "f cfa"])) { REPONSES.prix(); return apresReponse(); }
         if (a(["arnaque", "securi", "confiance", "fiable", "vrai"])) { REPONSES.securite(); return apresReponse(); }
@@ -569,8 +587,8 @@
         });
         if (meilleur) return presenter(meilleur);
 
-        robot("Je suis un robot, je comprends mieux quand tu touches les boutons 😅");
-        robot("Tu peux aussi écrire à une vraie personne sur WhatsApp.");
+        robot("Pardonnez-moi, je suis une assistante automatique et je comprends mieux quand vous touchez les boutons 🙏");
+        robot("Vous pouvez aussi écrire à une vraie personne sur WhatsApp, elle vous répondra avec plaisir.");
         apresReponse();
       }
 
@@ -597,14 +615,14 @@
           var cible = null;
           ebooks.forEach(function (e) { if (!cible && demande && codeEbook(e) === demande) cible = e; });
           if (cible) {
-            robot("Bonjour ! 👋 Je suis **Didy**, l'assistante automatique de **Didy Digital**.");
-            robot("Tu t'intéresses à **« " + cible.nom + " »** ? Très bon choix ! Voici tout ce qu'il faut savoir 👇");
+            robot(salutation() + " et bienvenue chez **Didy Digital** 🙏 Je suis **Didy**, l'assistante automatique de la boutique.");
+            robot("Vous vous intéressez à **« " + cible.nom + " »** ? Excellent choix ! Voici tout ce qu'il faut savoir 👇");
             robotBloc(function () { return fiche(cible); });
-            robot("Il coûte **" + cible.prix + "**. Tu le lis directement sur ton téléphone.");
+            argumenter(cible);
             choix([
-              { texte: "🛒 Je l'achète", action: function () { acheter(cible); } },
+              { texte: "🛒 Je l'achète maintenant", action: function () { acheter(cible); } },
               { texte: "🤔 J'ai une question", action: questions },
-              { texte: "📚 Voir les autres ebooks", action: function () { robot("Avec plaisir ! Voici ce que je te propose :"); menu(); } }
+              { texte: "📚 Voir les autres ebooks", action: function () { robot("Avec plaisir ! Voici ce que je vous propose :"); menu(); } }
             ]);
           } else {
             accueil();
