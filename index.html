@@ -15,7 +15,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-YDmxTzMbsTM0B1PD+MNzSisbMK93jZqk6SzxEzZbSbc='; script-src 'sha256-x3+4ywm8FB2h1DuIhX/J442x4cx0vlwvxjFKrOJuo/Y='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-OworZd3MYxVpEYLecvjP+kSNg0xZ0N3/qHq1Hf/P2Y4='; script-src 'sha256-J8QyK8aFULG2jILsUtSYnfmZjDlVlCNN0VFIOmHpcuI='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -325,6 +325,45 @@
     .illustration, .photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
     .photo { object-fit: cover; }
 
+    /* ===== ANIMATIONS DES COUVERTURES =====
+       On n'anime que "opacity", "scale" et "translate" : le téléphone les
+       calcule avec sa carte graphique, donc ça reste fluide même sur un petit Android. */
+    .couverture-cadre {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .couverture-cadre > * {
+      opacity: 0;
+      scale: 1.14;
+      transition: opacity 0.9s ease, scale 1.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    /* 1. Apparition en douceur quand la carte arrive à l'écran */
+    .carte.visible .couverture-cadre > * {
+      opacity: 1;
+      scale: 1.06;
+      /* 2. Flottement lent (commence après l'apparition) */
+      animation: flotter-couverture 7s ease-in-out 1.3s infinite;
+    }
+    /* 3. Léger zoom quand on touche (ou survole) la couverture */
+    .carte.visible.touche .couverture-cadre > *,
+    .carte.visible:hover .couverture-cadre > * {
+      scale: 1.13;
+      transition: opacity 0.9s ease, scale 0.5s ease;
+    }
+    /* … et ombre colorée autour de la carte */
+    .carte.touche,
+    .carte:hover {
+      box-shadow: 0 24px 60px rgba(249, 115, 22, 0.38), 0 10px 24px rgba(225, 29, 72, 0.2);
+    }
+    @keyframes flotter-couverture {
+      0%, 100% { translate: 0 0; }
+      50%      { translate: 0 -7px; }
+    }
+
     /* Les couleurs de couverture possibles ("couleur" dans ebooks.json) */
     .theme-orange   { background: linear-gradient(135deg, var(--orange), var(--soleil)); }
     .theme-vert     { background: linear-gradient(135deg, var(--emeraude), #6ee7b7); }
@@ -563,6 +602,7 @@
     .revele { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
     .revele.visible { opacity: 1; transform: none; }
     .carte.revele.visible:hover { transform: translateY(-8px); }
+    .carte.revele { transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease; }
 
     /* ===== ANIMATIONS ===== */
     @keyframes monter { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
@@ -583,6 +623,7 @@
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
       .revele { opacity: 1; transform: none; }
       .hero h1, .hero p, .surtitre, .actions { opacity: 1; }
+      .couverture-cadre > * { opacity: 1 !important; scale: 1 !important; translate: none !important; }
     }
   </style>
 </head>
@@ -817,6 +858,8 @@
 
         var couleur = COULEURS[ebook.couleur] || "orange";
         var couverture = element("div", "couverture theme-" + couleur);
+        // Le "cadre" garde l'image à l'intérieur de la couverture quand elle zoome ou flotte
+        var cadre = element("div", "couverture-cadre");
         var modele = ebook.illustration ? document.getElementById("illustration-" + ebook.illustration) : null;
         var photo = cheminPhoto(ebook.image);
         if (photo) {
@@ -826,16 +869,30 @@
           img.alt = String(ebook.nom || "");
           img.loading = "lazy";
           img.decoding = "async";
-          couverture.appendChild(img);
+          cadre.appendChild(img);
         } else if (modele && modele.content) {
-          couverture.appendChild(modele.content.cloneNode(true));
+          cadre.appendChild(modele.content.cloneNode(true));
         } else {
           var icone = element("span", "icone", ebook.icone || "📘");
           icone.setAttribute("aria-hidden", "true");
-          couverture.appendChild(icone);
+          cadre.appendChild(icone);
         }
+        couverture.appendChild(cadre);
         couverture.appendChild(element("div", "prix", ebook.prix));
         carte.appendChild(couverture);
+
+        // Quand on touche la couverture : léger zoom et ombre colorée
+        var minuterie = null;
+        couverture.addEventListener("pointerdown", function () {
+          window.clearTimeout(minuterie);
+          carte.classList.add("touche");
+        }, { passive: true });
+        ["pointerup", "pointercancel", "pointerleave"].forEach(function (nomEvenement) {
+          couverture.addEventListener(nomEvenement, function () {
+            window.clearTimeout(minuterie);
+            minuterie = window.setTimeout(function () { carte.classList.remove("touche"); }, 450);
+          }, { passive: true });
+        });
 
         var contenu = element("div", "contenu");
         contenu.appendChild(element("h3", "", ebook.nom));
