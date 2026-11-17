@@ -15,7 +15,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Tu peux en revanche modifier librement LA LISTE DES EBOOKS et LES RÉGLAGES.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cq/i65QOoFSxC68K1Tzn1MKM/EdPapx33oaQT/ps64c='; script-src 'sha256-2WtAIDle6DRkiL9ZpznR9wRzqaYxYrhCWQx3x3mda44='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-u8WK8hBiMfQgrkveoS/wZG23vlEQVBUAvAQs+Ssg0IY='; script-src 'sha256-7c3ZU7En+R5RnDK9s+/+M6lXPoHpcWE44F7AH1f47kQ='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -328,8 +328,9 @@
     .couverture.couverture-claire { background: #f4f4f4; }
 
     /* ===== ANIMATIONS DES COUVERTURES =====
-       On n'anime que "opacity", "scale" et "translate" : le téléphone les
-       calcule avec sa carte graphique, donc ça reste fluide même sur un petit Android. */
+       On n'anime que "opacity", "scale", "translate", "rotate" et "transform" :
+       le téléphone les calcule avec sa carte graphique, donc ça reste fluide
+       même sur un petit Android. */
     .couverture-cadre {
       position: absolute;
       inset: 0;
@@ -337,18 +338,33 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      perspective: 900px;          /* donne la profondeur 3D */
     }
     .couverture-cadre > * {
       opacity: 0;
       scale: 1.14;
-      transition: opacity 0.9s ease, scale 1.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      /* inclinaison 3D qui suit le doigt (réglée par le script) */
+      transform: rotateX(var(--incl-x, 0deg)) rotateY(var(--incl-y, 0deg));
+      transition: opacity 0.9s ease, scale 1.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s ease-out;
     }
+    /* Reflet de lumière quand on touche */
+    .couverture-cadre::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at var(--lumiere-x, 50%) var(--lumiere-y, 30%), rgba(255, 255, 255, 0.35), transparent 55%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+    .carte.touche .couverture-cadre::after,
+    .carte:hover .couverture-cadre::after { opacity: 1; }
     /* 1. Apparition en douceur quand la carte arrive à l'écran */
     .carte.visible .couverture-cadre > * {
       opacity: 1;
       scale: 1.06;
-      /* 2. Flottement lent (commence après l'apparition) */
-      animation: flotter-couverture 7s ease-in-out 1.3s infinite;
+      /* 2. Flottement lent en 3D (commence après l'apparition) */
+      animation: flotter-couverture 8s ease-in-out 1.3s infinite;
     }
     /* 3. Léger zoom quand on touche (ou survole) la couverture */
     .carte.visible.touche .couverture-cadre > *,
@@ -362,8 +378,8 @@
       box-shadow: 0 24px 60px rgba(249, 115, 22, 0.38), 0 10px 24px rgba(225, 29, 72, 0.2);
     }
     @keyframes flotter-couverture {
-      0%, 100% { translate: 0 0; }
-      50%      { translate: 0 -7px; }
+      0%, 100% { translate: 0 0;    rotate: 0.35 1 0 -5deg; }
+      50%      { translate: 0 -7px; rotate: 0.35 1 0 5deg; }
     }
 
     /* Les couleurs de couverture possibles ("couleur" dans ebooks.json) */
@@ -416,6 +432,10 @@
     .couverture-lien { position: absolute; inset: 0; z-index: 1; border-radius: 28px 28px 0 0; }
     .couverture-lien:focus-visible { outline: 3px solid var(--soleil); outline-offset: -3px; }
     .couverture .prix { z-index: 2; }
+
+    /* Repères de confiance */
+    .reperes { list-style: none; margin: -6px 0 18px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+    .reperes li { font-size: 0.82rem; font-weight: 700; color: var(--emeraude); }
 
     /* Bouton "Discuter avec Didy" */
     .bouton-didy {
@@ -644,7 +664,7 @@
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
       .revele { opacity: 1; transform: none; }
       .hero h1, .hero p, .surtitre, .actions { opacity: 1; }
-      .couverture-cadre > * { opacity: 1 !important; scale: 1 !important; translate: none !important; }
+      .couverture-cadre > * { opacity: 1 !important; scale: 1 !important; translate: none !important; rotate: none !important; transform: none !important; }
     }
   </style>
 </head>
@@ -882,6 +902,8 @@
           .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
       }
 
+      var calmeCouvertures = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
       function creerCarte(ebook) {
         var lienDidy = "vendeur.html?ebook=" + encodeURIComponent(codeEbook(ebook));
         var carte = element("article", "carte revele");
@@ -919,22 +941,53 @@
         couverture.appendChild(lienCouverture);
         carte.appendChild(couverture);
 
-        // Quand on touche la couverture : léger zoom et ombre colorée
-        var minuterie = null;
-        couverture.addEventListener("pointerdown", function () {
+        // Quand on touche la couverture : léger zoom, ombre colorée,
+        // et inclinaison 3D vers le doigt avec un reflet de lumière
+        var minuterie = null, image3d = cadre.firstElementChild, enCours = false, dernier = null;
+        function incliner() {
+          enCours = false;
+          if (!dernier || !image3d) return;
+          var r = couverture.getBoundingClientRect();
+          var x = Math.min(Math.max((dernier.clientX - r.left) / r.width, 0), 1);
+          var y = Math.min(Math.max((dernier.clientY - r.top) / r.height, 0), 1);
+          image3d.style.setProperty("--incl-y", ((x - 0.5) * 14).toFixed(1) + "deg");
+          image3d.style.setProperty("--incl-x", ((0.5 - y) * 10).toFixed(1) + "deg");
+          cadre.style.setProperty("--lumiere-x", Math.round(x * 100) + "%");
+          cadre.style.setProperty("--lumiere-y", Math.round(y * 100) + "%");
+        }
+        function suivre(ev) {
+          if (calmeCouvertures) return;
+          dernier = { clientX: ev.clientX, clientY: ev.clientY };
+          if (!enCours) { enCours = true; window.requestAnimationFrame(incliner); }
+        }
+        function redresser() {
+          if (!image3d) return;
+          image3d.style.setProperty("--incl-x", "0deg");
+          image3d.style.setProperty("--incl-y", "0deg");
+        }
+        couverture.addEventListener("pointerdown", function (ev) {
           window.clearTimeout(minuterie);
           carte.classList.add("touche");
+          suivre(ev);
         }, { passive: true });
+        couverture.addEventListener("pointermove", suivre, { passive: true });
         ["pointerup", "pointercancel", "pointerleave"].forEach(function (nomEvenement) {
           couverture.addEventListener(nomEvenement, function () {
             window.clearTimeout(minuterie);
-            minuterie = window.setTimeout(function () { carte.classList.remove("touche"); }, 450);
+            minuterie = window.setTimeout(function () { carte.classList.remove("touche"); redresser(); }, 450);
           }, { passive: true });
         });
 
         var contenu = element("div", "contenu");
         contenu.appendChild(element("h3", "", ebook.nom));
         contenu.appendChild(element("p", "", ebook.description));
+
+        // Petits repères qui rassurent avant de payer
+        var reperes = element("ul", "reperes");
+        ["📥 Téléchargeable", "📱 Lisible sur téléphone", "🔒 Paiement sécurisé"].forEach(function (r) {
+          reperes.appendChild(element("li", "", r));
+        });
+        contenu.appendChild(reperes);
 
         var boutonDidy = element("a", "bouton bouton-didy");
         boutonDidy.href = lienDidy;

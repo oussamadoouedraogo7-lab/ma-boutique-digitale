@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-49vQoe3cXv0FoR+KJMXLVM8KHCQFTG0BAgpXW8AHV5Q='; script-src 'sha256-5j+x/f6OUNL4cjb5rAlp0YR4upKy5dqnP6gMkHmsZqk='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mPA3Shg20GPzPOQkoxR/tkBu7qkS3LMRR72Qwhg7UOI='; script-src 'sha256-5j+x/f6OUNL4cjb5rAlp0YR4upKy5dqnP6gMkHmsZqk='; font-src 'self'; connect-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#23110a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -153,7 +153,17 @@
       font-size: 64px;
       background: linear-gradient(135deg, var(--orange), var(--soleil));
     }
-    .fiche-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .fiche-image { perspective: 900px; overflow: hidden; }
+    .fiche-image img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      scale: 1.07;
+      animation: flotter-3d 8s ease-in-out infinite;
+    }
+    .fiche-image img.entiere { scale: 1; }
+    @keyframes flotter-3d {
+      0%, 100% { translate: 0 0;    rotate: 0.35 1 0 -5deg; }
+      50%      { translate: 0 -5px; rotate: 0.35 1 0 5deg; }
+    }
     .fiche-image img.entiere { object-fit: contain; padding: 6px 0; }
     .fiche-image.claire { background: #f4f4f4; }
     .fiche-prix {
