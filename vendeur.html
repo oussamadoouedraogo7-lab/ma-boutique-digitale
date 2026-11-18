@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cFT5UGu0yz3lyWMcqRRU+iAqQPgPaLefPzVaVx2z8zA='; script-src 'sha256-t0I5FZey89uR4MxCUuQL3UINCAX8TwxTnmIsOwaHpA0='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cFT5UGu0yz3lyWMcqRRU+iAqQPgPaLefPzVaVx2z8zA='; script-src 'sha256-VXw8r3xWRcJkHq+qz6vpw22geNBfQ4Wil9TsAYRcJ3U='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -317,6 +317,29 @@
       var reglages = {};
       try { reglages = JSON.parse(document.getElementById("reglages").textContent) || {}; } catch (e) { reglages = {}; }
 
+      // ---------- D'où vient le visiteur ? (lien ...?ref=tiktok, ou mémorisé depuis la page d'accueil) ----------
+      var source = "";
+      try { source = String(new URLSearchParams(location.search).get("ref") || new URLSearchParams(location.search).get("utm_source") || "").toLowerCase(); } catch (e) { source = ""; }
+      if (!source) { try { source = String(sessionStorage.getItem("didy-source") || ""); } catch (e) { source = ""; } }
+      if (!/^[a-z0-9-]{1,30}$/.test(source)) source = "";
+
+      // ---------- Statistiques ANONYMES des discussions (GoatCounter) ----------
+      // On compte seulement des actions (ex. "un clic sur Orange Money pour l'ebook argent").
+      // Aucun nom, aucun numéro, aucun texte écrit par le client n'est envoyé.
+      var codeStats = String(reglages.goatcounter || "").trim().toLowerCase();
+      var dejaCompte = {};
+      function evenement(nom, titre) {
+        if (!/^[a-z0-9-]{2,50}$/.test(codeStats) || location.protocol !== "https:") return;
+        nom = String(nom).toLowerCase().replace(/[^a-z0-9-]/g, "-").slice(0, 60);
+        if (dejaCompte[nom]) return;
+        dejaCompte[nom] = true;
+        var img = new Image(1, 1);
+        img.referrerPolicy = "no-referrer";
+        img.src = "https://" + codeStats + ".goatcounter.com/count?e=true&p=" + encodeURIComponent(nom) +
+                  "&t=" + encodeURIComponent(titre || nom) +
+                  (source ? "&r=" + encodeURIComponent(source) : "");
+      }
+
       // ---------- Petits outils ----------
       function element(balise, classe, texte) {
         var el = document.createElement(balise);
@@ -450,17 +473,30 @@
           a.href = l.href;
           a.target = "_blank";
           a.rel = "noopener noreferrer";
+          if (l.evenements) a.addEventListener("click", function () {
+            l.evenements.forEach(function (ev) { evenement(ev[0], ev[1]); });
+          });
           div.appendChild(a);
         });
         return div;
+      }
+      // Les statistiques envoyées quand on touche un bouton de paiement
+      function evenementsPaiement(ebook, moyen) {
+        var noms = { orange: "Orange Money", moov: "Moov Money", chariow: "Chariow" };
+        var id = ebook ? codeEbook(ebook) : "inconnu";
+        return [
+          ["didy-paiement", "Clic pour payer (tous)"],
+          ["didy-paiement-" + moyen, "Clic pour payer : " + noms[moyen]],
+          ["didy-paiement-" + id + "-" + moyen, "Payer « " + (ebook ? ebook.nom : "?") + " » : " + noms[moyen]]
+        ];
       }
       function liensMobileMoney(ebook) {
         var debut = ebook
           ? "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par "
           : "Bonjour Didy Digital ! J'aimerais acheter un ebook. Je veux payer par ";
         return [
-          { classe: "orange-money", texte: "Payer par Orange Money (via WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2") },
-          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1") }
+          { classe: "orange-money", texte: "Payer par Orange Money (via WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2"), evenements: evenementsPaiement(ebook, "orange") },
+          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1"), evenements: evenementsPaiement(ebook, "moov") }
         ];
       }
 
@@ -505,6 +541,7 @@
       }
 
       function presenter(e) {
+        evenement("didy-ebook-" + codeEbook(e), "Ebook regardé : " + e.nom);
         robot("Excellent choix 👌 Voici l'ebook qu'il vous faut :");
         robotBloc(function () { return fiche(e); });
         argumenter(e);
@@ -525,12 +562,13 @@
       }
 
       function acheter(e) {
+        evenement("didy-achat-" + codeEbook(e), "« Je l'achète » : " + e.nom);
         var chariow = lienSecurise(e.lienChariow) || lienSecurise(reglages.boutiqueChariow);
         if (chariow) {
           robot("Merci pour votre confiance 🙏 Vous pouvez payer par **Orange Money** ou **Moov Money** en nous écrivant sur WhatsApp :");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
           robot("Ou payez directement en ligne sur **Chariow**, une page de paiement sécurisée : **vous recevez votre ebook automatiquement**, même la nuit 👇");
-          robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Payer « " + e.nom + " » sur Chariow", href: chariow }]); });
+          robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Payer « " + e.nom + " » sur Chariow", href: chariow, evenements: evenementsPaiement(e, "chariow") }]); });
         } else {
           robot("Merci pour votre confiance 🙏 Choisissez votre moyen de paiement. WhatsApp va s'ouvrir avec un message déjà écrit : vous n'avez plus qu'à l'envoyer.");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
@@ -567,6 +605,7 @@
           robot("Si vous souhaitez en parler, écrivez-nous sur WhatsApp, nous vous répondrons avec plaisir.");
         },
         humain: function () {
+          evenement("didy-whatsapp", "Demande à parler à une personne");
           robot("Bien sûr ! Écrivez-nous sur WhatsApp, une vraie personne vous répondra avec plaisir 😊");
           robotBloc(function () {
             return blocLiens([{ classe: "wa", texte: "💬 Écrire sur WhatsApp", href: lienWhatsApp("Bonjour Didy Digital ! J'ai une question sur vos ebooks.", "1") }]);
@@ -583,6 +622,7 @@
       }
 
       function questions() {
+        evenement("didy-question", "Question posée (bouton)");
         robot("Bien sûr, je vous écoute 😊 Choisissez votre question, ou écrivez-la en bas.");
         choix([
           { texte: "📥 Comment je reçois l'ebook ?", action: function () { REPONSES.recevoir(); apresReponse(); } },
@@ -631,6 +671,7 @@
         champ.value = "";
         zoneChoix.textContent = "";
         client(texte);
+        evenement("didy-message-ecrit", "Message écrit par le client (texte non enregistré)");
         comprendre(texte);
       });
 
@@ -646,7 +687,9 @@
           if (!demande) demande = String(location.hash || "").replace(/^#/, "").toLowerCase().slice(0, 40);
           var cible = null;
           ebooks.forEach(function (e) { if (!cible && demande && codeEbook(e) === demande) cible = e; });
+          evenement("didy-discussion", "Discussion avec Didy");
           if (cible) {
+            evenement("didy-ebook-" + codeEbook(cible), "Ebook regardé : " + cible.nom);
             robot(salutation() + " et bienvenue chez **Didy Digital** 🙏 Je suis **Didy**, l'assistante automatique de la boutique.");
             robot("Vous vous intéressez à **« " + cible.nom + " »** ? Excellent choix ! Voici tout ce qu'il faut savoir 👇");
             robotBloc(function () { return fiche(cible); });
@@ -666,13 +709,6 @@
       if (/^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
         var pixel = new Image(1, 1);
         pixel.referrerPolicy = "no-referrer";
-        // D'où vient le visiteur ? Lien spécial du type ...?ref=tiktok (ou utm_source=tiktok)
-        var source = "";
-        try {
-          var parametres = new URLSearchParams(location.search);
-          source = String(parametres.get("ref") || parametres.get("utm_source") || "").toLowerCase();
-        } catch (e) { source = ""; }
-        if (!/^[a-z0-9-]{1,30}$/.test(source)) source = "";
         var provenance = source || (document.referrer && document.referrer.indexOf(location.origin) !== 0 ? document.referrer : "");
         pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) +
                     "&t=" + encodeURIComponent(document.title) +

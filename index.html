@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-39uRtxgj+Hm+K4Embl0cxxLOo764VNp1IDcyMu86RiE='; script-src 'sha256-ejdRoeL1RshJrtrgAE4TbVgYBp1442VLabjHg0bFAOU='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-39uRtxgj+Hm+K4Embl0cxxLOo764VNp1IDcyMu86RiE='; script-src 'sha256-fKzuN59JDPl9scyqrbf/NnWiS+3qfQYziy4/cnGaq1g='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -856,6 +856,7 @@
           source = String(parametres.get("ref") || parametres.get("utm_source") || "").toLowerCase();
         } catch (e) { source = ""; }
         if (!/^[a-z0-9-]{1,30}$/.test(source)) source = "";
+        if (source) { try { sessionStorage.setItem("didy-source", source); } catch (e) { /* rien */ } }
         var provenance = source || (document.referrer && document.referrer.indexOf(location.origin) !== 0 ? document.referrer : "");
         pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) +
                     "&t=" + encodeURIComponent(document.title) +

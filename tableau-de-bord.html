@@ -9,7 +9,7 @@
     Protection : elle n'exécute que son propre code, et ne peut contacter
     que ton compteur GoatCounter (connect-src).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-9/pRPXV9U1wllaRqND4hY3TzFo0D5PTgbVOLM2NmRlw='; script-src 'sha256-vmSb/raiiMWw7Vx6ldUiMo04+eug921CO2HxRbD3BHA='; font-src 'self'; connect-src https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xbdbFwlBojeF+eQCL30ir3lXkbkGkE1oPe3w48SfQTo='; script-src 'sha256-YsiMzYZir8D9cPh8uu9BoAYSzbbaU644XW38lpJeDG0='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <!-- Demande aux moteurs de recherche (Google…) de ne pas afficher cette page -->
   <meta name="robots" content="noindex, nofollow">
@@ -108,6 +108,22 @@
     .bouton-clair { background: #fff; color: var(--cacao); box-shadow: 0 6px 18px rgba(35, 17, 10, 0.08); }
     .bouton:focus-visible { outline: 3px solid var(--soleil); outline-offset: 3px; }
 
+    .didy { margin-top: 28px; padding: 20px 16px; border-radius: 24px; background: #fff; box-shadow: 0 8px 24px rgba(35, 17, 10, 0.08); }
+    .didy h2 { margin: 0; font-family: "Bricolage", system-ui, sans-serif; font-size: 1.35rem; }
+    .didy h3 { margin: 22px 0 0; font-family: "Bricolage", system-ui, sans-serif; font-size: 1.05rem; }
+    .didy .grille { margin-top: 12px; }
+    .didy .bloc { box-shadow: none; border: 1px solid #f0e2cc; }
+    .grille.trois { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .grille.trois .bloc { padding: 14px 10px; }
+    .grille.trois .bloc strong { font-size: 1.8rem; }
+    .bloc.orange { border-top-color: #ff7a00 !important; }
+    .bloc.moov { border-top-color: #0b5cad !important; }
+    .bloc.chariow { border-top-color: var(--soleil) !important; }
+    .didy-note { margin: 8px 0 0; color: var(--texte-doux); font-size: 0.85rem; }
+    .liste-ebooks { display: grid; gap: 8px; margin-top: 12px; }
+    .ligne-ebook { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-radius: 14px; background: var(--sable); font-weight: 700; font-size: 0.92rem; }
+    .ligne-ebook strong { font-family: "Bricolage", system-ui, sans-serif; color: var(--terre); }
+
     .aide { margin-top: 28px; padding: 20px; border-radius: 22px; background: #fff; color: var(--texte-doux); font-size: 0.92rem; }
     .aide h2 { margin: 0 0 8px; font-family: "Bricolage", system-ui, sans-serif; color: var(--cacao); font-size: 1.15rem; }
     .aide ol { margin: 0; padding-left: 20px; }
@@ -133,6 +149,25 @@
       <div class="bloc"><span>12 derniers mois</span><strong id="annee" class="chargement">…</strong></div>
     </div>
 
+    <!-- ===== DISCUSSIONS AVEC DIDY (statistiques anonymes) ===== -->
+    <section class="didy" id="didy">
+      <h2>💬 Discussions avec Didy</h2>
+      <p class="didy-note">On compte les actions, pas les personnes : aucun nom, aucun numéro, aucun message n'est enregistré.</p>
+      <div class="grille">
+        <div class="bloc"><span>Discussions (total)</span><strong id="didy-total" class="chargement">…</strong></div>
+        <div class="bloc"><span>Discussions aujourd'hui</span><strong id="didy-jour" class="chargement">…</strong></div>
+      </div>
+      <h3>🛒 Clics pour payer</h3>
+      <div class="grille trois">
+        <div class="bloc orange"><span>Orange Money</span><strong id="pay-orange" class="chargement">…</strong></div>
+        <div class="bloc moov"><span>Moov Money</span><strong id="pay-moov" class="chargement">…</strong></div>
+        <div class="bloc chariow"><span>Chariow</span><strong id="pay-chariow" class="chargement">…</strong></div>
+      </div>
+      <h3>📚 Ebooks les plus regardés</h3>
+      <div class="liste-ebooks" id="liste-ebooks"></div>
+      <p class="didy-note">📍 D'où viennent les gens qui discutent ? Sur GoatCounter, touchez la ligne « didy-discussion » : vous verrez WhatsApp, TikTok, Facebook…</p>
+    </section>
+
     <div id="message" class="message cache"></div>
 
     <div class="actions">
@@ -157,7 +192,8 @@
     (function () {
       "use strict";
 
-      var ADRESSE = "https://didyodg.goatcounter.com/counter/TOTAL.json";
+      var BASE = "https://didyodg.goatcounter.com/counter/";
+      var ADRESSE = BASE + "TOTAL.json";
 
       // Date du jour au format AAAA-MM-JJ (ex. 2026-11-17)
       function aujourdHui() {
@@ -187,7 +223,7 @@
       }
 
       function lire(periode) {
-        var url = ADRESSE + (periode.debut ? "?start=" + encodeURIComponent(periode.debut) : "");
+        var url = (periode.chemin || ADRESSE) + (periode.debut ? "?start=" + encodeURIComponent(periode.debut) : "");
         return fetch(url, { credentials: "omit", cache: "no-store", referrerPolicy: "no-referrer" })
           .then(function (reponse) {
             // 404 = aucune visite enregistrée pour cette période
@@ -202,7 +238,49 @@
           });
       }
 
+      // ----- Discussions avec Didy (si un chiffre manque, on affiche simplement "–") -----
+      var STATS_DIDY = [
+        { id: "didy-total", chemin: BASE + "didy-discussion.json", debut: "" },
+        { id: "didy-jour", chemin: BASE + "didy-discussion.json", debut: aujourdHui() },
+        { id: "pay-orange", chemin: BASE + "didy-paiement-orange.json", debut: "" },
+        { id: "pay-moov", chemin: BASE + "didy-paiement-moov.json", debut: "" },
+        { id: "pay-chariow", chemin: BASE + "didy-paiement-chariow.json", debut: "" }
+      ];
+      function lireSansErreur(p) {
+        return lire(p).catch(function () {
+          var el = document.getElementById(p.id);
+          if (el) { el.textContent = "–"; el.classList.remove("chargement"); }
+        });
+      }
+      function chargerDidy() {
+        STATS_DIDY.forEach(lireSansErreur);
+        // Combien de fois chaque ebook a été regardé avec Didy
+        var zone = document.getElementById("liste-ebooks");
+        fetch("ebooks.json", { cache: "no-cache", credentials: "same-origin" })
+          .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+          .then(function (ebooks) {
+            zone.textContent = "";
+            (Array.isArray(ebooks) ? ebooks : []).forEach(function (e) {
+              var id = String(e.id || "").toLowerCase();
+              if (!/^[a-z0-9-]{1,40}$/.test(id)) return;
+              var ligne = document.createElement("div");
+              ligne.className = "ligne-ebook";
+              var nom = document.createElement("span");
+              nom.textContent = (e.icone ? e.icone + " " : "") + String(e.nom || id);
+              var nombre = document.createElement("strong");
+              nombre.id = "vu-" + id;
+              nombre.textContent = "…";
+              ligne.appendChild(nom);
+              ligne.appendChild(nombre);
+              zone.appendChild(ligne);
+              lireSansErreur({ id: "vu-" + id, chemin: BASE + "didy-ebook-" + id + ".json", debut: "" });
+            });
+          })
+          .catch(function () { zone.textContent = "–"; });
+      }
+
       function actualiser() {
+        chargerDidy();
         PERIODES.forEach(function (p) {
           var el = document.getElementById(p.id);
           el.textContent = "…";
