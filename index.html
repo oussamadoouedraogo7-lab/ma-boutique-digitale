@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-0f9YIXsRIAAlaJ74tplHwb5K+qv9HOPrwu0cp0ZWia8='; script-src 'sha256-zQIS6c0FynLLxNlh21PksdUaepgf6Fwgmwcv1GJd4xc='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-tN/tPp+f3QhPKl1ZV1ILAxZ8UZsE79/PfUN/TtS6/Io='; script-src 'sha256-Z6CILN83ElU9z3eG4o/pO//03ofl9WXOFiyA9e9+BsA='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -188,6 +188,11 @@
     .theme-soleil   { background: linear-gradient(135deg, var(--or), var(--or-clair)); }
     .theme-terre    { background: linear-gradient(135deg, var(--terre), #f08a4b); }
     .couverture.couverture-claire { background: #e9e9ea; }
+    /* Couverture en vidéo : carrée, pour voir toute l'animation */
+    .couverture.couverture-video { height: auto; aspect-ratio: 1 / 1; max-height: 440px; background: #0d1033; }
+    .couverture-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* La vidéo bouge déjà : pas de flottement en plus (plus léger pour le téléphone) */
+    .js .carte.visible .couverture-cadre > video { animation: none; scale: 1.02; }
     /* Derrière une boîte 3D : la même image, floutée, pour un fond sans cadre */
     .couverture-flou { position: absolute; inset: -30px; width: calc(100% + 60px); height: calc(100% + 60px); object-fit: cover; filter: blur(24px) saturate(1.15); opacity: 0.75; }
 
@@ -527,6 +532,45 @@
         var c = String(chemin || "").trim();
         return /^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(c) ? c : null;
       }
+      // N'accepte que les vidéos .mp4 du dossier images/ (ex. "images/video-argent.mp4")
+      function cheminVideo(chemin) {
+        var c = String(chemin || "").trim();
+        return /^images\/[A-Za-z0-9._-]+\.mp4$/i.test(c) ? c : null;
+      }
+
+      // Les vidéos ne tournent que quand on les voit (économise la batterie et internet)
+      var observateurVideo = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entrees) {
+        entrees.forEach(function (entree) {
+          var v = entree.target;
+          if (entree.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+          else { v.pause(); }
+        });
+      }, { threshold: 0.25 }) : null;
+
+      function creerVideo(chemin, affiche, titre) {
+        var v = document.createElement("video");
+        v.muted = true;                      // toujours sans son
+        v.defaultMuted = true;
+        v.setAttribute("muted", "");
+        v.loop = true;
+        v.playsInline = true;
+        v.setAttribute("playsinline", "");
+        v.setAttribute("disablepictureinpicture", "");
+        v.preload = "metadata";
+        if (affiche) v.poster = affiche;
+        v.setAttribute("aria-label", "Vidéo de présentation : " + titre);
+        v.src = chemin;
+        // Si la vidéo ne peut pas se lire, on affiche l'image à la place
+        v.addEventListener("error", function () {
+          if (!affiche || !v.parentNode) return;
+          var img = element("img", "photo");
+          img.src = affiche; img.alt = titre;
+          v.parentNode.replaceChild(img, v);
+        });
+        if (!calme && observateurVideo) observateurVideo.observe(v);
+        return v;
+      }
+
       // Le "code" de l'ebook pour ouvrir Didy directement sur lui (ex. vendeur.html?ebook=argent)
       function codeEbook(e) {
         var id = String(e.id || "").trim().toLowerCase();
@@ -545,8 +589,12 @@
         var couverture = element("div", "couverture theme-" + (COULEURS[ebook.couleur] || "orange"));
         var cadre = element("div", "couverture-cadre");
         var photo = cheminPhoto(ebook.image);
+        var video = cheminVideo(ebook.video);
         var modele = ebook.illustration ? document.getElementById("illustration-" + ebook.illustration) : null;
-        if (photo) {
+        if (video) {
+          couverture.classList.add("couverture-video");
+          cadre.appendChild(creerVideo(video, cheminPhoto(ebook.videoImage) || photo, String(ebook.nom || "")));
+        } else if (photo) {
           var entiere = ebook.imageEntiere === true;
           if (entiere) {
             couverture.classList.add("couverture-claire");
