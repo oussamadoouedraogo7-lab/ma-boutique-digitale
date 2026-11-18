@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-r88t8AUwTVx5OPVuL2kslyx47jSlwPMx2LpFiPvbKfc='; script-src 'sha256-Puem4xGIZB/t2EnraeZmpJldsB2VhqwbuXAjB3KkbNM='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mnlKHYQLn6chxLb2e9O0C+wnD2tZxApMgM1G/z3nCE8='; script-src 'sha256-W4VgtVRD8HW1jD2y/svFYnxBvR3KFboG/+K0dDuUNnw='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -150,6 +150,8 @@
     ol.instructions li { margin-bottom: 6px; }
     ol.instructions strong { color: var(--cacao); }
 
+    .reservee { max-width: 520px; margin: 40px auto; padding: 28px 20px; text-align: center; background: #fff; border-radius: 22px; box-shadow: 0 8px 24px rgba(35, 17, 10, 0.08); font-weight: 700; }
+    .reservee a { color: #c2410c; }
     .retour { display: block; text-align: center; margin-top: 10px; color: var(--terre); font-weight: 700; }
   </style>
 </head>
@@ -260,6 +262,53 @@
   <script>
     (function () {
       "use strict";
+      // ----- Reconnaître le propriétaire du site (toi) -----
+      // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
+      // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.
+      var EMPREINTE_PROPRIO = "e0a30fb67edbbe1f9df4c805ec1c28035712d9caba1f77139a65a394b9b62be6";
+      function estProprio() {
+        try { return localStorage.getItem("didy-proprietaire") === EMPREINTE_PROPRIO; } catch (e) { return false; }
+      }
+      function verifierLienSecret() {
+        var donne = null;
+        try { donne = new URLSearchParams(location.search).get("proprietaire"); } catch (e) { donne = null; }
+        if (donne === null) return Promise.resolve(estProprio());
+        function nettoyer() {
+          try { var u = new URL(location.href); u.searchParams.delete("proprietaire"); history.replaceState(null, "", u.pathname + u.search + u.hash); } catch (e) { /* rien */ }
+        }
+        if (donne === "non") {
+          try { localStorage.removeItem("didy-proprietaire"); } catch (e) { /* rien */ }
+          nettoyer();
+          return Promise.resolve(false);
+        }
+        if (!window.crypto || !window.crypto.subtle || !window.TextEncoder) { nettoyer(); return Promise.resolve(estProprio()); }
+        return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(donne).slice(0, 100)))
+          .then(function (b) {
+            var h = Array.prototype.map.call(new Uint8Array(b), function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+            if (h === EMPREINTE_PROPRIO) { try { localStorage.setItem("didy-proprietaire", EMPREINTE_PROPRIO); } catch (e) { /* rien */ } }
+            nettoyer();
+            return estProprio();
+          })
+          .catch(function () { nettoyer(); return estProprio(); });
+      }
+      function pageReservee() {
+        var main = document.querySelector("main");
+        if (!main) return;
+        main.hidden = true;
+        var avis = document.createElement("main");
+        avis.className = "reservee";
+        var t = document.createElement("p");
+        t.textContent = "🔒 Cette page est réservée au propriétaire du site.";
+        var lien = document.createElement("a");
+        lien.href = "./";
+        lien.textContent = "← Retour au site";
+        avis.appendChild(t);
+        avis.appendChild(lien);
+        main.parentNode.insertBefore(avis, main);
+      }
+
+      verifierLienSecret().then(function (proprio) { if (!proprio) pageReservee(); });
+
 
       var ebooks = [];
       var enModification = -1;   // -1 = on ajoute un nouvel ebook

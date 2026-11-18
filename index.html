@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-EtxsTcoeD9aTSQeeGpUkyDwrT+1B35+uacfeqqAyVHs='; script-src 'sha256-SdXJjWgVLwnqpVAmN6zyJvGYBL+yh2pRutuOexoOXW4='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-L2t6hbVDIDIdrH83TCxFXXDRyNeL/iXVXg7bbX1iez4='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -87,6 +87,19 @@
     .barre-lien { color: var(--or-clair); font-weight: 700; text-decoration: none; }
     .barre-lien:hover { color: #fff; }
     @media (max-width: 767px) { .barre-lien { display: none; } }
+    .barre-proprio {
+      display: inline-flex; align-items: center; min-height: 40px; padding: 8px 14px; border-radius: 999px;
+      background: var(--or); color: var(--nuit); font-weight: 800; font-size: 0.9rem; text-decoration: none;
+    }
+    .barre-proprio[hidden] { display: none; }
+    .logo, .barre-didy, .barre-proprio { white-space: nowrap; }
+    @media (max-width: 767px) {
+      .barre-liens { gap: 8px; }
+      .barre-didy, .barre-proprio { padding: 8px 12px; font-size: 0.85rem; }
+      .logo { font-size: 1.05rem; gap: 8px; }
+      .logo-marque { width: 32px; height: 32px; }
+    }
+    @media (max-width: 400px) { .texte-long { display: none; } }
     .barre-didy {
       display: inline-flex; align-items: center; gap: 6px;
       min-height: 40px; padding: 8px 14px; border-radius: 999px;
@@ -389,7 +402,8 @@
       <div class="barre-liens">
         <a class="barre-lien" href="#ebooks">Ebooks</a>
         <a class="barre-lien" href="#commander">Comment commander</a>
-        <a class="barre-didy" href="vendeur.html">💬 Parler à Didy</a>
+        <a class="barre-proprio" id="lien-proprio" href="tableau-de-bord.html" hidden>📊 Visites</a>
+        <a class="barre-didy" href="vendeur.html">💬 <span class="texte-long">Parler à </span>Didy</a>
       </div>
     </div>
   </nav>
@@ -505,7 +519,6 @@
     </div>
     <div class="conteneur bas-pied">
       <small class="droits">© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small>
-      <a class="bouton-visites" href="tableau-de-bord.html">📊 Voir les visiteurs</a>
     </div>
   </footer>
 
@@ -845,10 +858,60 @@
           zone.appendChild(element("div", "erreur", "Impossible d'afficher les ebooks pour le moment. Rechargez la page, ou écrivez-nous sur WhatsApp."));
         });
 
+
+      // ----- Reconnaître le propriétaire du site (toi) -----
+      // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
+      // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.
+      var EMPREINTE_PROPRIO = "e0a30fb67edbbe1f9df4c805ec1c28035712d9caba1f77139a65a394b9b62be6";
+      function estProprio() {
+        try { return localStorage.getItem("didy-proprietaire") === EMPREINTE_PROPRIO; } catch (e) { return false; }
+      }
+      function verifierLienSecret() {
+        var donne = null;
+        try { donne = new URLSearchParams(location.search).get("proprietaire"); } catch (e) { donne = null; }
+        if (donne === null) return Promise.resolve(estProprio());
+        function nettoyer() {
+          try { var u = new URL(location.href); u.searchParams.delete("proprietaire"); history.replaceState(null, "", u.pathname + u.search + u.hash); } catch (e) { /* rien */ }
+        }
+        if (donne === "non") {
+          try { localStorage.removeItem("didy-proprietaire"); } catch (e) { /* rien */ }
+          nettoyer();
+          return Promise.resolve(false);
+        }
+        if (!window.crypto || !window.crypto.subtle || !window.TextEncoder) { nettoyer(); return Promise.resolve(estProprio()); }
+        return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(donne).slice(0, 100)))
+          .then(function (b) {
+            var h = Array.prototype.map.call(new Uint8Array(b), function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+            if (h === EMPREINTE_PROPRIO) { try { localStorage.setItem("didy-proprietaire", EMPREINTE_PROPRIO); } catch (e) { /* rien */ } }
+            nettoyer();
+            return estProprio();
+          })
+          .catch(function () { nettoyer(); return estProprio(); });
+      }
+      function pageReservee() {
+        var main = document.querySelector("main");
+        if (!main) return;
+        main.hidden = true;
+        var avis = document.createElement("main");
+        avis.className = "reservee";
+        var t = document.createElement("p");
+        t.textContent = "🔒 Cette page est réservée au propriétaire du site.";
+        var lien = document.createElement("a");
+        lien.href = "./";
+        lien.textContent = "← Retour au site";
+        avis.appendChild(t);
+        avis.appendChild(lien);
+        main.parentNode.insertBefore(avis, main);
+      }
+
       // ----- 8. Compteur de visites GoatCounter (sans cookie, sans donnée personnelle) -----
       var reglages = lireDonnees("reglages", {}) || {};
       var code = String(reglages.goatcounter || "").trim().toLowerCase();
-      if (/^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
+      verifierLienSecret().then(function (proprio) {
+      // Le bouton "Mes visites" n'apparaît que chez le propriétaire
+      if (proprio) document.getElementById("lien-proprio").hidden = false;
+      // Les visites du propriétaire ne sont pas comptées
+      if (!proprio && /^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
         var pixel = new Image(1, 1);
         pixel.referrerPolicy = "no-referrer";
         // D'où vient le visiteur ? Lien spécial du type ...?ref=tiktok (ou utm_source=tiktok)
@@ -865,7 +928,8 @@
                     (provenance ? "&r=" + encodeURIComponent(provenance) : "") +
                     (source ? "&q=" + encodeURIComponent("?ref=" + source) : "");
       }
-      if (/^[a-z0-9-]{2,50}$/.test(code) && reglages.afficherCompteur === true && window.fetch) {
+      // Le nombre de visites en haut du site : visible seulement par le propriétaire
+      if (proprio && /^[a-z0-9-]{2,50}$/.test(code) && reglages.afficherCompteur === true && window.fetch) {
         var minimum = Number(reglages.compteurMinimum) || 0;
         fetch("https://" + code + ".goatcounter.com/counter/TOTAL.json", { credentials: "omit", referrerPolicy: "no-referrer" })
           .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
@@ -877,6 +941,7 @@
           })
           .catch(function () { /* en cas de problème, le compteur reste caché */ });
       }
+      });
     })();
   </script>
 </body>

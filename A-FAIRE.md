@@ -52,5 +52,5 @@ Utilise ces liens selon l'endroit où tu publies. Dans GoatCounter, la partie
 Pour Didy sur un ebook précis, ajoute la même fin avec « & » :
 https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=argent&ref=tiktok
 
-Voir les visiteurs : bouton « 📊 Voir les visiteurs » tout en bas du site,
-ou https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/tableau-de-bord.html
+Voir les visiteurs : bouton « 📊 Visites » en haut du site, visible seulement sur ton
+téléphone après avoir ouvert une fois ton lien secret (gardé dans la conversation, pas ici). Page : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/tableau-de-bord.html

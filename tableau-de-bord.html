@@ -9,7 +9,7 @@
     Protection : elle n'exécute que son propre code, et ne peut contacter
     que ton compteur GoatCounter (connect-src).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-DHVPoyCnJbjTxsy5tT4V3nI249o2bGbPYzUVUhtlqwg='; script-src 'sha256-Q1sPl/rDIG286q8aeaW5dxQ4qvUv5RnI2yO6cz6GN78='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-5E1jYgPDsKRBXnsXOQSPkKk7tGNou6pXoMG0hNycdGk='; script-src 'sha256-U+BltJa7CII0t2SjuSmaoOkpuMmPi9APElVAeB/Sf0E='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <!-- Demande aux moteurs de recherche (Google…) de ne pas afficher cette page -->
   <meta name="robots" content="noindex, nofollow">
@@ -125,6 +125,8 @@
     .ligne-ebook { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-radius: 14px; background: var(--sable); font-weight: 700; font-size: 0.92rem; }
     .ligne-ebook strong { font-family: "Bricolage", system-ui, sans-serif; color: var(--terre); }
 
+    .reservee { max-width: 520px; margin: 40px auto; padding: 28px 20px; text-align: center; background: #fff; border-radius: 22px; box-shadow: 0 8px 24px rgba(35, 17, 10, 0.08); font-weight: 700; }
+    .reservee a { color: #c2410c; }
     .aide { margin-top: 28px; padding: 20px; border-radius: 22px; background: #fff; color: var(--texte-doux); font-size: 0.92rem; }
     .aide h2 { margin: 0 0 8px; font-family: "Bricolage", system-ui, sans-serif; color: var(--cacao); font-size: 1.15rem; }
     .aide ol { margin: 0; padding-left: 20px; }
@@ -193,6 +195,51 @@
   <script>
     (function () {
       "use strict";
+      // ----- Reconnaître le propriétaire du site (toi) -----
+      // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
+      // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.
+      var EMPREINTE_PROPRIO = "e0a30fb67edbbe1f9df4c805ec1c28035712d9caba1f77139a65a394b9b62be6";
+      function estProprio() {
+        try { return localStorage.getItem("didy-proprietaire") === EMPREINTE_PROPRIO; } catch (e) { return false; }
+      }
+      function verifierLienSecret() {
+        var donne = null;
+        try { donne = new URLSearchParams(location.search).get("proprietaire"); } catch (e) { donne = null; }
+        if (donne === null) return Promise.resolve(estProprio());
+        function nettoyer() {
+          try { var u = new URL(location.href); u.searchParams.delete("proprietaire"); history.replaceState(null, "", u.pathname + u.search + u.hash); } catch (e) { /* rien */ }
+        }
+        if (donne === "non") {
+          try { localStorage.removeItem("didy-proprietaire"); } catch (e) { /* rien */ }
+          nettoyer();
+          return Promise.resolve(false);
+        }
+        if (!window.crypto || !window.crypto.subtle || !window.TextEncoder) { nettoyer(); return Promise.resolve(estProprio()); }
+        return window.crypto.subtle.digest("SHA-256", new TextEncoder().encode(String(donne).slice(0, 100)))
+          .then(function (b) {
+            var h = Array.prototype.map.call(new Uint8Array(b), function (x) { return ("0" + x.toString(16)).slice(-2); }).join("");
+            if (h === EMPREINTE_PROPRIO) { try { localStorage.setItem("didy-proprietaire", EMPREINTE_PROPRIO); } catch (e) { /* rien */ } }
+            nettoyer();
+            return estProprio();
+          })
+          .catch(function () { nettoyer(); return estProprio(); });
+      }
+      function pageReservee() {
+        var main = document.querySelector("main");
+        if (!main) return;
+        main.hidden = true;
+        var avis = document.createElement("main");
+        avis.className = "reservee";
+        var t = document.createElement("p");
+        t.textContent = "🔒 Cette page est réservée au propriétaire du site.";
+        var lien = document.createElement("a");
+        lien.href = "./";
+        lien.textContent = "← Retour au site";
+        avis.appendChild(t);
+        avis.appendChild(lien);
+        main.parentNode.insertBefore(avis, main);
+      }
+
 
       var BASE = "https://didyodg.goatcounter.com/counter/";
       var ADRESSE = BASE + "TOTAL.json";
@@ -305,7 +352,9 @@
       }
 
       document.getElementById("actualiser").addEventListener("click", actualiser);
-      actualiser();
+      verifierLienSecret().then(function (proprio) {
+        if (proprio) actualiser(); else pageReservee();
+      });
     })();
   </script>
 </body>
