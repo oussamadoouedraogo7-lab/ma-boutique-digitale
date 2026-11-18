@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-tN/tPp+f3QhPKl1ZV1ILAxZ8UZsE79/PfUN/TtS6/Io='; script-src 'sha256-Z6CILN83ElU9z3eG4o/pO//03ofl9WXOFiyA9e9+BsA='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-dXDdGwt3LyAGLH9jW6mT0NlO4LEsI2AVWoWuwzk+uPU='; script-src 'sha256-nyPhFv3wE2f5WjDop5JNnoJA9scpu8mkUob38xu0O4s='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -73,8 +73,7 @@
     /* ===== BARRE DU HAUT ===== */
     .barre {
       position: sticky; top: 0; z-index: 20;
-      background: rgba(20, 26, 74, 0.94);
-      -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+      background: var(--nuit);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .barre .conteneur { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 62px; }
@@ -145,20 +144,18 @@
     .vitrine[hidden] { display: none; }
     .vitrine img {
       position: absolute; top: 50%; left: 50%;
-      width: 46%; max-width: 240px; aspect-ratio: 1 / 1; object-fit: cover;
-      margin: -23% 0 0 -23%;
+      width: 46vw; height: 46vw; max-width: 240px; max-height: 240px; object-fit: cover;
       border-radius: 16px; background: #e9e9ea;
       box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
       border: 3px solid rgba(255, 255, 255, 0.9);
       animation: eventail 7s ease-in-out infinite;
     }
-    @media (min-width: 900px) { .vitrine img { margin: -120px 0 0 -120px; } }
     .vitrine img:nth-child(1) { --rot: -13deg; --dx: -40%; z-index: 1; animation-delay: -1s; }
     .vitrine img:nth-child(2) { --rot: 11deg;  --dx: 40%;  z-index: 2; animation-delay: -3s; }
     .vitrine img:nth-child(3) { --rot: -2deg;  --dx: 0%;   z-index: 3; animation-delay: -5s; }
     @keyframes eventail {
-      0%, 100% { transform: translateX(var(--dx)) rotate(var(--rot)) rotateY(-8deg) translateY(0); }
-      50%      { transform: translateX(var(--dx)) rotate(var(--rot)) rotateY(8deg) translateY(-12px); }
+      0%, 100% { transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)) translateY(0); }
+      50%      { transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)) translateY(-10px); }
     }
 
     /* Bande de pagne */
@@ -189,15 +186,16 @@
     .theme-terre    { background: linear-gradient(135deg, var(--terre), #f08a4b); }
     .couverture.couverture-claire { background: #e9e9ea; }
     /* Couverture en vidéo : carrée, pour voir toute l'animation */
-    .couverture.couverture-video { height: auto; aspect-ratio: 1 / 1; max-height: 440px; background: #0d1033; }
-    .couverture-video video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .couverture.couverture-video { height: 92vw; max-height: 440px; background: #0d1033; }
+    @supports (aspect-ratio: 1 / 1) { .couverture.couverture-video { height: auto; aspect-ratio: 1 / 1; } }
+    .couverture-video video { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     /* La vidéo bouge déjà : pas de flottement en plus (plus léger pour le téléphone) */
     .js .carte.visible .couverture-cadre > video { animation: none; scale: 1.02; }
     /* Derrière une boîte 3D : la même image, floutée, pour un fond sans cadre */
-    .couverture-flou { position: absolute; inset: -30px; width: calc(100% + 60px); height: calc(100% + 60px); object-fit: cover; filter: blur(24px) saturate(1.15); opacity: 0.75; }
+    .couverture-flou { position: absolute; top: -30px; left: -30px; width: calc(100% + 60px); height: calc(100% + 60px); object-fit: cover; filter: blur(24px) saturate(1.15); opacity: 0.75; }
 
     /* Animations des couvertures (opacity, scale, translate, rotate, transform : fluides sur Android) */
-    .couverture-cadre { position: absolute; inset: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; perspective: 900px; }
+    .couverture-cadre { position: absolute; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; perspective: 900px; }
     .couverture-cadre > * {
       transform: rotateX(var(--incl-x, 0deg)) rotateY(var(--incl-y, 0deg));
       transition: opacity 0.9s ease, scale 1.3s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.35s ease-out;
@@ -208,7 +206,7 @@
     .js .carte.visible.touche .couverture-cadre > *,
     .js .carte.visible:hover .couverture-cadre > * { scale: 1.12; transition: opacity 0.9s ease, scale 0.5s ease, transform 0.35s ease-out; }
     .couverture-cadre::after {
-      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
+      content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; pointer-events: none; opacity: 0; transition: opacity 0.35s ease;
       background: radial-gradient(circle at var(--lumiere-x, 50%) var(--lumiere-y, 30%), rgba(255, 255, 255, 0.35), transparent 55%);
     }
     .carte.touche .couverture-cadre::after, .carte:hover .couverture-cadre::after { opacity: 1; }
@@ -216,7 +214,7 @@
       0%, 100% { translate: 0 0;    rotate: 0.35 1 0 -5deg; }
       50%      { translate: 0 -7px; rotate: 0.35 1 0 5deg; }
     }
-    .illustration, .photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    .illustration, .photo { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; display: block; }
     .photo { object-fit: cover; }
     .photo-entiere { object-fit: contain; padding: 10px 0; filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.25)); }
     .couverture .icone { filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.25)); }
@@ -224,7 +222,7 @@
     .vapeur.v2 { animation-delay: 1s; }
     .vapeur.v3 { animation-delay: 2s; }
     .piece { animation: piece 2.6s ease-in infinite; }
-    .couverture-lien { position: absolute; inset: 0; z-index: 1; }
+    .couverture-lien { position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: 1; }
     .couverture-lien:focus-visible { outline: 3px solid var(--or); outline-offset: -3px; }
 
     .contenu { display: flex; flex-direction: column; flex: 1; gap: 14px; padding: 20px 20px 22px; }
@@ -247,9 +245,25 @@
     .reperes { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
     .reperes li { padding: 4px 10px; border-radius: 999px; background: var(--ivoire); border: 1px solid var(--bord); font-size: 0.78rem; font-weight: 700; color: var(--encre-douce); }
 
-    .boutons-carte { display: grid; gap: 10px; margin-top: auto; padding-top: 4px; }
-    .bouton-acheter { width: 100%; background: var(--nuit); color: #fff; box-shadow: 0 10px 22px rgba(20, 26, 74, 0.25); }
-    .bouton-acheter:hover { background: var(--nuit-2); transform: translateY(-2px); }
+    .paiement { display: grid; gap: 10px; margin-top: auto; padding: 16px; border-radius: 16px; background: var(--ivoire); border: 1px solid var(--bord); }
+    .paiement-titre { font-family: var(--titres); font-weight: 800; font-size: 1.05rem; color: var(--nuit); }
+    .ou { display: flex; align-items: center; gap: 10px; color: var(--encre-douce); font-weight: 700; font-size: 0.85rem; margin-top: 4px; }
+    .ou::before, .ou::after { content: ""; flex: 1; height: 1px; background: var(--bord); }
+    /* Le gros bouton Chariow, tout en bas, bien visible */
+    .bouton-chariow {
+      position: relative; overflow: hidden; width: 100%; min-height: 62px;
+      background: var(--or); color: var(--nuit); font-size: 1.2rem; font-weight: 800;
+      box-shadow: 0 12px 28px rgba(242, 167, 27, 0.45); border: 2px solid #e0960c;
+    }
+    .bouton-chariow:hover { transform: translateY(-2px); }
+    /* Petit reflet qui passe sur le bouton pour attirer l'œil */
+    .bouton-chariow::after {
+      content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+      transform: skewX(-20deg); animation: reflet 3.2s ease-in-out infinite;
+    }
+    @keyframes reflet { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+    .note-chariow { margin: -2px 0 0; text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--encre-douce); }
     .bouton-didy { width: 100%; background: #fff3dc; color: var(--nuit); border: 1px solid #f6d79a; }
     .bouton-didy:hover { background: #ffe9bf; }
 
@@ -259,12 +273,12 @@
     .autres summary::-webkit-details-marker { display: none; }
     .autres summary::after { content: "+"; font-size: 1.3rem; color: var(--terre); transition: transform 0.25s ease; }
     .autres[open] summary::after { transform: rotate(45deg); }
-    .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-    .bouton-mm { flex-direction: column; gap: 0; min-height: 58px; padding: 8px; border-radius: 12px; color: #fff; font-size: 0.95rem; line-height: 1.2; }
+    .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .bouton-mm { flex-direction: column; gap: 0; min-height: 62px; padding: 8px; border-radius: 12px; color: #fff; font-size: 0.95rem; line-height: 1.2; }
     .bouton-mm small { font-family: var(--corps); font-weight: 600; font-size: 0.72rem; opacity: 0.9; }
     .moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); }
     .orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); }
-    .note-securite { margin: 10px 0 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; }
+    .note-securite { margin: 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; text-align: center; }
 
     .erreur { grid-column: 1 / -1; background: #fff; border-radius: 22px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
 
@@ -284,7 +298,7 @@
     /* ===== DIDY ===== */
     .didy-bloc { position: relative; display: grid; gap: 26px; align-items: center; padding: 34px 22px 26px; border-radius: 26px; background: var(--nuit); color: #fff; overflow: hidden; }
     @media (min-width: 900px) { .didy-bloc { grid-template-columns: 1fr 1fr; padding: 52px 48px 48px; } }
-    .didy-bloc::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 8px; background: var(--kente); }
+    .didy-bloc::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: var(--kente); }
     .didy-bloc .eyebrow { color: var(--or-clair); }
     .didy-bloc h2 { margin-top: 8px; font-size: clamp(1.8rem, 6.5vw, 2.5rem); }
     .didy-bloc h2 em { font-style: normal; color: var(--or); }
@@ -333,12 +347,19 @@
     @keyframes vapeur { 0% { opacity: 0; transform: translateY(10px); } 40% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-16px); } }
     @keyframes piece { 0% { opacity: 0; transform: translateY(-14px); } 25% { opacity: 1; } 70% { opacity: 1; transform: translateY(14px); } 100% { opacity: 0; transform: translateY(26px); } }
 
+    /* Mode léger : téléphones peu puissants ou "économie de données" */
+    .leger .vitrine img { animation: none; transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)); }
+    .leger .couverture-flou { display: none; }
+    .leger.js .carte.visible .couverture-cadre > * { animation: none; scale: 1; }
+    .leger .couverture-cadre::after { display: none; }
+    .leger .bouton-chariow::after { display: none; }
+
     /* Respecte les téléphones réglés pour réduire les animations */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
       .js .revele { opacity: 1; transform: none; }
       .couverture-cadre > * { opacity: 1 !important; scale: 1 !important; translate: none !important; rotate: none !important; transform: none !important; }
-      .vitrine img { transform: translateX(var(--dx)) rotate(var(--rot)); }
+      .vitrine img { transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)); }
     }
   </style>
 </head>
@@ -498,6 +519,12 @@
       "use strict";
       document.documentElement.classList.add("js");
 
+      // Téléphone peu puissant ou en "économie de données" : on allège les animations
+      var leger = !!((navigator.connection && navigator.connection.saveData) ||
+        (navigator.deviceMemory && navigator.deviceMemory <= 2) ||
+        (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4));
+      if (leger) document.documentElement.classList.add("leger");
+
       // "1" = compte Moov Money, "2" = compte Orange Money
       var NUMEROS = { "1": "22603078805", "2": "22605564451" };
       var MESSAGE_GENERAL = "Bonjour Didy Digital ! J'aimerais avoir des informations sur vos ebooks.";
@@ -655,39 +682,34 @@
         ["📥 Téléchargeable", "📱 Sur téléphone", "🔒 Paiement sécurisé"].forEach(function (r) { reperes.appendChild(element("li", "", r)); });
         contenu.appendChild(reperes);
 
-        // Boutons
-        var boutons = element("div", "boutons-carte");
-        var acheter;
-        if (chariow) {
-          acheter = lienExterne("bouton bouton-acheter");
-          acheter.href = chariow;
-          acheter.appendChild(element("span", "", "🛒 Acheter maintenant"));
-        } else {
-          acheter = element("a", "bouton bouton-acheter");
-          acheter.href = lienDidy;
-          acheter.appendChild(element("span", "", "🛒 Commander"));
-        }
-        boutons.appendChild(acheter);
+        // Une question ? -> Didy
         var didy = element("a", "bouton bouton-didy");
         didy.href = lienDidy;
         didy.appendChild(element("span", "", "💬 Une question ? Demandez à Didy"));
-        boutons.appendChild(didy);
-        contenu.appendChild(boutons);
+        contenu.appendChild(didy);
 
-        // Mobile Money (replié)
-        var autres = element("details", "autres");
-        autres.appendChild(element("summary", "", "Payer par Moov Money ou Orange Money"));
+        // Le paiement : Mobile Money en haut, Chariow en bas (bien visible)
+        var paiement = element("div", "paiement");
+        paiement.appendChild(element("div", "paiement-titre", "Comment souhaitez-vous payer ?"));
         var grille = element("div", "mm-grille");
-        [{ nom: "Moov Money", classe: "moov", numero: "1" }, { nom: "Orange Money", classe: "orange-money", numero: "2" }].forEach(function (m) {
-          var b = lienExterne("bouton bouton-mm " + m.classe);
-          b.href = lienWhatsApp("Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par " + m.nom + ".", m.numero);
-          b.appendChild(element("span", "", m.nom));
-          b.appendChild(element("small", "", "via WhatsApp"));
-          grille.appendChild(b);
+        [{ nom: "Orange Money", classe: "orange-money", numero: "2" }, { nom: "Moov Money", classe: "moov", numero: "1" }].forEach(function (m) {
+          var bt = lienExterne("bouton bouton-mm " + m.classe);
+          bt.href = lienWhatsApp("Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par " + m.nom + ".", m.numero);
+          bt.appendChild(element("span", "", "Payer par " + m.nom));
+          bt.appendChild(element("small", "", "via WhatsApp"));
+          grille.appendChild(bt);
         });
-        autres.appendChild(grille);
-        autres.appendChild(element("p", "note-securite", "🔒 Nous ne vous demanderons jamais votre code secret."));
-        contenu.appendChild(autres);
+        paiement.appendChild(grille);
+        paiement.appendChild(element("p", "note-securite", "🔒 Nous ne vous demanderons jamais votre code secret."));
+        if (chariow) {
+          paiement.appendChild(element("div", "ou", "ou payez en ligne"));
+          var boutonChariow = lienExterne("bouton bouton-chariow");
+          boutonChariow.href = chariow;
+          boutonChariow.appendChild(element("span", "", "🛒 Payer sur Chariow"));
+          paiement.appendChild(boutonChariow);
+          paiement.appendChild(element("p", "note-chariow", "Paiement sécurisé (Mobile Money ou carte) · ebook reçu automatiquement"));
+        }
+        contenu.appendChild(paiement);
 
         carte.appendChild(contenu);
         return carte;
@@ -708,7 +730,7 @@
           cadre.style.setProperty("--lumiere-y", Math.round(y * 100) + "%");
         }
         function suivre(ev) {
-          if (calme) return;
+          if (calme || leger) return;
           dernier = { x: ev.clientX, y: ev.clientY };
           if (!enCours) { enCours = true; window.requestAnimationFrame(incliner); }
         }

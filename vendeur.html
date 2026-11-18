@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-2pe/TBHrr6q7zB+Z/paumzxPDSDTtHUimboqqUQbv68='; script-src 'sha256-QVwulV0/d9bCdoARsmwJzl/Vw5MWI04IkbW0BxwX1Dg='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cFT5UGu0yz3lyWMcqRRU+iAqQPgPaLefPzVaVx2z8zA='; script-src 'sha256-nEfsqIu04D4BNrVcmSMAAa2KnjE8my46IiQGluaM8iw='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -155,13 +155,14 @@
     }
     .fiche-image { perspective: 900px; overflow: hidden; }
     .fiche-image img {
-      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
       scale: 1.07;
       animation: flotter-3d 8s ease-in-out infinite;
     }
     .fiche-image img.entiere { scale: 1; }
-    .fiche-image.video { height: auto; aspect-ratio: 1 / 1; max-height: 340px; background: #0d1033; }
-    .fiche-image video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .fiche-image.video { height: 86vw; max-height: 340px; background: #0d1033; }
+    @supports (aspect-ratio: 1 / 1) { .fiche-image.video { height: auto; aspect-ratio: 1 / 1; } }
+    .fiche-image video { position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
     @keyframes flotter-3d {
       0%, 100% { translate: 0 0;    rotate: 0.35 1 0 -5deg; }
       50%      { translate: 0 -5px; rotate: 0.35 1 0 5deg; }
@@ -203,7 +204,7 @@
       text-decoration: none;
       color: #fff;
     }
-    .lien.chariow { background: var(--cacao); color: var(--soleil); box-shadow: 0 8px 20px rgba(35, 17, 10, 0.25); }
+    .lien.chariow { min-height: 60px; font-size: 1.1rem; background: var(--soleil); color: var(--cacao); border: 2px solid #e0960c; box-shadow: 0 10px 24px rgba(242, 167, 27, 0.45); }
     .lien.moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); }
     .lien.orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); }
     .lien.wa { background: linear-gradient(135deg, var(--wa), var(--emeraude)); }
@@ -458,8 +459,8 @@
           ? "Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par "
           : "Bonjour Didy Digital ! J'aimerais acheter un ebook. Je veux payer par ";
         return [
-          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1") },
-          { classe: "orange-money", texte: "Payer par Orange Money (via WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2") }
+          { classe: "orange-money", texte: "Payer par Orange Money (via WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2") },
+          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1") }
         ];
       }
 
@@ -526,11 +527,10 @@
       function acheter(e) {
         var chariow = lienSecurise(e.lienChariow) || lienSecurise(reglages.boutiqueChariow);
         if (chariow) {
-          robot("Merci pour votre confiance 🙏 Pour l'acheter, touchez le bouton ci-dessous : vous payez sur **Chariow**, une page de paiement sécurisée (Mobile Money ou carte).");
-          robot("Dès que votre paiement est validé, **vous recevez votre ebook automatiquement**, même la nuit.");
-          robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Acheter « " + e.nom + " » sur Chariow", href: chariow }]); });
-          robot("Vous préférez payer par Mobile Money en nous écrivant ? C'est possible aussi :");
+          robot("Merci pour votre confiance 🙏 Vous pouvez payer par **Orange Money** ou **Moov Money** en nous écrivant sur WhatsApp :");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
+          robot("Ou payez directement en ligne sur **Chariow**, une page de paiement sécurisée : **vous recevez votre ebook automatiquement**, même la nuit 👇");
+          robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Payer « " + e.nom + " » sur Chariow", href: chariow }]); });
         } else {
           robot("Merci pour votre confiance 🙏 Choisissez votre moyen de paiement. WhatsApp va s'ouvrir avec un message déjà écrit : vous n'avez plus qu'à l'envoyer.");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
