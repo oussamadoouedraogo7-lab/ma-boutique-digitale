@@ -1,29 +1,18 @@
 # À faire – Didy Digital
 
-## 1. Mettre le site en ligne (le plus important)
+## 1. ✅ Le site est en ligne (18 novembre 2026)
 
-Le dépôt est encore **privé** : c'est pour ça que le site affiche « 404 ».
+🌐 **https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/**
 
-**A. Rendre le dépôt public**
-1. Sur GitHub, ouvre le dépôt `ma-boutique-digitale` → **Settings**.
-   (Sur téléphone : dans Chrome, ⋮ → coche « Version pour ordinateur ».)
-2. Tout en bas, dans **Danger Zone** → **Change visibility** → **Change to public** → confirme.
-
-**B. Activer GitHub Pages**
-1. **Settings** → **Pages**.
-2. Source : **Deploy from a branch**.
-3. Branch : **`claude/project-explanation-fr-ccmfrg`** et **`/ (root)`** → **Save**.
-4. Attendre 2 à 10 minutes.
-5. Le site sera à : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/
+- Dépôt **public** ✅ — GitHub Pages activé sur la branche `claude/project-explanation-fr-ccmfrg` ✅
+- À chaque enregistrement sur cette branche, le site se met à jour tout seul (1 à 2 minutes).
 
 **C. Cacher ton email (conseillé)**
 Photo de profil → **Settings** → **Emails** → coche **« Keep my email addresses private »**.
 
 ## 2. Ensuite
 
-- [ ] Envoyer le lien de ta **boutique Chariow** (et de chaque ebook) pour que l'assistante Didy
-      envoie les clients acheter sur Chariow.
-- [ ] Une fois le site en ligne, partager le lien de l'assistante **Didy** :
+- [ ] Partager le lien de l'assistante **Didy** :
       https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html
       Liens qui ouvrent Didy directement sur un ebook :
       - Argent : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=argent
