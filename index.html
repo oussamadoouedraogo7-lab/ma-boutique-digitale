@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-dXDdGwt3LyAGLH9jW6mT0NlO4LEsI2AVWoWuwzk+uPU='; script-src 'sha256-nyPhFv3wE2f5WjDop5JNnoJA9scpu8mkUob38xu0O4s='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-G/zltwmFKMFw4Ti50HBzRO9wax2PtQanXXI1UtWAq9c='; script-src 'sha256-3bX+rcHp9C8pj07kMoQxSAnq2Mfr7DImreSEYRs+5Fc='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -83,6 +83,10 @@
       width: 36px; height: 36px; border-radius: 11px;
       background: var(--or); color: var(--nuit); font-size: 1.1rem;
     }
+    .barre-liens { display: flex; align-items: center; gap: 24px; }
+    .barre-lien { color: var(--or-clair); font-weight: 700; text-decoration: none; }
+    .barre-lien:hover { color: #fff; }
+    @media (max-width: 767px) { .barre-lien { display: none; } }
     .barre-didy {
       display: inline-flex; align-items: center; gap: 6px;
       min-height: 40px; padding: 8px 14px; border-radius: 999px;
@@ -100,8 +104,9 @@
         radial-gradient(rgba(255, 255, 255, 0.07) 1.2px, transparent 1.4px);
       background-size: auto, auto, 22px 22px;
     }
-    .hero .conteneur { display: grid; gap: 30px; padding-top: 40px; padding-bottom: 52px; align-items: center; }
-    @media (min-width: 900px) { .hero .conteneur { grid-template-columns: 1.1fr 0.9fr; padding-top: 72px; padding-bottom: 80px; } }
+    .hero .conteneur > * { min-width: 0; }
+    .hero .conteneur { display: grid; grid-template-columns: minmax(0, 1fr); gap: 30px; padding-top: 40px; padding-bottom: 52px; align-items: center; }
+    @media (min-width: 900px) { .hero .conteneur { grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); padding-top: 72px; padding-bottom: 80px; } }
 
     .surtitre {
       display: inline-flex; align-items: center; gap: 8px;
@@ -138,25 +143,23 @@
     .compteur strong { color: var(--or); font-family: var(--titres); }
     .compteur[hidden] { display: none; }
 
-    /* Les couvertures en éventail */
-    .vitrine { position: relative; height: 250px; perspective: 1000px; }
-    @media (min-width: 900px) { .vitrine { height: 400px; } }
-    .vitrine[hidden] { display: none; }
+    /* Les couvertures côte à côte (celle du milieu plus grande, cadre doré) */
+    .vitrine-bloc { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .vitrine-bloc[hidden] { display: none; }
+    .vitrine { display: flex; align-items: flex-end; gap: 12px; width: 100%; }
     .vitrine img {
-      position: absolute; top: 50%; left: 50%;
-      width: 46vw; height: 46vw; max-width: 240px; max-height: 240px; object-fit: cover;
-      border-radius: 16px; background: #e9e9ea;
-      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45);
-      border: 3px solid rgba(255, 255, 255, 0.9);
-      animation: eventail 7s ease-in-out infinite;
+      flex: 1 1 0; min-width: 0; height: 220px; object-fit: cover;
+      border-radius: 20px; border: 4px solid #fff; background: #e9e9ea;
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.40);
     }
-    .vitrine img:nth-child(1) { --rot: -13deg; --dx: -40%; z-index: 1; animation-delay: -1s; }
-    .vitrine img:nth-child(2) { --rot: 11deg;  --dx: 40%;  z-index: 2; animation-delay: -3s; }
-    .vitrine img:nth-child(3) { --rot: -2deg;  --dx: 0%;   z-index: 3; animation-delay: -5s; }
-    @keyframes eventail {
-      0%, 100% { transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)) translateY(0); }
-      50%      { transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)) translateY(-10px); }
+    .vitrine img.centre { height: 290px; border-color: var(--or); animation: flotter-vitrine 6s ease-in-out infinite; }
+    @media (max-width: 767px) {
+      .vitrine { gap: 8px; }
+      .vitrine img { height: 150px; border-width: 3px; border-radius: 14px; }
+      .vitrine img.centre { height: 200px; }
     }
+    @keyframes flotter-vitrine { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .vitrine-legende { margin: 0; color: #c4c9ee; font-size: 0.85rem; }
 
     /* Bande de pagne */
     .pagne { height: 12px; background: var(--kente); }
@@ -230,7 +233,12 @@
     .prix { font-family: var(--titres); font-weight: 800; font-size: 1.5rem; color: var(--terre); white-space: nowrap; }
     .paiement-unique { font-size: 0.8rem; font-weight: 700; color: var(--encre-douce); }
     .contenu h3 { font-size: 1.3rem; color: var(--nuit); }
-    .description { margin: 0; color: var(--encre-douce); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+    .categorie {
+      position: absolute; top: 12px; left: 12px; z-index: 2; pointer-events: none;
+      padding: 4px 12px; border-radius: 999px; background: var(--or); color: var(--nuit);
+      font-weight: 800; font-size: 0.75rem; letter-spacing: 0.06em;
+    }
+    .description { margin: 0; color: var(--encre-douce); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .description.ouverte { -webkit-line-clamp: unset; display: block; }
     .lire-plus { align-self: flex-start; margin-top: -8px; padding: 2px 0; border: 0; background: none; color: var(--terre); font: inherit; font-weight: 700; font-size: 0.9rem; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
     .lire-plus[hidden] { display: none; }
@@ -274,10 +282,10 @@
     .autres summary::after { content: "+"; font-size: 1.3rem; color: var(--terre); transition: transform 0.25s ease; }
     .autres[open] summary::after { transform: rotate(45deg); }
     .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .bouton-mm { flex-direction: column; gap: 0; min-height: 62px; padding: 8px; border-radius: 12px; color: #fff; font-size: 0.95rem; line-height: 1.2; }
+    .bouton-mm { flex-direction: column; gap: 0; min-height: 62px; padding: 8px; border-radius: 12px; color: #fff; font-size: 1.02rem; line-height: 1.25; }
     .bouton-mm small { font-family: var(--corps); font-weight: 600; font-size: 0.72rem; opacity: 0.9; }
-    .moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); }
-    .orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); }
+    .moov { background: #0b5cad; }
+    .orange-money { background: #ff7a00; }
     .note-securite { margin: 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; text-align: center; }
 
     .erreur { grid-column: 1 / -1; background: #fff; border-radius: 22px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
@@ -348,7 +356,7 @@
     @keyframes piece { 0% { opacity: 0; transform: translateY(-14px); } 25% { opacity: 1; } 70% { opacity: 1; transform: translateY(14px); } 100% { opacity: 0; transform: translateY(26px); } }
 
     /* Mode léger : téléphones peu puissants ou "économie de données" */
-    .leger .vitrine img { animation: none; transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)); }
+    .leger .vitrine img { animation: none; }
     .leger .couverture-flou { display: none; }
     .leger.js .carte.visible .couverture-cadre > * { animation: none; scale: 1; }
     .leger .couverture-cadre::after { display: none; }
@@ -359,7 +367,6 @@
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
       .js .revele { opacity: 1; transform: none; }
       .couverture-cadre > * { opacity: 1 !important; scale: 1 !important; translate: none !important; rotate: none !important; transform: none !important; }
-      .vitrine img { transform: translate(-50%, -50%) translateX(var(--dx)) rotate(var(--rot)); }
     }
   </style>
 </head>
@@ -371,7 +378,11 @@
   <nav class="barre" aria-label="Menu principal">
     <div class="conteneur">
       <a class="logo" href="#haut"><span class="logo-marque" aria-hidden="true">D</span>Didy Digital</a>
-      <a class="barre-didy" href="vendeur.html">💬 Didy</a>
+      <div class="barre-liens">
+        <a class="barre-lien" href="#ebooks">Ebooks</a>
+        <a class="barre-lien" href="#commander">Comment commander</a>
+        <a class="barre-didy" href="vendeur.html">💬 Parler à Didy</a>
+      </div>
     </div>
   </nav>
 
@@ -381,19 +392,23 @@
       <div>
         <span class="surtitre">✦ Ebooks pratiques · Afrique de l'Ouest</span>
         <h1>Des guides simples pour <span class="souligne">avancer</span> dans votre vie.</h1>
-        <p class="intro">Argent, cuisine, projets, santé : des ebooks clairs et concrets, à lire directement sur votre téléphone. Payez en toute sécurité et recevez votre ebook rapidement.</p>
+        <p class="intro">Argent, cuisine, business, projets en Europe, santé : des ebooks clairs, à lire sur votre téléphone. Payez par Orange Money, Moov Money ou en ligne, en toute sécurité.</p>
         <div class="actions">
           <a class="bouton bouton-or" href="#ebooks">Voir les ebooks</a>
           <a class="bouton bouton-ligne" href="vendeur.html">💬 Discuter avec Didy</a>
         </div>
         <ul class="confiance-hero">
           <li>🔒 Paiement sécurisé</li>
-          <li>📱 Moov &amp; Orange Money</li>
+          <li>🟠 Orange Money</li>
+          <li>🔵 Moov Money</li>
           <li>📥 Ebook téléchargeable</li>
         </ul>
         <div class="compteur" id="compteur-visites" hidden>👀 <strong id="nombre-visites">0</strong> visites sur le site</div>
       </div>
-      <div class="vitrine" id="vitrine" aria-hidden="true" hidden></div>
+      <div class="vitrine-bloc" id="vitrine-bloc" hidden>
+        <div class="vitrine" id="vitrine" aria-hidden="true"></div>
+        <p class="vitrine-legende" id="vitrine-legende"></p>
+      </div>
     </div>
     <div class="pagne" aria-hidden="true"></div>
   </header>
@@ -405,7 +420,7 @@
         <div class="entete-section revele">
           <span class="eyebrow">Nos ebooks</span>
           <h2>Choisissez votre prochain guide</h2>
-          <p>Touchez une couverture pour en savoir plus avec Didy, ou achetez directement en toute sécurité.</p>
+          <p>Payez par Orange Money ou Moov Money, ou directement en ligne sur Chariow.</p>
         </div>
         <div class="grille" id="liste-ebooks">
           <noscript>
@@ -416,7 +431,7 @@
     </section>
 
     <!-- ===== COMMENT ÇA MARCHE ===== -->
-    <section class="etapes-section">
+    <section class="etapes-section" id="commander">
       <div class="conteneur">
         <div class="entete-section revele">
           <span class="eyebrow">Simple et rapide</span>
@@ -442,8 +457,8 @@
           </div>
           <div class="discussion" aria-hidden="true">
             <div class="msg robot"><span class="msg-nom">Didy</span>Bonjour et bienvenue chez Didy Digital 🙏 Qu'est-ce qui vous ferait plaisir aujourd'hui ?</div>
-            <div class="msg client">Comment je reçois l'ebook ?</div>
-            <div class="msg robot"><span class="msg-nom">Didy</span>Sur Chariow, vous le recevez automatiquement juste après le paiement 📥</div>
+            <div class="msg client">Comment je paie par Orange Money ?</div>
+            <div class="msg robot"><span class="msg-nom">Didy</span>Touchez « Orange Money » : WhatsApp s'ouvre avec votre commande déjà écrite 📲</div>
           </div>
         </div>
       </div>
@@ -475,8 +490,8 @@
         <p>Des ebooks simples et pratiques pour avancer dans votre vie. Une question ? Écrivez-nous sur WhatsApp, nous vous répondons avec plaisir.</p>
       </div>
       <div class="numeros">
-        <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money</small></a>
         <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51 <small>Orange Money</small></a>
+        <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money</small></a>
       </div>
     </div>
     <div class="conteneur"><small class="droits">© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small></div>
@@ -647,6 +662,8 @@
         lienCouverture.href = lienDidy;
         lienCouverture.setAttribute("aria-label", "Découvrir « " + ebook.nom + " » avec Didy");
         couverture.appendChild(lienCouverture);
+        var categorie = String(ebook.categorie || "").trim().slice(0, 30);
+        if (categorie) couverture.appendChild(element("span", "categorie", categorie));
         carte.appendChild(couverture);
         activer3D(carte, couverture, cadre);
 
@@ -672,22 +689,6 @@
           if (description.scrollHeight > description.clientHeight + 2) lirePlus.hidden = false;
         });
 
-        if (Array.isArray(ebook.apercu) && ebook.apercu.length) {
-          var liste = element("ul", "apercu");
-          ebook.apercu.slice(0, 3).forEach(function (x) { liste.appendChild(element("li", "", String(x))); });
-          contenu.appendChild(liste);
-        }
-
-        var reperes = element("ul", "reperes");
-        ["📥 Téléchargeable", "📱 Sur téléphone", "🔒 Paiement sécurisé"].forEach(function (r) { reperes.appendChild(element("li", "", r)); });
-        contenu.appendChild(reperes);
-
-        // Une question ? -> Didy
-        var didy = element("a", "bouton bouton-didy");
-        didy.href = lienDidy;
-        didy.appendChild(element("span", "", "💬 Une question ? Demandez à Didy"));
-        contenu.appendChild(didy);
-
         // Le paiement : Mobile Money en haut, Chariow en bas (bien visible)
         var paiement = element("div", "paiement");
         paiement.appendChild(element("div", "paiement-titre", "Comment souhaitez-vous payer ?"));
@@ -695,7 +696,7 @@
         [{ nom: "Orange Money", classe: "orange-money", numero: "2" }, { nom: "Moov Money", classe: "moov", numero: "1" }].forEach(function (m) {
           var bt = lienExterne("bouton bouton-mm " + m.classe);
           bt.href = lienWhatsApp("Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par " + m.nom + ".", m.numero);
-          bt.appendChild(element("span", "", "Payer par " + m.nom));
+          bt.appendChild(element("span", "", m.nom));
           bt.appendChild(element("small", "", "via WhatsApp"));
           grille.appendChild(bt);
         });
@@ -747,21 +748,27 @@
         });
       }
 
-      // ----- 3. Les couvertures en éventail dans l'en-tête -----
+      // ----- 3. Les couvertures dans l'en-tête : une boîte, la vidéo principale, une boîte -----
       function remplirVitrine(ebooks) {
+        // Boîtes 3D : la photo propre ; sinon l'image de la vidéo
+        function image(e) {
+          return e.imageEntiere === true ? (cheminPhoto(e.image) || cheminPhoto(e.videoImage)) : (cheminPhoto(e.videoImage) || cheminPhoto(e.image));
+        }
+        var avec = ebooks.filter(image);
+        var centre = avec.filter(function (e) { return e.imageEntiere !== true; })[0] || avec[0];
+        var cotes = avec.filter(function (e) { return e !== centre && e.imageEntiere === true; });
+        if (cotes.length < 2) cotes = cotes.concat(avec.filter(function (e) { return e !== centre && cotes.indexOf(e) < 0; }));
+        if (!centre || cotes.length < 2) return;
         var vitrine = document.getElementById("vitrine");
-        var choix = ebooks.filter(function (e) { return cheminPhoto(e.image) && e.imageEntiere === true; });
-        if (choix.length < 3) choix = choix.concat(ebooks.filter(function (e) { return cheminPhoto(e.image) && e.imageEntiere !== true; }));
-        choix = choix.slice(0, 3);
-        if (choix.length < 2) return;
-        choix.forEach(function (e) {
-          var img = element("img");
-          img.src = cheminPhoto(e.image);
+        [cotes[0], centre, cotes[1]].forEach(function (e) {
+          var img = element("img", e === centre ? "centre" : "");
+          img.src = image(e);
           img.alt = "";
           img.decoding = "async";
           vitrine.appendChild(img);
         });
-        vitrine.hidden = false;
+        document.getElementById("vitrine-legende").textContent = ebooks.length + " ebooks · vidéos animées ci-dessous";
+        document.getElementById("vitrine-bloc").hidden = false;
       }
 
       // ----- 4. Liens WhatsApp, année -----
