@@ -9,7 +9,7 @@
     Protection : elle n'exécute que son propre code, et ne peut contacter
     que ton compteur GoatCounter (connect-src).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xbdbFwlBojeF+eQCL30ir3lXkbkGkE1oPe3w48SfQTo='; script-src 'sha256-YsiMzYZir8D9cPh8uu9BoAYSzbbaU644XW38lpJeDG0='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-DHVPoyCnJbjTxsy5tT4V3nI249o2bGbPYzUVUhtlqwg='; script-src 'sha256-Q1sPl/rDIG286q8aeaW5dxQ4qvUv5RnI2yO6cz6GN78='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <!-- Demande aux moteurs de recherche (Google…) de ne pas afficher cette page -->
   <meta name="robots" content="noindex, nofollow">
@@ -113,11 +113,12 @@
     .didy h3 { margin: 22px 0 0; font-family: "Bricolage", system-ui, sans-serif; font-size: 1.05rem; }
     .didy .grille { margin-top: 12px; }
     .didy .bloc { box-shadow: none; border: 1px solid #f0e2cc; }
-    .grille.trois { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .grille.trois { grid-template-columns: 1fr 1fr; gap: 10px; }
     .grille.trois .bloc { padding: 14px 10px; }
     .grille.trois .bloc strong { font-size: 1.8rem; }
     .bloc.orange { border-top-color: #ff7a00 !important; }
     .bloc.moov { border-top-color: #0b5cad !important; }
+    .bloc.wave { border-top-color: #1dc8f2 !important; }
     .bloc.chariow { border-top-color: var(--soleil) !important; }
     .didy-note { margin: 8px 0 0; color: var(--texte-doux); font-size: 0.85rem; }
     .liste-ebooks { display: grid; gap: 8px; margin-top: 12px; }
@@ -161,6 +162,7 @@
       <div class="grille trois">
         <div class="bloc orange"><span>Orange Money</span><strong id="pay-orange" class="chargement">…</strong></div>
         <div class="bloc moov"><span>Moov Money</span><strong id="pay-moov" class="chargement">…</strong></div>
+        <div class="bloc wave"><span>Wave</span><strong id="pay-wave" class="chargement">…</strong></div>
         <div class="bloc chariow"><span>Chariow</span><strong id="pay-chariow" class="chargement">…</strong></div>
       </div>
       <h3>📚 Ebooks les plus regardés</h3>
@@ -244,6 +246,7 @@
         { id: "didy-jour", chemin: BASE + "didy-discussion.json", debut: aujourdHui() },
         { id: "pay-orange", chemin: BASE + "didy-paiement-orange.json", debut: "" },
         { id: "pay-moov", chemin: BASE + "didy-paiement-moov.json", debut: "" },
+        { id: "pay-wave", chemin: BASE + "didy-paiement-wave.json", debut: "" },
         { id: "pay-chariow", chemin: BASE + "didy-paiement-chariow.json", debut: "" }
       ];
       function lireSansErreur(p) {

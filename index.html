@@ -14,11 +14,11 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-39uRtxgj+Hm+K4Embl0cxxLOo764VNp1IDcyMu86RiE='; script-src 'sha256-fKzuN59JDPl9scyqrbf/NnWiS+3qfQYziy4/cnGaq1g='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-EtxsTcoeD9aTSQeeGpUkyDwrT+1B35+uacfeqqAyVHs='; script-src 'sha256-SdXJjWgVLwnqpVAmN6zyJvGYBL+yh2pRutuOexoOXW4='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
-  <meta name="description" content="Didy Digital : des ebooks simples et pratiques, à lire sur votre téléphone. Paiement sécurisé sur Chariow ou par Moov Money et Orange Money.">
+  <meta name="description" content="Didy Digital : des ebooks simples et pratiques, à lire sur votre téléphone. Paiement sécurisé sur Chariow ou par Orange Money, Moov Money et Wave.">
   <meta name="theme-color" content="#141a4a">
 
   <link rel="preload" href="fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
@@ -281,10 +281,11 @@
     .autres summary::-webkit-details-marker { display: none; }
     .autres summary::after { content: "+"; font-size: 1.3rem; color: var(--terre); transition: transform 0.25s ease; }
     .autres[open] summary::after { transform: rotate(45deg); }
-    .mm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .bouton-mm { flex-direction: column; gap: 0; min-height: 62px; padding: 8px; border-radius: 12px; color: #fff; font-size: 1.02rem; line-height: 1.25; }
+    .mm-grille { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .bouton-mm { flex-direction: column; gap: 0; min-height: 62px; padding: 8px 4px; border-radius: 12px; color: #fff; font-size: 0.95rem; line-height: 1.2; }
     .bouton-mm small { font-family: var(--corps); font-weight: 600; font-size: 0.72rem; opacity: 0.9; }
     .moov { background: #0b5cad; }
+    .wave { background: #1dc8f2; color: #0b2a4a !important; }
     .orange-money { background: #ff7a00; }
     .note-securite { margin: 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; text-align: center; }
 
@@ -399,7 +400,7 @@
       <div>
         <span class="surtitre">✦ Ebooks pratiques · Afrique de l'Ouest</span>
         <h1>Des guides simples pour <span class="souligne">avancer</span> dans votre vie.</h1>
-        <p class="intro">Argent, cuisine, business, projets en Europe, santé : des ebooks clairs, à lire sur votre téléphone. Payez par Orange Money, Moov Money ou en ligne, en toute sécurité.</p>
+        <p class="intro">Argent, cuisine, business, projets en Europe, santé : des ebooks clairs, à lire sur votre téléphone. Payez par Orange Money, Moov Money, Wave ou en ligne, en toute sécurité.</p>
         <div class="actions">
           <a class="bouton bouton-or" href="#ebooks">Voir les ebooks</a>
           <a class="bouton bouton-ligne" href="vendeur.html">💬 Discuter avec Didy</a>
@@ -408,6 +409,7 @@
           <li>🔒 Paiement sécurisé</li>
           <li>🟠 Orange Money</li>
           <li>🔵 Moov Money</li>
+          <li>🩵 Wave</li>
           <li>📥 Ebook téléchargeable</li>
         </ul>
         <div class="compteur" id="compteur-visites" hidden>👀 <strong id="nombre-visites">0</strong> visites sur le site</div>
@@ -427,7 +429,7 @@
         <div class="entete-section revele">
           <span class="eyebrow">Nos ebooks</span>
           <h2>Choisissez votre prochain guide</h2>
-          <p>Payez par Orange Money ou Moov Money, ou directement en ligne sur Chariow.</p>
+          <p>Payez par Orange Money, Moov Money ou Wave, ou directement en ligne sur Chariow.</p>
         </div>
         <div class="grille" id="liste-ebooks">
           <noscript>
@@ -446,7 +448,7 @@
         </div>
         <ol class="etapes">
           <li class="etape revele"><h3>Choisissez votre ebook</h3><p>Lisez la présentation, ou posez vos questions à Didy, notre assistante.</p></li>
-          <li class="etape revele"><h3>Payez en toute sécurité</h3><p>En ligne sur Chariow, ou par Moov Money ou Orange Money via WhatsApp.</p></li>
+          <li class="etape revele"><h3>Payez en toute sécurité</h3><p>En ligne sur Chariow, ou par Orange Money, Moov Money ou Wave via WhatsApp.</p></li>
           <li class="etape revele"><h3>Recevez votre ebook</h3><p>Sur Chariow, il arrive automatiquement. Sur WhatsApp, nous vous l'envoyons dès que le paiement est confirmé.</p></li>
         </ol>
       </div>
@@ -479,7 +481,7 @@
           <h2>Vous vous posez une question ?</h2>
         </div>
         <div class="faq">
-          <details class="question revele"><summary>Comment payer ?</summary><p>Deux possibilités : en ligne sur Chariow, avec une page de paiement sécurisée, ou par Moov Money (+226 03 07 88 05) ou Orange Money (+226 05 56 44 51) en nous écrivant sur WhatsApp.</p></details>
+          <details class="question revele"><summary>Comment payer ?</summary><p>Deux possibilités : en ligne sur Chariow, avec une page de paiement sécurisée, ou par Orange Money (+226 05 56 44 51), Moov Money ou Wave (+226 03 07 88 05) en nous écrivant sur WhatsApp.</p></details>
           <details class="question revele"><summary>Comment je reçois mon ebook ?</summary><p>Sur Chariow, l'ebook vous est envoyé automatiquement après le paiement. Par Mobile Money, nous vous l'envoyons sur WhatsApp dès que le paiement est confirmé.</p></details>
           <details class="question revele"><summary>Je peux le lire sur mon téléphone ?</summary><p>Oui. Les ebooks se lisent directement sur votre téléphone, où vous voulez, quand vous voulez.</p></details>
           <details class="question revele"><summary>Le paiement est-il sûr ?</summary><p>Oui. Ce site ne touche jamais à votre argent et ne vous demande aucune information. Vous payez vous-même, dans votre application Mobile Money ou sur la page sécurisée de Chariow. Nous ne vous demanderons jamais votre code secret : payez uniquement aux numéros affichés sur ce site.</p></details>
@@ -498,7 +500,7 @@
       </div>
       <div class="numeros">
         <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51 <small>Orange Money</small></a>
-        <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money</small></a>
+        <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money · Wave</small></a>
       </div>
     </div>
     <div class="conteneur bas-pied">
@@ -550,7 +552,7 @@
         (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4));
       if (leger) document.documentElement.classList.add("leger");
 
-      // "1" = compte Moov Money, "2" = compte Orange Money
+      // "1" = compte Moov Money et Wave, "2" = compte Orange Money
       var NUMEROS = { "1": "22603078805", "2": "22605564451" };
       var MESSAGE_GENERAL = "Bonjour Didy Digital ! J'aimerais avoir des informations sur vos ebooks.";
       var COULEURS = { orange: "orange", vert: "vert", hibiscus: "hibiscus", cacao: "cacao", soleil: "soleil", terre: "terre", dore: "soleil" };
@@ -703,7 +705,7 @@
         var paiement = element("div", "paiement");
         paiement.appendChild(element("div", "paiement-titre", "Comment souhaitez-vous payer ?"));
         var grille = element("div", "mm-grille");
-        [{ nom: "Orange Money", classe: "orange-money", numero: "2" }, { nom: "Moov Money", classe: "moov", numero: "1" }].forEach(function (m) {
+        [{ nom: "Orange Money", classe: "orange-money", numero: "2" }, { nom: "Moov Money", classe: "moov", numero: "1" }, { nom: "Wave", classe: "wave", numero: "1" }].forEach(function (m) {
           var bt = lienExterne("bouton bouton-mm " + m.classe);
           bt.href = lienWhatsApp("Bonjour Didy Digital ! Je souhaite commander l'ebook « " + ebook.nom + " » (" + ebook.prix + "). Je veux payer par " + m.nom + ".", m.numero);
           bt.appendChild(element("span", "", m.nom));

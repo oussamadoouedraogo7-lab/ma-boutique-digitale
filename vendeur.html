@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cFT5UGu0yz3lyWMcqRRU+iAqQPgPaLefPzVaVx2z8zA='; script-src 'sha256-VXw8r3xWRcJkHq+qz6vpw22geNBfQ4Wil9TsAYRcJ3U='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-+r+kdd75Q+L+/xG/8ofG8OtKD6cMWlYZipUGPAWrPvM='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -206,6 +206,7 @@
     }
     .lien.chariow { min-height: 60px; font-size: 1.1rem; background: var(--soleil); color: var(--cacao); border: 2px solid #e0960c; box-shadow: 0 10px 24px rgba(242, 167, 27, 0.45); }
     .lien.moov { background: linear-gradient(135deg, #1565c0, #0b3d7a); }
+    .lien.wave { background: #1dc8f2; color: #0b2a4a; }
     .lien.orange-money { background: linear-gradient(135deg, #ff8a1f, #e65c00); }
     .lien.wa { background: linear-gradient(135deg, var(--wa), var(--emeraude)); }
     .lien:focus-visible, .choix button:focus-visible, .saisie button:focus-visible { outline: 3px solid var(--soleil); outline-offset: 3px; }
@@ -307,7 +308,7 @@
     (function () {
       "use strict";
 
-      // "1" = Moov Money, "2" = Orange Money
+      // "1" = Moov Money et Wave, "2" = Orange Money
       var NUMEROS = { "1": "22603078805", "2": "22605564451" };
       var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -482,7 +483,7 @@
       }
       // Les statistiques envoyées quand on touche un bouton de paiement
       function evenementsPaiement(ebook, moyen) {
-        var noms = { orange: "Orange Money", moov: "Moov Money", chariow: "Chariow" };
+        var noms = { orange: "Orange Money", moov: "Moov Money", wave: "Wave", chariow: "Chariow" };
         var id = ebook ? codeEbook(ebook) : "inconnu";
         return [
           ["didy-paiement", "Clic pour payer (tous)"],
@@ -496,7 +497,8 @@
           : "Bonjour Didy Digital ! J'aimerais acheter un ebook. Je veux payer par ";
         return [
           { classe: "orange-money", texte: "Payer par Orange Money (via WhatsApp)", href: lienWhatsApp(debut + "Orange Money.", "2"), evenements: evenementsPaiement(ebook, "orange") },
-          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1"), evenements: evenementsPaiement(ebook, "moov") }
+          { classe: "moov", texte: "Payer par Moov Money (via WhatsApp)", href: lienWhatsApp(debut + "Moov Money.", "1"), evenements: evenementsPaiement(ebook, "moov") },
+          { classe: "wave", texte: "Payer par Wave (via WhatsApp)", href: lienWhatsApp(debut + "Wave.", "1"), evenements: evenementsPaiement(ebook, "wave") }
         ];
       }
 
@@ -565,7 +567,7 @@
         evenement("didy-achat-" + codeEbook(e), "« Je l'achète » : " + e.nom);
         var chariow = lienSecurise(e.lienChariow) || lienSecurise(reglages.boutiqueChariow);
         if (chariow) {
-          robot("Merci pour votre confiance 🙏 Vous pouvez payer par **Orange Money** ou **Moov Money** en nous écrivant sur WhatsApp :");
+          robot("Merci pour votre confiance 🙏 Vous pouvez payer par **Orange Money**, **Moov Money** ou **Wave** en nous écrivant sur WhatsApp :");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
           robot("Ou payez directement en ligne sur **Chariow**, une page de paiement sécurisée : **vous recevez votre ebook automatiquement**, même la nuit 👇");
           robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Payer « " + e.nom + " » sur Chariow", href: chariow, evenements: evenementsPaiement(e, "chariow") }]); });
@@ -584,14 +586,14 @@
       var REPONSES = {
         recevoir: function () {
           robot("Sur **Chariow**, vous recevez l'ebook **automatiquement** juste après le paiement.");
-          robot("Si vous payez par **Moov Money** ou **Orange Money** sur WhatsApp, nous vous envoyons le fichier dès que votre paiement est confirmé.");
+          robot("Si vous payez par **Orange Money**, **Moov Money** ou **Wave** sur WhatsApp, nous vous envoyons le fichier dès que votre paiement est confirmé.");
         },
         payer: function () {
-          robot("Vous avez le choix 💳 : payer en ligne sur **Chariow**, ou payer par **Moov Money** ou **Orange Money** en nous écrivant sur WhatsApp.");
+          robot("Vous avez le choix 💳 : payer en ligne sur **Chariow**, ou payer par **Orange Money**, **Moov Money** ou **Wave** en nous écrivant sur WhatsApp.");
         },
         securite: function () {
           robot("Oui, vous pouvez être tranquille 🔒. Vous payez vous-même, dans votre application Mobile Money ou sur la page sécurisée de Chariow.");
-          robot("Nous ne vous demanderons **jamais** votre code secret. Payez uniquement à nos numéros officiels : **+226 03 07 88 05** (Moov) et **+226 05 56 44 51** (Orange).");
+          robot("Nous ne vous demanderons **jamais** votre code secret. Payez uniquement à nos numéros officiels : **+226 05 56 44 51** (Orange Money) et **+226 03 07 88 05** (Moov Money et Wave).");
         },
         lire: function () {
           robot("Oui ! 📱 Les ebooks se lisent directement sur votre téléphone, où vous voulez, quand vous voulez.");
@@ -644,7 +646,7 @@
         if (a(["prix", "combien", "cout", "tarif", "fcfa", "f cfa"])) { REPONSES.prix(); return apresReponse(); }
         if (a(["arnaque", "securi", "confiance", "fiable", "vrai"])) { REPONSES.securite(); return apresReponse(); }
         if (a(["recevoir", "recoit", "livraison", "livrer", "envoi", "telecharg", "fichier"])) { REPONSES.recevoir(); return apresReponse(); }
-        if (a(["payer", "paiement", "moov", "orange", "money", "chariow", "carte", "acheter", "commander"])) { REPONSES.payer(); return apresReponse(); }
+        if (a(["payer", "paiement", "moov", "orange", "wave", "money", "chariow", "carte", "acheter", "commander"])) { REPONSES.payer(); return apresReponse(); }
         if (a(["telephone", "lire", "pdf", "android", "portable"])) { REPONSES.lire(); return apresReponse(); }
         if (a(["humain", "personne", "parler", "whatsapp", "appeler", "numero", "contact"])) { REPONSES.humain(); return apresReponse(); }
 
