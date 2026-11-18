@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-G/zltwmFKMFw4Ti50HBzRO9wax2PtQanXXI1UtWAq9c='; script-src 'sha256-3bX+rcHp9C8pj07kMoQxSAnq2Mfr7DImreSEYRs+5Fc='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-39uRtxgj+Hm+K4Embl0cxxLOo764VNp1IDcyMu86RiE='; script-src 'sha256-ejdRoeL1RshJrtrgAE4TbVgYBp1442VLabjHg0bFAOU='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -337,7 +337,14 @@
     .numeros a { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 16px; border-radius: 14px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #fff; text-decoration: none; font-weight: 700; }
     .numeros a small { margin-left: auto; font-weight: 600; color: var(--or-clair); }
     .numeros svg { width: 20px; height: 20px; color: var(--wa); flex-shrink: 0; }
-    .pied small.droits { display: block; margin-top: 28px; opacity: 0.6; }
+    .bas-pied { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-top: 28px; }
+    .pied small.droits { display: block; opacity: 0.6; }
+    .bouton-visites {
+      display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 16px;
+      border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.06);
+      color: var(--or-clair); font-weight: 700; font-size: 0.9rem; text-decoration: none;
+    }
+    .bouton-visites:hover { background: rgba(255, 255, 255, 0.12); }
 
     /* ===== BOUTON WHATSAPP FLOTTANT ===== */
     .flottant {
@@ -494,7 +501,10 @@
         <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money</small></a>
       </div>
     </div>
-    <div class="conteneur"><small class="droits">© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small></div>
+    <div class="conteneur bas-pied">
+      <small class="droits">© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small>
+      <a class="bouton-visites" href="tableau-de-bord.html">📊 Voir les visiteurs</a>
+    </div>
   </footer>
 
   <!-- ===== BOUTON WHATSAPP FLOTTANT ===== -->
@@ -839,7 +849,18 @@
       if (/^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
         var pixel = new Image(1, 1);
         pixel.referrerPolicy = "no-referrer";
-        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) + "&t=" + encodeURIComponent(document.title);
+        // D'où vient le visiteur ? Lien spécial du type ...?ref=tiktok (ou utm_source=tiktok)
+        var source = "";
+        try {
+          var parametres = new URLSearchParams(location.search);
+          source = String(parametres.get("ref") || parametres.get("utm_source") || "").toLowerCase();
+        } catch (e) { source = ""; }
+        if (!/^[a-z0-9-]{1,30}$/.test(source)) source = "";
+        var provenance = source || (document.referrer && document.referrer.indexOf(location.origin) !== 0 ? document.referrer : "");
+        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) +
+                    "&t=" + encodeURIComponent(document.title) +
+                    (provenance ? "&r=" + encodeURIComponent(provenance) : "") +
+                    (source ? "&q=" + encodeURIComponent("?ref=" + source) : "");
       }
       if (/^[a-z0-9-]{2,50}$/.test(code) && reglages.afficherCompteur === true && window.fetch) {
         var minimum = Number(reglages.compteurMinimum) || 0;

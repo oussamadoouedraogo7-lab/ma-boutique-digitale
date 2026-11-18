@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cFT5UGu0yz3lyWMcqRRU+iAqQPgPaLefPzVaVx2z8zA='; script-src 'sha256-nEfsqIu04D4BNrVcmSMAAa2KnjE8my46IiQGluaM8iw='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-cFT5UGu0yz3lyWMcqRRU+iAqQPgPaLefPzVaVx2z8zA='; script-src 'sha256-t0I5FZey89uR4MxCUuQL3UINCAX8TwxTnmIsOwaHpA0='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -666,7 +666,18 @@
       if (/^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
         var pixel = new Image(1, 1);
         pixel.referrerPolicy = "no-referrer";
-        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) + "&t=" + encodeURIComponent(document.title);
+        // D'où vient le visiteur ? Lien spécial du type ...?ref=tiktok (ou utm_source=tiktok)
+        var source = "";
+        try {
+          var parametres = new URLSearchParams(location.search);
+          source = String(parametres.get("ref") || parametres.get("utm_source") || "").toLowerCase();
+        } catch (e) { source = ""; }
+        if (!/^[a-z0-9-]{1,30}$/.test(source)) source = "";
+        var provenance = source || (document.referrer && document.referrer.indexOf(location.origin) !== 0 ? document.referrer : "");
+        pixel.src = "https://" + code + ".goatcounter.com/count?p=" + encodeURIComponent(location.pathname) +
+                    "&t=" + encodeURIComponent(document.title) +
+                    (provenance ? "&r=" + encodeURIComponent(provenance) : "") +
+                    (source ? "&q=" + encodeURIComponent("?ref=" + source) : "");
       }
     })();
   </script>

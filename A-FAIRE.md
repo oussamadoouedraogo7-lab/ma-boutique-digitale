@@ -35,3 +35,22 @@ Photo de profil → **Settings** → **Emails** → coche **« Keep my email add
 - **Chariow** : le client paie en ligne et reçoit l'ebook tout seul, même la nuit.
 - **WhatsApp Business** : un message d'absence automatique répond aux clients
   quand tu n'es pas disponible (Outils professionnels → Message d'absence).
+
+## 4. Liens spéciaux pour savoir d'où viennent tes visiteurs
+
+Utilise ces liens selon l'endroit où tu publies. Dans GoatCounter, la partie
+« Top referrers » montrera combien de visiteurs viennent de chaque réseau.
+
+| Où tu publies | Lien à utiliser |
+|---|---|
+| WhatsApp (messages, groupes) | https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/?ref=whatsapp |
+| Statut WhatsApp | https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/?ref=statut |
+| Facebook | https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/?ref=facebook |
+| TikTok (bio) | https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/?ref=tiktok |
+| Instagram | https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/?ref=instagram |
+
+Pour Didy sur un ebook précis, ajoute la même fin avec « & » :
+https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?ebook=argent&ref=tiktok
+
+Voir les visiteurs : bouton « 📊 Voir les visiteurs » tout en bas du site,
+ou https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/tableau-de-bord.html
