@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-M82ptYrCVqKWVqj+e4wzUkig/x3kyg8SyWC4bF3hZDw='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-WvwshncrkcF6RaWk/JFstO1beNZ9dfx0N/IyD7tDHTg='; script-src 'sha256-pBPb/My8RydLUc14BX8VNvIokHBHnxmQdf2y7aUBma0='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -100,6 +100,11 @@
       .logo-marque { width: 32px; height: 32px; }
     }
     @media (max-width: 400px) { .texte-long { display: none; } }
+    .espace-proprio { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 18px; padding-bottom: 6px; }
+    .espace-proprio[hidden] { display: none; }
+    .espace-proprio strong { color: var(--or-clair); width: 100%; }
+    .espace-proprio a { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 16px; border-radius: 999px; background: var(--or); color: var(--nuit); font-weight: 800; text-decoration: none; }
+    @media (max-width: 440px) { .texte-proprio { display: none; } .barre-proprio { padding: 8px 10px; } }
     .barre-didy {
       display: inline-flex; align-items: center; gap: 6px;
       min-height: 40px; padding: 8px 14px; border-radius: 999px;
@@ -402,7 +407,8 @@
       <div class="barre-liens">
         <a class="barre-lien" href="#ebooks">Ebooks</a>
         <a class="barre-lien" href="#commander">Comment commander</a>
-        <a class="barre-proprio" id="lien-proprio" href="tableau-de-bord.html" hidden>📊 Visites</a>
+        <a class="barre-proprio" id="lien-proprio" href="tableau-de-bord.html" aria-label="Mes visites" hidden>📊<span class="texte-proprio"> Visites</span></a>
+        <a class="barre-proprio" id="lien-gestion" href="gestion-ebooks.html" aria-label="Modifier ou ajouter mes ebooks" hidden>⚙️<span class="texte-proprio"> Mes ebooks</span></a>
         <a class="barre-didy" href="vendeur.html">💬 <span class="texte-long">Parler à </span>Didy</a>
       </div>
     </div>
@@ -516,6 +522,11 @@
         <a data-whatsapp="2" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 05 56 44 51 <small>Orange Money</small></a>
         <a data-whatsapp="1" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#icone-wa"/></svg>+226 03 07 88 05 <small>Moov Money · Wave</small></a>
       </div>
+    </div>
+    <div class="conteneur espace-proprio" id="espace-proprio" hidden>
+      <strong>🔑 Espace propriétaire</strong>
+      <a href="tableau-de-bord.html">📊 Mes visites</a>
+      <a href="gestion-ebooks.html">⚙️ Modifier ou ajouter des ebooks</a>
     </div>
     <div class="conteneur bas-pied">
       <small class="droits">© <span id="annee">2026</span> Didy Digital – Tous droits réservés</small>
@@ -963,7 +974,7 @@
       var code = String(reglages.goatcounter || "").trim().toLowerCase();
       verifierLienSecret().then(function (proprio) {
       // Le bouton "Mes visites" n'apparaît que chez le propriétaire
-      if (proprio) document.getElementById("lien-proprio").hidden = false;
+      if (proprio) { document.getElementById("lien-proprio").hidden = false; document.getElementById("lien-gestion").hidden = false; document.getElementById("espace-proprio").hidden = false; }
       // Les visites du propriétaire ne sont pas comptées
       if (!proprio && /^[a-z0-9-]{2,50}$/.test(code) && location.protocol === "https:") {
         var pixel = new Image(1, 1);
