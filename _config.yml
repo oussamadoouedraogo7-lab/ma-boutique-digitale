@@ -1,0 +1,10 @@
+# Réglages de GitHub Pages (Jekyll) pour Didy Digital.
+# "exclude" empêche ces fichiers d'être publiés comme pages du site.
+# Attention : le dépôt étant public, ils restent visibles sur GitHub.com.
+exclude:
+  - A-FAIRE.md
+  - README.md
+  - images/LISEZMOI.txt
+  - images/couverture-argent.png
+  - images/couverture-recettes.png
+  - style.css

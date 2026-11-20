@@ -54,3 +54,27 @@ https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/vendeur.html?eboo
 
 Voir les visiteurs : bouton « 📊 Visites » en haut du site, visible seulement sur ton
 téléphone après avoir ouvert une fois ton lien secret (gardé dans la conversation, pas ici). Page : https://oussamadoouedraogo7-lab.github.io/ma-boutique-digitale/tableau-de-bord.html
+
+## 5. 🔐 Sécurité – actions à faire toi-même (audit du 20 novembre 2026)
+
+**GitHub (le plus important : c'est la clé de ton site)**
+- [ ] Double vérification (2FA) : Settings → Password and authentication → Enable two-factor authentication.
+      Garde les codes de récupération sur papier.
+- [ ] Email caché : Settings → Emails → « Keep my email addresses private » + « Block command line pushes that expose my email ».
+- [ ] Protéger la branche du site : dépôt → Settings → Rules → Rulesets → New branch ruleset
+      → cible `claude/project-explanation-fr-ccmfrg` → cocher « Restrict deletions » et « Block force pushes » → Active.
+- [ ] Dépôt → Settings → Collaborators : personne d'autre que toi.
+- [ ] Dépôt → Settings → Deploy keys : vide.
+- [ ] Dépôt → Settings → Actions → General : « Disable actions » (le site n'en a pas besoin).
+- [ ] Dépôt → Settings → Code security : activer « Secret scanning » et « Push protection ».
+- [ ] Dépôt → Settings → Pages : cocher « Enforce HTTPS ».
+- [ ] Settings du compte → Applications : vérifier les applications autorisées, retirer celles que tu n'utilises plus.
+- [ ] Settings du compte → Sessions : déconnecter les appareils inconnus.
+
+**Tes autres comptes (ils protègent l'argent et les données des clients)**
+- [ ] Gmail : double vérification (l'email permet de réinitialiser tous les autres comptes).
+- [ ] Chariow : mot de passe fort et unique, double vérification si disponible. C'est là que sont
+      les paiements et les informations des acheteurs.
+- [ ] WhatsApp : Paramètres → Compte → Validation en deux étapes (code PIN). Les messages des clients y sont.
+- [ ] GoatCounter : mot de passe fort et unique.
+- [ ] Orange Money, Moov Money, Wave : ne jamais donner ton code secret, vérifier chaque paiement dans l'application.

@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-L2t6hbVDIDIdrH83TCxFXXDRyNeL/iXVXg7bbX1iez4='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-cjSUdF/A01jjoDvfqBt7FndH5FoOeXSZdPQ2PYqBZUE='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -584,10 +584,17 @@
         if (texte) el.textContent = texte;
         return el;
       }
-      // N'accepte que les liens "https://" (bloque les liens piégés)
+      // N'accepte que les liens https:// vers Chariow (chariow.com ou ta boutique *.mychariow.shop).
+      // Même si quelqu'un modifiait ebooks.json, un bouton ne pourrait pas mener vers un faux site de paiement.
       function lienSecurise(url) {
-        try { var u = new URL(String(url || "")); return u.protocol === "https:" ? u.href : null; } catch (e) { return null; }
+        try {
+          var u = new URL(String(url || ""));
+          var h = u.hostname.toLowerCase();
+          var chariow = h === "chariow.com" || /\.chariow\.com$/.test(h) || /^[a-z0-9-]+\.mychariow\.shop$/.test(h);
+          return (u.protocol === "https:" && chariow && !u.username && !u.password) ? u.href : null;
+        } catch (e) { return null; }
       }
+
       function lienExterne(classe) {
         var a = element("a", classe);
         a.target = "_blank";

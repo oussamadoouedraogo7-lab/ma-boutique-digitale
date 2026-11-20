@@ -9,7 +9,7 @@
     Protection : elle n'exécute que son propre code, et ne peut contacter
     que ton compteur GoatCounter (connect-src).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-5E1jYgPDsKRBXnsXOQSPkKk7tGNou6pXoMG0hNycdGk='; script-src 'sha256-U+BltJa7CII0t2SjuSmaoOkpuMmPi9APElVAeB/Sf0E='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-5E1jYgPDsKRBXnsXOQSPkKk7tGNou6pXoMG0hNycdGk='; script-src 'sha256-ZNPNuJI2Hus8o1bfsYaDrfsdrIT8onYSrcABxWC6E+M='; font-src 'self'; connect-src 'self' https://didyodg.goatcounter.com; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <!-- Demande aux moteurs de recherche (Google…) de ne pas afficher cette page -->
   <meta name="robots" content="noindex, nofollow">
@@ -195,6 +195,13 @@
   <script>
     (function () {
       "use strict";
+      // Protection anti-"clickjacking" : cette page refuse de s'afficher à l'intérieur d'un autre site
+      if (window.top !== window.self) {
+        document.documentElement.style.display = "none";
+        try { window.top.location = window.self.location.href; } catch (e) { /* rien */ }
+        return;
+      }
+
       // ----- Reconnaître le propriétaire du site (toi) -----
       // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
       // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.

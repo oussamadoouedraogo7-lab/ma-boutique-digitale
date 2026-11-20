@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mnlKHYQLn6chxLb2e9O0C+wnD2tZxApMgM1G/z3nCE8='; script-src 'sha256-W4VgtVRD8HW1jD2y/svFYnxBvR3KFboG/+K0dDuUNnw='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mnlKHYQLn6chxLb2e9O0C+wnD2tZxApMgM1G/z3nCE8='; script-src 'sha256-CYNcSQelJQMjJ0hBIFKPP3tII2wsf5ZmufXcq4vf1AI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -262,6 +262,13 @@
   <script>
     (function () {
       "use strict";
+      // Protection anti-"clickjacking" : cette page refuse de s'afficher à l'intérieur d'un autre site
+      if (window.top !== window.self) {
+        document.documentElement.style.display = "none";
+        try { window.top.location = window.self.location.href; } catch (e) { /* rien */ }
+        return;
+      }
+
       // ----- Reconnaître le propriétaire du site (toi) -----
       // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
       // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.
@@ -465,8 +472,12 @@
         var lien = texte($("lienChariow").value, 300);
         if (lien) {
           var ok = false;
-          try { ok = new URL(lien).protocol === "https:"; } catch (err) { ok = false; }
-          if (!ok) throw new Error("Le lien Chariow doit commencer par https://");
+          try {
+            var u = new URL(lien), h = u.hostname.toLowerCase();
+            ok = u.protocol === "https:" && !u.username && !u.password &&
+              (h === "chariow.com" || /\.chariow\.com$/.test(h) || /^[a-z0-9-]+\.mychariow\.shop$/.test(h));
+          } catch (err) { ok = false; }
+          if (!ok) throw new Error("Le lien doit être un lien Chariow sécurisé, par exemple https://tvqanrik.mychariow.shop/prd_…/checkout");
         }
         e.lienChariow = lien;
 

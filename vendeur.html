@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-IcYkmcFO6QgnSI4VLLKtsGSltd4xwMFWz7XI5c8pzKY='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-shjp3AzRK+Qx9P+ao9vQG09Aj81i7qW7C+S+gJwAB4s='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -350,10 +350,17 @@
         if (texte) el.textContent = texte;
         return el;
       }
+      // N'accepte que les liens https:// vers Chariow (chariow.com ou ta boutique *.mychariow.shop).
+      // Même si quelqu'un modifiait ebooks.json, un bouton ne pourrait pas mener vers un faux site de paiement.
       function lienSecurise(url) {
-        try { var u = new URL(String(url || "")); return u.protocol === "https:" ? u.href : null; }
-        catch (e) { return null; }
+        try {
+          var u = new URL(String(url || ""));
+          var h = u.hostname.toLowerCase();
+          var chariow = h === "chariow.com" || /\.chariow\.com$/.test(h) || /^[a-z0-9-]+\.mychariow\.shop$/.test(h);
+          return (u.protocol === "https:" && chariow && !u.username && !u.password) ? u.href : null;
+        } catch (e) { return null; }
       }
+
       function cheminPhoto(c) {
         c = String(c || "").trim();
         return /^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(c) ? c : null;
