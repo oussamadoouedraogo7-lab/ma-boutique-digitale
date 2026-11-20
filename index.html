@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-J6833C8u7N8l84ZP1sUDT9uPt1SVp00lZH2VVBhM0DM='; script-src 'sha256-S4ehkwNRftvX38AAyvDbJCEWYauhzzEhWqxh0nDS36g='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-NzRyTIyCuQyyogPWv6U2tHesxWd0v40IhZV66QfJ4N8='; script-src 'sha256-3n5SO+dyHViwtE2Uxi/yugUCtvxo903dXVJBssY8PBw='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -305,6 +305,40 @@
     .moov { background: #0b5cad; }
     .wave { background: #1dc8f2; color: #0b2a4a !important; }
     .orange-money { background: #ff7a00; }
+    /* Menu des catégories */
+    .filtres { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 12px; margin: -6px 0 18px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .filtres::-webkit-scrollbar { display: none; }
+    .filtres[hidden] { display: none; }
+    .filtre { flex: 0 0 auto; min-height: 44px; padding: 8px 16px; border-radius: 999px; border: 2px solid var(--bord); background: var(--papier); color: var(--nuit); font: inherit; font-weight: 800; font-size: 0.88rem; cursor: pointer; white-space: nowrap; }
+    .filtre[aria-pressed="true"] { background: var(--nuit); border-color: var(--nuit); color: #fff; }
+    .filtre:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
+    .carte[hidden] { display: none; }
+    /* Petits boutons de la carte : extrait + partage */
+    .actions-carte { display: flex; flex-wrap: wrap; gap: 8px; }
+    .action-carte { flex: 1 1 140px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--bord); background: var(--ivoire); color: var(--nuit); font: inherit; font-weight: 700; font-size: 0.9rem; text-decoration: none; cursor: pointer; }
+    .action-carte:hover { background: #fff3dc; }
+    .action-carte.partage { color: #12703f; border-color: #bfe3cc; background: #eef9f2; }
+    /* Fenêtre de l'extrait gratuit */
+    .fenetre-extrait { width: min(94vw, 640px); max-height: 90vh; padding: 0; border: 0; border-radius: 20px; background: var(--papier); color: var(--encre); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
+    .fenetre-extrait::backdrop { background: rgba(13, 16, 51, 0.75); }
+    .fenetre-haut { position: sticky; top: 0; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; background: var(--nuit); color: #fff; }
+    .fenetre-haut h3 { margin: 0; font-size: 1rem; color: #fff; }
+    .fermer { flex: 0 0 auto; min-width: 44px; min-height: 44px; border: 0; border-radius: 999px; background: var(--or); color: var(--nuit); font: inherit; font-weight: 800; cursor: pointer; }
+    .pages-extrait { display: grid; gap: 12px; padding: 14px; }
+    .pages-extrait img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--bord); background: #fff; }
+    .fenetre-bas { padding: 0 14px 16px; text-align: center; font-weight: 700; color: var(--encre-douce); }
+    /* Comment payer, pas à pas */
+    .guide-paiement { margin-top: 24px; padding: 20px; border-radius: 18px; background: var(--ivoire); border: 1px solid var(--bord); }
+    .guide-paiement > h3 { margin: 0 0 12px; font-size: 1.2rem; color: var(--nuit); }
+    .onglets { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 14px; }
+    @media (max-width: 480px) { .onglets { grid-template-columns: 1fr 1fr; } }
+    .onglet { min-height: 46px; padding: 8px 6px; border-radius: 12px; border: 2px solid var(--bord); background: var(--papier); color: var(--nuit); font: inherit; font-weight: 800; font-size: 0.88rem; cursor: pointer; }
+    .onglet[aria-selected="true"] { background: var(--or); border-color: #e0960c; }
+    .onglet:focus-visible { outline: 3px solid var(--nuit); outline-offset: 2px; }
+    .panneau[hidden] { display: none; }
+    .panneau ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
+    .panneau li { line-height: 1.5; overflow-wrap: anywhere; }
+    .panneau .bouton { margin-top: 14px; }
     .note-securite { margin: 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; text-align: center; }
 
     .erreur { grid-column: 1 / -1; background: #fff; border-radius: 22px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
@@ -455,6 +489,7 @@
           <h2 id="t-titre-ebooks">Choisissez votre prochain guide</h2>
           <p id="t-texte-ebooks">Payez par Orange Money, Moov Money ou Wave, ou directement en ligne sur Chariow.</p>
         </div>
+        <div class="filtres" id="filtres" role="group" aria-label="Choisir une catégorie" hidden></div>
         <div class="grille" id="liste-ebooks">
           <noscript>
             <div class="erreur">Activez JavaScript pour voir les ebooks, ou écrivez-nous sur WhatsApp au +226 03 07 88 05 ou au +226 05 56 44 51.</div>
@@ -462,6 +497,17 @@
         </div>
       </div>
     </section>
+
+    <!-- ===== FENÊTRE : EXTRAIT GRATUIT ===== -->
+    <dialog class="fenetre-extrait" id="fenetre-extrait" aria-labelledby="titre-extrait">
+      <div class="fenetre-haut">
+        <h3 id="titre-extrait">📖 Extrait gratuit</h3>
+        <button class="fermer" type="button" id="fermer-extrait" aria-label="Fermer">✕</button>
+      </div>
+      <div class="pages-extrait" id="pages-extrait"></div>
+      <p class="fenetre-bas">Ça vous plaît ? Le guide complet vous attend 👇</p>
+      <div class="fenetre-bas"><a class="bouton bouton-or" id="extrait-didy" href="vendeur.html">💬 Commander avec Didy</a></div>
+    </dialog>
 
     <!-- ===== COMMENT ÇA MARCHE ===== -->
     <section class="etapes-section" id="commander">
@@ -475,6 +521,48 @@
           <li class="etape revele"><h3>Payez en toute sécurité</h3><p>En ligne sur Chariow, ou par Orange Money, Moov Money ou Wave via WhatsApp.</p></li>
           <li class="etape revele"><h3>Recevez votre ebook</h3><p>Sur Chariow, il arrive automatiquement. Sur WhatsApp, nous vous l'envoyons dès que le paiement est confirmé.</p></li>
         </ol>
+        <div class="guide-paiement revele" id="payer">
+          <h3>💳 Comment payer ? Pas à pas</h3>
+          <div class="onglets" role="tablist" aria-label="Moyen de paiement">
+            <button class="onglet" type="button" role="tab" id="onglet-orange" aria-controls="panneau-orange" aria-selected="true">🟠 Orange</button>
+            <button class="onglet" type="button" role="tab" id="onglet-moov" aria-controls="panneau-moov" aria-selected="false" tabindex="-1">🔵 Moov</button>
+            <button class="onglet" type="button" role="tab" id="onglet-wave" aria-controls="panneau-wave" aria-selected="false" tabindex="-1">🩵 Wave</button>
+            <button class="onglet" type="button" role="tab" id="onglet-chariow" aria-controls="panneau-chariow" aria-selected="false" tabindex="-1">🛒 Chariow</button>
+          </div>
+          <div class="panneau" role="tabpanel" id="panneau-orange" aria-labelledby="onglet-orange">
+            <ol>
+              <li>Sous l'ebook choisi, touchez <strong>« Orange Money »</strong> : WhatsApp s'ouvre avec votre commande déjà écrite. Envoyez le message.</li>
+              <li>Ouvrez votre application <strong>Orange Money</strong> et envoyez le prix de l'ebook au <strong>+226 05 56 44 51</strong>.</li>
+              <li>Envoyez-nous sur WhatsApp le message de confirmation de votre paiement.</li>
+              <li>Nous vérifions le paiement et nous vous envoyons votre ebook sur WhatsApp.</li>
+            </ol>
+          </div>
+          <div class="panneau" role="tabpanel" id="panneau-moov" aria-labelledby="onglet-moov" hidden>
+            <ol>
+              <li>Sous l'ebook choisi, touchez <strong>« Moov Money »</strong> : WhatsApp s'ouvre avec votre commande déjà écrite. Envoyez le message.</li>
+              <li>Ouvrez votre application <strong>Moov Money</strong> et envoyez le prix de l'ebook au <strong>+226 03 07 88 05</strong>.</li>
+              <li>Envoyez-nous sur WhatsApp le message de confirmation de votre paiement.</li>
+              <li>Nous vérifions le paiement et nous vous envoyons votre ebook sur WhatsApp.</li>
+            </ol>
+          </div>
+          <div class="panneau" role="tabpanel" id="panneau-wave" aria-labelledby="onglet-wave" hidden>
+            <ol>
+              <li>Sous l'ebook choisi, touchez <strong>« Wave »</strong> : WhatsApp s'ouvre avec votre commande déjà écrite. Envoyez le message.</li>
+              <li>Ouvrez votre application <strong>Wave</strong> et envoyez le prix de l'ebook au <strong>+226 03 07 88 05</strong>.</li>
+              <li>Envoyez-nous sur WhatsApp le message de confirmation de votre paiement.</li>
+              <li>Nous vérifions le paiement et nous vous envoyons votre ebook sur WhatsApp.</li>
+            </ol>
+          </div>
+          <div class="panneau" role="tabpanel" id="panneau-chariow" aria-labelledby="onglet-chariow" hidden>
+            <ol>
+              <li>Sous l'ebook choisi, touchez le gros bouton <strong>« 🛒 Payer sur Chariow »</strong>.</li>
+              <li>Vérifiez que l'adresse de la page commence par <strong>tvqanrik.mychariow.shop</strong>.</li>
+              <li>Remplissez les informations demandées, choisissez votre moyen de paiement et validez.</li>
+              <li>Votre ebook vous est envoyé <strong>automatiquement</strong>, même la nuit. Suivez simplement les instructions affichées.</li>
+            </ol>
+          </div>
+          <a class="bouton bouton-or" href="#ebooks">📚 Choisir mon ebook</a>
+        </div>
         <div class="securite-paiement revele">
           <h3>🔒 Pour payer en toute sécurité</h3>
           <ul>
@@ -591,6 +679,8 @@
 
       // "1" = compte Moov Money et Wave, "2" = compte Orange Money
       var NUMEROS = { "1": "22603078805", "2": "22605564451" };
+      // Adresse du site (pour le lien envoyé quand on partage un ebook)
+      var ADRESSE_SITE = location.origin + location.pathname.replace(/[^\/]*$/, "");
       var MESSAGE_GENERAL = "Bonjour Didy Digital ! J'aimerais avoir des informations sur vos ebooks.";
       var COULEURS = { orange: "orange", vert: "vert", hibiscus: "hibiscus", cacao: "cacao", soleil: "soleil", terre: "terre", dore: "soleil" };
       var calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -699,6 +789,7 @@
         var lienDidy = "vendeur.html?ebook=" + encodeURIComponent(codeEbook(ebook));
         var chariow = lienSecurise(ebook.lienChariow);
         var carte = element("article", "carte revele");
+        carte.setAttribute("data-categorie", String(ebook.categorie || "").trim().slice(0, 30));
 
         // Couverture : photo, dessin ou icône
         var couverture = element("div", "couverture theme-" + (COULEURS[ebook.couleur] || "orange"));
@@ -762,6 +853,21 @@
           if (description.scrollHeight > description.clientHeight + 2) lirePlus.hidden = false;
         });
 
+        // Extrait gratuit + partager à un ami
+        var actions = element("div", "actions-carte");
+        var pages = (Array.isArray(ebook.extrait) ? ebook.extrait : []).map(cheminPhoto).filter(Boolean).slice(0, 6);
+        if (pages.length) {
+          var boutonExtrait = element("button", "action-carte", "📖 Lire un extrait gratuit");
+          boutonExtrait.type = "button";
+          boutonExtrait.addEventListener("click", function () { ouvrirExtrait(ebook, pages, lienDidy); });
+          actions.appendChild(boutonExtrait);
+        }
+        var partage = lienExterne("action-carte partage");
+        partage.textContent = "📲 Partager à un ami";
+        partage.href = "https://wa.me/?text=" + encodeURIComponent("Regarde cet ebook, il peut t'intéresser : « " + ebook.nom + " » (" + ebook.prix + ") 👉 " + ADRESSE_SITE + lienDidy + "&ref=partage");
+        actions.appendChild(partage);
+        contenu.appendChild(actions);
+
         // Le paiement : Mobile Money en haut, Chariow en bas (bien visible)
         var paiement = element("div", "paiement");
         paiement.appendChild(element("div", "paiement-titre", "Comment souhaitez-vous payer ?"));
@@ -788,6 +894,80 @@
         carte.appendChild(contenu);
         return carte;
       }
+
+      // ----- Fenêtre de l'extrait gratuit -----
+      var fenetre = document.getElementById("fenetre-extrait");
+      function ouvrirExtrait(ebook, pages, lienDidy) {
+        var zonePages = document.getElementById("pages-extrait");
+        while (zonePages.firstChild) zonePages.removeChild(zonePages.firstChild);
+        document.getElementById("titre-extrait").textContent = "📖 Extrait : " + ebook.nom;
+        pages.forEach(function (chemin, i) {
+          var img = element("img");
+          img.src = chemin;
+          img.alt = "Page " + (i + 1) + " de l'extrait";
+          img.loading = "lazy";
+          img.decoding = "async";
+          zonePages.appendChild(img);
+        });
+        document.getElementById("extrait-didy").href = lienDidy;
+        if (fenetre.showModal) { fenetre.showModal(); } else { fenetre.setAttribute("open", ""); }
+        zonePages.scrollTop = 0;
+      }
+      function fermerExtrait() {
+        if (fenetre.close) { fenetre.close(); } else { fenetre.removeAttribute("open"); }
+      }
+      document.getElementById("fermer-extrait").addEventListener("click", fermerExtrait);
+      fenetre.addEventListener("click", function (ev) { if (ev.target === fenetre) fermerExtrait(); });
+
+      // ----- Menu des catégories -----
+      function creerFiltres() {
+        var cartes = Array.prototype.slice.call(document.querySelectorAll("#liste-ebooks .carte"));
+        var categories = [];
+        cartes.forEach(function (c) {
+          var cat = c.getAttribute("data-categorie");
+          if (cat && categories.indexOf(cat) < 0) categories.push(cat);
+        });
+        if (categories.length < 2) return;
+        var zoneFiltres = document.getElementById("filtres");
+        var boutons = [];
+        ["Tous"].concat(categories).forEach(function (cat, i) {
+          var b = element("button", "filtre", i === 0 ? "📚 Tous" : cat);
+          b.type = "button";
+          b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+          b.addEventListener("click", function () {
+            boutons.forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+            cartes.forEach(function (c) {
+              c.hidden = !(i === 0 || c.getAttribute("data-categorie") === cat);
+              if (!c.hidden) c.classList.add("visible");
+            });
+            majProgression();
+          });
+          boutons.push(b);
+          zoneFiltres.appendChild(b);
+        });
+        zoneFiltres.hidden = false;
+      }
+
+      // ----- Comment payer : les onglets -----
+      (function () {
+        var onglets = Array.prototype.slice.call(document.querySelectorAll(".onglet"));
+        function choisir(o, focus) {
+          onglets.forEach(function (x) {
+            var actif = x === o;
+            x.setAttribute("aria-selected", actif ? "true" : "false");
+            x.tabIndex = actif ? 0 : -1;
+            document.getElementById(x.getAttribute("aria-controls")).hidden = !actif;
+          });
+          if (focus) o.focus();
+        }
+        onglets.forEach(function (o, i) {
+          o.addEventListener("click", function () { choisir(o, false); });
+          o.addEventListener("keydown", function (ev) {
+            var n = ev.key === "ArrowRight" ? 1 : ev.key === "ArrowLeft" ? -1 : 0;
+            if (n) { ev.preventDefault(); choisir(onglets[(i + n + onglets.length) % onglets.length], true); }
+          });
+        });
+      })();
 
       // ----- 2. La 3D : la couverture s'incline vers le doigt, avec un reflet -----
       function activer3D(carte, couverture, cadre) {
@@ -929,6 +1109,7 @@
             zone.appendChild(carte);
             reveler(carte, i % 3);
           });
+          creerFiltres();
           remplirVitrine(ebooks);
           majProgression();
         })
