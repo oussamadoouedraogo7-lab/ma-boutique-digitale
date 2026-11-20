@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mnlKHYQLn6chxLb2e9O0C+wnD2tZxApMgM1G/z3nCE8='; script-src 'sha256-ZocHOSKr+npUes3xnSe9PsPegNyQOl60jwn8kQ6Ixng='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xZAQIKbyMZUJDpFokj0iBFXp70+AvKmfIBOUOfQPEE8='; script-src 'sha256-vpZ5vmxagA3dXVpsSa2O7ocFf0jjYLtZTNfnfkzyCAI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -113,6 +113,8 @@
     textarea { min-height: 110px; resize: vertical; }
     input:focus, textarea:focus, select:focus { outline: none; border-color: var(--orange); background: #fff; }
     .aide-champ { margin: 6px 0 0; color: var(--texte-doux); font-size: 0.82rem; }
+    label.case { display: flex; gap: 10px; align-items: flex-start; font-weight: 600; }
+    label.case input { width: auto; margin-top: 4px; }
     .deux { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
     .bouton {
@@ -224,6 +226,18 @@
         <input id="image" maxlength="80" placeholder="Ex. : images/mon-ebook.jpg">
         <p class="aide-champ">Mets d'abord ta photo dans le dossier « images » sur GitHub, puis écris son nom ici. Une photo remplace le dessin et l'icône.</p>
 
+        <label for="categorie">Catégorie <span>(facultatif, affichée sur la couverture)</span></label>
+        <input id="categorie" maxlength="30" placeholder="Ex. : 💼 BUSINESS">
+
+        <label for="video">Vidéo de couverture <span>(facultatif)</span></label>
+        <input id="video" maxlength="80" placeholder="Ex. : images/video-mon-ebook.mp4">
+        <p class="aide-champ">Mets la vidéo (.mp4, sans son, légère) dans le dossier « images » sur GitHub. Demande-moi de la préparer si besoin.</p>
+
+        <label for="videoImage">Image affichée avant la vidéo <span>(facultatif)</span></label>
+        <input id="videoImage" maxlength="80" placeholder="Ex. : images/video-mon-ebook.jpg">
+
+        <label class="case"><input id="imageEntiere" type="checkbox"> La couverture est une boîte 3D sur fond clair (l'afficher en entier)</label>
+
         <label for="lienChariow">Lien Chariow <span>(facultatif)</span></label>
         <input id="lienChariow" maxlength="300" inputmode="url" placeholder="https://…">
         <p class="aide-champ">Laisse vide si l'ebook n'est pas encore sur Chariow : le bouton restera caché.</p>
@@ -253,6 +267,46 @@
         <li><strong>Colle</strong> le texte copié.</li>
         <li>Touche <strong>« Commit changes »</strong>, puis encore <strong>« Commit changes »</strong>.</li>
         <li>Attends 1 à 2 minutes, puis recharge ton site : le nouvel ebook apparaît ✅</li>
+      </ol>
+    </section>
+
+    <!-- ===== 4. TEXTES DU SITE ===== -->
+    <section class="panneau" id="textes">
+      <h2><span class="etape-num">✏️</span>Textes du site</h2>
+      <p>Change les titres et les phrases de ta page d'accueil, puis enregistre-les dans le fichier textes.json sur GitHub.</p>
+      <form id="formulaire-textes" novalidate autocomplete="off">
+        <label for="tx-surtitre">Petit texte au-dessus du titre</label>
+        <input id="tx-surtitre" maxlength="80">
+        <label for="tx-titre">Grand titre *</label>
+        <input id="tx-titre" maxlength="120">
+        <label for="tx-motEnCouleur">Mot du titre à mettre en couleur <span>(facultatif, doit être dans le titre)</span></label>
+        <input id="tx-motEnCouleur" maxlength="40">
+        <label for="tx-intro">Phrase d'accueil (sous le titre)</label>
+        <textarea id="tx-intro" maxlength="400"></textarea>
+        <label for="tx-titreEbooks">Titre de la partie ebooks</label>
+        <input id="tx-titreEbooks" maxlength="100">
+        <label for="tx-texteEbooks">Phrase de la partie ebooks</label>
+        <textarea id="tx-texteEbooks" maxlength="300"></textarea>
+        <label for="tx-titreDidy">Titre de la partie Didy <span>(le mot « Didy » sera en couleur)</span></label>
+        <input id="tx-titreDidy" maxlength="120">
+        <label for="tx-texteDidy">Phrase de la partie Didy</label>
+        <textarea id="tx-texteDidy" maxlength="300"></textarea>
+        <label for="tx-piedTexte">Texte du bas de page</label>
+        <textarea id="tx-piedTexte" maxlength="300"></textarea>
+        <div class="actions-form">
+          <button class="bouton bouton-principal" type="submit">✅ Préparer les nouveaux textes</button>
+        </div>
+        <div id="message-textes" class="message cache"></div>
+      </form>
+      <textarea id="resultat-textes" class="resultat" readonly aria-label="Nouveaux textes du site"></textarea>
+      <button class="bouton bouton-sombre" id="copier-textes" type="button">📋 Copier le texte</button>
+      <a class="bouton bouton-lien" href="https://github.com/oussamadoouedraogo7-lab/ma-boutique-digitale/edit/claude/project-explanation-fr-ccmfrg/textes.json" target="_blank" rel="noopener noreferrer">✏️ Ouvrir textes.json sur GitHub</a>
+      <div id="message-copie-textes" class="message cache"></div>
+      <ol class="instructions">
+        <li>Modifie les textes, puis touche <strong>« Préparer les nouveaux textes »</strong>.</li>
+        <li>Touche <strong>« Copier le texte »</strong>, puis <strong>« Ouvrir textes.json sur GitHub »</strong>.</li>
+        <li><strong>Efface tout</strong>, <strong>colle</strong>, puis touche <strong>« Commit changes »</strong> deux fois.</li>
+        <li>Attends 1 à 2 minutes et recharge ton site ✅</li>
       </ol>
     </section>
 
@@ -322,7 +376,7 @@
 
       var COULEURS = ["orange", "vert", "hibiscus", "soleil", "terre", "cacao"];
       var DESSINS = ["", "finance", "mafe"];
-      var CHAMPS = ["nom", "envie", "prix", "description", "apercuTitre", "apercu", "icone", "couleur", "illustration", "image", "lienChariow"];
+      var CHAMPS = ["nom", "envie", "prix", "description", "apercuTitre", "apercu", "icone", "couleur", "illustration", "image", "categorie", "video", "videoImage", "imageEntiere", "lienChariow"];
 
       function $(id) { return document.getElementById(id); }
 
@@ -423,6 +477,7 @@
           if (c === "apercu") v = Array.isArray(v) ? v.join("\n") : "";
           if (c === "couleur" && COULEURS.indexOf(v) < 0) v = (v === "dore" ? "soleil" : "orange");
           if (c === "illustration" && DESSINS.indexOf(v || "") < 0) v = "";
+          if (c === "imageEntiere") { $(c).checked = v === true; return; }
           $(c).value = v == null ? "" : v;
         });
         $("titre-formulaire").lastChild.textContent = "Modifier un ebook";
@@ -468,6 +523,24 @@
           }
           e.image = image;
         }
+
+        var categorie = texte($("categorie").value, 30);
+        if (categorie) e.categorie = categorie;
+        var video = texte($("video").value, 80);
+        if (video) {
+          if (!/^images\/[A-Za-z0-9._-]+\.mp4$/i.test(video)) {
+            throw new Error("La vidéo doit ressembler à : images/video-mon-ebook.mp4 (sans espace ni accent).");
+          }
+          e.video = video;
+        }
+        var videoImage = texte($("videoImage").value, 80);
+        if (videoImage) {
+          if (!/^images\/[A-Za-z0-9._-]+\.(jpe?g|png|webp)$/i.test(videoImage)) {
+            throw new Error("L'image de la vidéo doit ressembler à : images/video-mon-ebook.jpg");
+          }
+          e.videoImage = videoImage;
+        }
+        if ($("imageEntiere").checked) e.imageEntiere = true;
 
         var lien = texte($("lienChariow").value, 300);
         if (lien) {
@@ -538,6 +611,51 @@
           secours();
         }
       });
+
+      // ----- Textes du site -----
+      var CHAMPS_TEXTES = { surtitre: 80, titre: 120, motEnCouleur: 40, intro: 400, titreEbooks: 100, texteEbooks: 300, titreDidy: 120, texteDidy: 300, piedTexte: 300 };
+      function remplirTextes(t) {
+        Object.keys(CHAMPS_TEXTES).forEach(function (c) {
+          $("tx-" + c).value = (t && typeof t[c] === "string") ? t[c] : "";
+        });
+      }
+      function lireTextes() {
+        var t = {};
+        Object.keys(CHAMPS_TEXTES).forEach(function (c) {
+          var v = texte($("tx-" + c).value, CHAMPS_TEXTES[c]);
+          if (v) t[c] = v;
+        });
+        if (!t.titre) throw new Error("Le grand titre ne peut pas être vide.");
+        if (t.motEnCouleur && t.titre.toLowerCase().indexOf(t.motEnCouleur.toLowerCase()) < 0) {
+          throw new Error("Le mot en couleur doit se trouver dans le grand titre.");
+        }
+        return t;
+      }
+      $("formulaire-textes").addEventListener("submit", function (ev) {
+        ev.preventDefault();
+        try {
+          $("resultat-textes").value = JSON.stringify(lireTextes(), null, 2) + "\n";
+          message("message-textes", "✅ Textes prêts. Copie-les et colle-les dans textes.json sur GitHub.", "ok");
+        } catch (err) {
+          message("message-textes", "⚠️ " + err.message, "erreur");
+        }
+      });
+      $("copier-textes").addEventListener("click", function () {
+        var zone = $("resultat-textes");
+        if (!zone.value) { message("message-copie-textes", "Touche d'abord « Préparer les nouveaux textes ».", "erreur"); return; }
+        function reussi() { message("message-copie-textes", "✅ Texte copié ! Ouvre maintenant textes.json sur GitHub.", "ok"); }
+        function secours() {
+          zone.focus(); zone.select();
+          try { document.execCommand("copy"); reussi(); }
+          catch (e) { message("message-copie-textes", "Sélectionne le texte à la main (appui long) puis copie-le.", "erreur"); }
+        }
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(zone.value).then(reussi, secours);
+        else secours();
+      });
+      fetch("textes.json", { cache: "no-cache", credentials: "same-origin" })
+        .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
+        .then(remplirTextes)
+        .catch(function () { message("message-textes", "Impossible de lire les textes actuels. Ouvre cette page depuis ton site en ligne.", "erreur"); });
 
       // ----- Lecture de la liste actuelle du site -----
       fetch("ebooks.json", { cache: "no-cache", credentials: "same-origin" })
