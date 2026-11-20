@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-vNA7345B5Ch1nDavKNWFJcvw5ZqLkQZX3+/+akgtfbY='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-AS22r2Oytcqju5N0MIptgWxpMR1tG9Pkw1MeFg6x6tQ='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -434,6 +434,27 @@
       }
 
       // ---------- Les blocs affichés ----------
+      // ----- Vidéos : une seule chargée et lue à la fois -----
+      var videoActive = null;
+      function arreterVideo(v) {
+        v.pause();
+        if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); }
+        if (videoActive === v) videoActive = null;
+      }
+      function lancerVideo(v) {
+        if (videoActive && videoActive !== v) arreterVideo(videoActive);
+        videoActive = v;
+        if (!v.getAttribute("src")) v.setAttribute("src", v.getAttribute("data-video"));
+        var p = v.play();
+        if (p && p.catch) p.catch(function () { /* lecture refusée : l'image reste */ });
+      }
+      var observateurVideo = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entrees) {
+        entrees.forEach(function (entree) {
+          if (entree.intersectionRatio >= 0.3) lancerVideo(entree.target);
+          else if (entree.intersectionRatio < 0.05) arreterVideo(entree.target);
+        });
+      }, { root: document.getElementById("fil"), threshold: [0, 0.05, 0.3] }) : null;
+
       function fiche(ebook) {
         var f = element("article", "fiche");
         var img = element("div", "fiche-image");
@@ -446,13 +467,13 @@
           v.muted = true; v.defaultMuted = true; v.setAttribute("muted", "");
           v.loop = true; v.playsInline = true; v.setAttribute("playsinline", "");
           v.setAttribute("disablepictureinpicture", "");
-          v.preload = "metadata";
+          v.preload = "none";
           var affiche = cheminPhoto(ebook.videoImage) || photo;
           if (affiche) v.poster = affiche;
           v.setAttribute("aria-label", "Vidéo de présentation : " + String(ebook.nom || ""));
-          v.src = video;
-          if (!calme) { v.autoplay = true; v.setAttribute("autoplay", ""); }
-          v.addEventListener("loadeddata", enBas);
+          v.setAttribute("data-video", video);
+          // Une seule vidéo à la fois (beaucoup de téléphones ne savent pas en lire deux)
+          if (!calme && observateurVideo) observateurVideo.observe(v);
           img.appendChild(v);
         } else if (photo) {
           var i = element("img", ebook.imageEntiere === true ? "entiere" : "");

@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-DT99oatezs/7QHjnjU4RD/7cQVhppf+MdSxlEHUh8sc='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-EnXm+V60EpBAwu9mvpeBej27Hbagc9UtQgTmbvX3YhQ='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -612,14 +612,30 @@
         return /^images\/[A-Za-z0-9._-]+\.mp4$/i.test(c) ? c : null;
       }
 
-      // Les vidéos ne tournent que quand on les voit (économise la batterie et internet)
+      // ----- Les vidéos : UNE SEULE à la fois -----
+      // Beaucoup de téléphones ne savent lire qu'une vidéo à la fois. On ne charge donc
+      // que la vidéo bien visible à l'écran ; les autres sont arrêtées ET déchargées
+      // (leur image de couverture reste affichée).
+      var videoActive = null;
+      function arreterVideo(v) {
+        v.pause();
+        if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); }
+        if (videoActive === v) videoActive = null;
+      }
+      function lancerVideo(v) {
+        if (videoActive && videoActive !== v) arreterVideo(videoActive);
+        videoActive = v;
+        if (!v.getAttribute("src")) v.setAttribute("src", v.getAttribute("data-video"));
+        var p = v.play();
+        if (p && p.catch) p.catch(function () { /* lecture refusée : l'image de couverture reste */ });
+      }
       var observateurVideo = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entrees) {
         entrees.forEach(function (entree) {
           var v = entree.target;
-          if (entree.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-          else { v.pause(); }
+          if (entree.intersectionRatio >= 0.6) lancerVideo(v);
+          else if (entree.intersectionRatio < 0.2) arreterVideo(v);
         });
-      }, { threshold: 0.25 }) : null;
+      }, { threshold: [0, 0.2, 0.6] }) : null;
 
       function creerVideo(chemin, affiche, titre) {
         var v = document.createElement("video");
@@ -630,13 +646,14 @@
         v.playsInline = true;
         v.setAttribute("playsinline", "");
         v.setAttribute("disablepictureinpicture", "");
-        v.preload = "metadata";
+        v.preload = "none";                  // rien n'est chargé tant que la vidéo n'est pas à l'écran
         if (affiche) v.poster = affiche;
         v.setAttribute("aria-label", "Vidéo de présentation : " + titre);
-        v.src = chemin;
-        // Si la vidéo ne peut pas se lire, on affiche l'image à la place
+        v.setAttribute("data-video", chemin);
+        // Si la vidéo ne peut vraiment pas se lire, on affiche l'image à la place
         v.addEventListener("error", function () {
-          if (!affiche || !v.parentNode) return;
+          if (!v.getAttribute("src") || !affiche || !v.parentNode) return;
+          if (videoActive === v) videoActive = null;
           var img = element("img", "photo");
           img.src = affiche; img.alt = titre;
           v.parentNode.replaceChild(img, v);
