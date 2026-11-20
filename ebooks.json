@@ -19,6 +19,9 @@
       "Éviter les dépenses inutiles",
       "Épargner chaque mois",
       "Tenir jusqu'à la fin du mois"
+    ],
+    "extrait": [
+      "images/extrait-argent.jpg"
     ]
   },
   {
@@ -45,6 +48,9 @@
       "Babenda",
       "Jus de bissap",
       "Dêguê"
+    ],
+    "extrait": [
+      "images/extrait-recettes.jpg"
     ]
   },
   {
@@ -146,6 +152,9 @@
       "tabac",
       "arreter",
       "nicotine"
+    ],
+    "extrait": [
+      "images/extrait-fumer.jpg"
     ]
   }
 ]

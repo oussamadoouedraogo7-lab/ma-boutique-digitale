@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xYcwcAIWPuLPdjDkf0o5MQRN9eyWCQGY4i8jGFeVpjA='; script-src 'sha256-WqCW6JerU+Tk1AZdFlxvgqvMnpGKx713OaepBhpS0lM='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-NhXuz2Ht/uONcGSYj4KL1Is2rCMTcRl6rsXqmvMHeOU='; script-src 'sha256-vhZESVtGdEQRSlNqErG9ms0qabXcscSbe5b6J3xLHHA='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -330,7 +330,9 @@
     .fermer { flex: 0 0 auto; min-width: 44px; min-height: 44px; border: 0; border-radius: 999px; background: var(--or); color: var(--nuit); font: inherit; font-weight: 800; cursor: pointer; }
     .pages-extrait { display: grid; gap: 12px; padding: 14px; }
     .pages-extrait img { width: 100%; height: auto; display: block; border-radius: 10px; border: 1px solid var(--bord); background: #fff; }
-    .fenetre-bas { padding: 0 14px 16px; text-align: center; font-weight: 700; color: var(--encre-douce); }
+    .fenetre-suite { display: grid; gap: 10px; padding: 4px 14px 18px; text-align: center; }
+    .suite-titre { margin: 0; font-family: var(--titres); font-weight: 800; font-size: 1.15rem; color: var(--nuit); }
+    .extrait-mm { color: var(--terre); font-weight: 700; font-size: 0.92rem; text-underline-offset: 3px; padding: 6px 0; }
     /* Comment payer, pas à pas */
     .guide-paiement { margin-top: 24px; padding: 20px; border-radius: 18px; background: var(--ivoire); border: 1px solid var(--bord); }
     .guide-paiement > h3 { margin: 0 0 12px; font-size: 1.2rem; color: var(--nuit); }
@@ -529,8 +531,11 @@
         <button class="fermer" type="button" id="fermer-extrait" aria-label="Fermer">✕</button>
       </div>
       <div class="pages-extrait" id="pages-extrait"></div>
-      <p class="fenetre-bas">Ça vous plaît ? Le guide complet vous attend 👇</p>
-      <div class="fenetre-bas"><a class="bouton bouton-or" id="extrait-didy" href="vendeur.html">💬 Commander avec Didy</a></div>
+      <div class="fenetre-suite">
+        <p class="suite-titre">Envie de lire la suite ?</p>
+        <a class="bouton bouton-chariow" id="extrait-acheter" href="vendeur.html" target="_blank" rel="noopener noreferrer">🛒 Acheter pour découvrir la suite</a>
+        <a class="extrait-mm" id="extrait-didy" href="vendeur.html">ou payer par Orange Money, Moov Money ou Wave avec Didy</a>
+      </div>
     </dialog>
 
     <!-- ===== COMMENT ÇA MARCHE ===== -->
@@ -926,7 +931,7 @@
         if (pages.length) {
           var boutonExtrait = element("button", "action-carte", "📖 Lire un extrait gratuit");
           boutonExtrait.type = "button";
-          boutonExtrait.addEventListener("click", function () { ouvrirExtrait(ebook, pages, lienDidy); });
+          boutonExtrait.addEventListener("click", function () { ouvrirExtrait(ebook, pages, lienDidy, chariow); });
           actions.appendChild(boutonExtrait);
         }
         var partage = lienExterne("action-carte partage");
@@ -964,7 +969,7 @@
 
       // ----- Fenêtre de l'extrait gratuit -----
       var fenetre = document.getElementById("fenetre-extrait");
-      function ouvrirExtrait(ebook, pages, lienDidy) {
+      function ouvrirExtrait(ebook, pages, lienDidy, chariow) {
         var zonePages = document.getElementById("pages-extrait");
         while (zonePages.firstChild) zonePages.removeChild(zonePages.firstChild);
         document.getElementById("titre-extrait").textContent = "📖 Extrait : " + ebook.nom;
@@ -977,6 +982,10 @@
           zonePages.appendChild(img);
         });
         document.getElementById("extrait-didy").href = lienDidy;
+        // Le gros bouton : Chariow si l'ebook y est, sinon Didy
+        var acheter = document.getElementById("extrait-acheter");
+        acheter.href = chariow || lienDidy;
+        if (chariow) { acheter.target = "_blank"; } else { acheter.removeAttribute("target"); }
         if (fenetre.showModal) { fenetre.showModal(); } else { fenetre.setAttribute("open", ""); }
         zonePages.scrollTop = 0;
       }
