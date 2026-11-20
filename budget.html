@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <!-- Sécurité : seul le code de cette page peut s'exécuter. Les chiffres restent sur le téléphone du visiteur. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-i5nncyz0+CujoQsc2+bwmx/PPap7cBHudbrnxYL5dCo='; script-src 'sha256-GoUpHbSHDXmNjB9O4RZ/+wrz2kxBhn93qCIx9M+Rn0w='; font-src 'self'; img-src 'self' https://*.goatcounter.com; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Mon budget du mois – Cadeau gratuit Didy Digital</title>
+  <meta name="description" content="Cadeau gratuit de Didy Digital : calculez votre budget du mois sur votre téléphone, simplement.">
+  <meta name="theme-color" content="#141a4a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="images/icone-180.png">
+  <link rel="icon" type="image/png" href="images/icone-192.png">
+  <style>
+    @font-face { font-family: "Bricolage"; src: url("fonts/bricolage-grotesque.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+    @font-face { font-family: "Jakarta"; src: url("fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-display: swap; }
+    :root {
+      --nuit: #141a4a; --or: #f2a71b; --or-clair: #ffd27a; --terre: #d9481c; --vert: #0f7b5f;
+      --ivoire: #fbf6ee; --papier: #ffffff; --encre: #1c1410; --encre-douce: #5c4a3d; --bord: #eadfcd;
+      --titres: "Bricolage", "Arial Black", system-ui, sans-serif;
+      --corps: "Jakarta", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; font-family: var(--corps); color: var(--encre); background: var(--ivoire); line-height: 1.55; }
+    h1, h2 { font-family: var(--titres); line-height: 1.15; margin: 0; }
+    .haut { background: var(--nuit); color: #fff; padding: 14px 16px; }
+    .haut a { color: var(--or-clair); font-weight: 800; text-decoration: none; }
+    main { max-width: 640px; margin: 0 auto; padding: 22px 16px 60px; }
+    .intro h1 { font-size: clamp(1.8rem, 8vw, 2.4rem); color: var(--nuit); }
+    .intro p { color: var(--encre-douce); }
+    .bloc { margin-top: 18px; padding: 18px; border-radius: 18px; background: var(--papier); border: 1px solid var(--bord); }
+    .bloc h2 { font-size: 1.2rem; color: var(--nuit); margin-bottom: 10px; }
+    .ligne { display: grid; grid-template-columns: minmax(0, 1fr) 140px; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--bord); }
+    .ligne:last-child { border-bottom: 0; }
+    .ligne label { font-weight: 700; font-size: 0.95rem; }
+    .ligne input { width: 100%; min-height: 44px; padding: 8px 10px; border-radius: 10px; border: 2px solid var(--bord); font: inherit; font-weight: 700; text-align: right; background: var(--ivoire); }
+    .ligne input:focus { outline: none; border-color: var(--or); background: #fff; }
+    .total { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; font-weight: 800; color: var(--nuit); }
+    .resultat { margin-top: 18px; padding: 20px; border-radius: 18px; background: var(--nuit); color: #fff; }
+    .resultat .chiffre { font-family: var(--titres); font-size: 2rem; font-weight: 800; color: var(--or-clair); overflow-wrap: anywhere; }
+    .resultat p { margin: 8px 0 0; }
+    .resultat.negatif .chiffre { color: #ff9b84; }
+    .bouton { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 12px 20px; border-radius: 14px; border: 0; font-family: var(--titres); font-weight: 700; font-size: 1rem; text-decoration: none; cursor: pointer; }
+    .bouton-or { background: var(--or); color: var(--nuit); }
+    .bouton-clair { background: transparent; color: var(--encre-douce); border: 2px solid var(--bord); }
+    .bouton:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .actions .bouton { flex: 1 1 200px; }
+    .note { font-size: 0.85rem; color: var(--encre-douce); margin-top: 14px; }
+    @media (max-width: 380px) { .ligne { grid-template-columns: minmax(0, 1fr) 118px; } }
+  </style>
+</head>
+<body>
+  <div class="haut"><a href="./">← Didy Digital</a></div>
+  <main>
+    <div class="intro">
+      <h1>🎁 Mon budget du mois</h1>
+      <p>Un cadeau gratuit de Didy Digital. Écrivez vos montants en F CFA : le calcul se fait tout seul. Vos chiffres restent <strong>uniquement sur votre téléphone</strong>, personne d'autre ne les voit.</p>
+    </div>
+
+    <section class="bloc" aria-labelledby="titre-entrees">
+      <h2 id="titre-entrees">💵 Ce qui entre</h2>
+      <div id="entrees"></div>
+      <div class="total"><span>Total qui entre</span><span id="total-entrees">0 F CFA</span></div>
+    </section>
+
+    <section class="bloc" aria-labelledby="titre-epargne">
+      <h2 id="titre-epargne">🐷 Je me paie en premier</h2>
+      <div id="epargne"></div>
+      <p class="note">Mettez cet argent de côté <strong>dès que vous êtes payé</strong>, avant les autres dépenses. Même une petite somme compte.</p>
+    </section>
+
+    <section class="bloc" aria-labelledby="titre-sorties">
+      <h2 id="titre-sorties">🧾 Ce qui sort</h2>
+      <div id="sorties"></div>
+      <div class="total"><span>Total qui sort</span><span id="total-sorties">0 F CFA</span></div>
+    </section>
+
+    <div class="resultat" id="resultat" aria-live="polite">
+      <div>Il vous reste pour le mois :</div>
+      <div class="chiffre" id="reste">0 F CFA</div>
+      <p id="conseil">Écrivez vos montants pour voir le résultat.</p>
+    </div>
+
+    <div class="actions">
+      <a class="bouton bouton-or" href="vendeur.html?ebook=argent&amp;ref=cadeau">📘 Aller plus loin avec le guide « Argent »</a>
+      <button class="bouton bouton-clair" type="button" id="effacer">🗑️ Tout effacer</button>
+    </div>
+    <p class="note">Revenez chaque mois pour refaire votre budget : vos derniers chiffres sont gardés sur ce téléphone.</p>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+      var LIGNES = {
+        entrees: [["salaire", "Salaire ou revenu principal"], ["autres", "Autres revenus (petit commerce, aide…)"]],
+        epargne: [["epargne", "Somme mise de côté"]],
+        sorties: [["loyer", "Loyer"], ["nourriture", "Nourriture"], ["transport", "Transport"], ["factures", "Électricité et eau"],
+                  ["telephone", "Téléphone et internet"], ["famille", "Famille et entraide"], ["sante", "Santé"],
+                  ["ecole", "École"], ["divers", "Autres dépenses"]]
+      };
+      var CLE = "didy-budget";
+      var valeurs = {};
+      try { valeurs = JSON.parse(localStorage.getItem(CLE) || "{}") || {}; } catch (e) { valeurs = {}; }
+
+      function nombre(v) {
+        var n = parseInt(String(v || "").replace(/[^0-9]/g, ""), 10);
+        return isFinite(n) ? Math.min(n, 999999999) : 0;
+      }
+      function fcfa(n) {
+        return (n < 0 ? "− " : "") + String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " F CFA";
+      }
+      function somme(groupe) {
+        return LIGNES[groupe].reduce(function (t, l) { return t + nombre(valeurs[l[0]]); }, 0);
+      }
+      function calculer() {
+        var e = somme("entrees"), p = somme("epargne"), s = somme("sorties");
+        var reste = e - p - s;
+        document.getElementById("total-entrees").textContent = fcfa(e);
+        document.getElementById("total-sorties").textContent = fcfa(s);
+        document.getElementById("reste").textContent = fcfa(reste);
+        document.getElementById("resultat").classList.toggle("negatif", reste < 0);
+        var conseil;
+        if (!e) conseil = "Écrivez vos montants pour voir le résultat.";
+        else if (reste < 0) conseil = "Attention : vous dépensez plus que ce qui entre. Regardez quelles dépenses vous pouvez réduire ce mois-ci.";
+        else if (!p) conseil = "Bien ! Essayez maintenant de mettre une petite somme de côté chaque mois, même 500 F.";
+        else conseil = "Bravo ! Vous épargnez " + fcfa(p) + " ce mois-ci, soit " + Math.round(p * 100 / e) + " % de ce qui entre.";
+        document.getElementById("conseil").textContent = conseil;
+      }
+      function enregistrer() {
+        try { localStorage.setItem(CLE, JSON.stringify(valeurs)); } catch (e) { /* stockage impossible : le calcul marche quand même */ }
+      }
+      Object.keys(LIGNES).forEach(function (groupe) {
+        var zone = document.getElementById(groupe);
+        LIGNES[groupe].forEach(function (l) {
+          var ligne = document.createElement("div");
+          ligne.className = "ligne";
+          var label = document.createElement("label");
+          label.htmlFor = "m-" + l[0];
+          label.textContent = l[1];
+          var champ = document.createElement("input");
+          champ.id = "m-" + l[0];
+          champ.inputMode = "numeric";
+          champ.autocomplete = "off";
+          champ.placeholder = "0";
+          champ.maxLength = 13;
+          if (nombre(valeurs[l[0]])) champ.value = String(nombre(valeurs[l[0]])).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+          champ.addEventListener("input", function () {
+            var n = nombre(champ.value);
+            valeurs[l[0]] = n;
+            champ.value = n ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " ") : "";
+            calculer();
+            enregistrer();
+          });
+          ligne.appendChild(label);
+          ligne.appendChild(champ);
+          zone.appendChild(ligne);
+        });
+      });
+      document.getElementById("effacer").addEventListener("click", function () {
+        valeurs = {};
+        document.querySelectorAll("input").forEach(function (c) { c.value = ""; });
+        try { localStorage.removeItem(CLE); } catch (e) { /* rien */ }
+        calculer();
+      });
+      calculer();
+
+      // Compteur de visites (sans cookie). Les visites du propriétaire ne sont pas comptées.
+      var proprio = false;
+      try { proprio = localStorage.getItem("didy-proprietaire") === "7096dd161ec5c7ca918bfeb4b6a3c119b3132d03f82c8a40b5d6e961a1b6e7e0"; } catch (e) { proprio = false; }
+      if (!proprio && location.protocol === "https:") {
+        var pixel = new Image(1, 1);
+        pixel.referrerPolicy = "no-referrer";
+        pixel.src = "https://didyodg.goatcounter.com/count?p=" + encodeURIComponent(location.pathname) + "&t=" + encodeURIComponent(document.title);
+      }
+    })();
+  </script>
+</body>
+</html>

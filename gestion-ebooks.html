@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xZAQIKbyMZUJDpFokj0iBFXp70+AvKmfIBOUOfQPEE8='; script-src 'sha256-+ZOwQzkvVfLzWkviYFotxgMNVPcS+GnrQJDMJoR7C5A='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xZAQIKbyMZUJDpFokj0iBFXp70+AvKmfIBOUOfQPEE8='; script-src 'sha256-g5kcXSz0rnA61gLsvtvf4XlNUu2y7pj6Zk1nj79NbjI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -297,6 +297,14 @@
         <textarea id="tx-texteDidy" maxlength="300"></textarea>
         <label for="tx-piedTexte">Texte du bas de page</label>
         <textarea id="tx-piedTexte" maxlength="300"></textarea>
+        <label for="tx-astuceTitre">💡 Astuce de la semaine : titre</label>
+        <input id="tx-astuceTitre" maxlength="80">
+        <label for="tx-astuceTexte">💡 Astuce de la semaine : le conseil</label>
+        <textarea id="tx-astuceTexte" maxlength="400"></textarea>
+        <label for="tx-astuceEbook">💡 Ebook lié à l'astuce <span>(son code : argent, recettes, europe, business, fumer…)</span></label>
+        <input id="tx-astuceEbook" maxlength="40">
+        <label for="tx-lienCommunaute">📣 Lien de ta chaîne WhatsApp <span>(facultatif : le bouton reste caché si c'est vide)</span></label>
+        <input id="tx-lienCommunaute" maxlength="200" inputmode="url" placeholder="https://whatsapp.com/channel/…">
         <div class="actions-form">
           <button class="bouton bouton-principal" type="submit">✅ Préparer les nouveaux textes</button>
         </div>
@@ -628,7 +636,7 @@
       });
 
       // ----- Textes du site -----
-      var CHAMPS_TEXTES = { surtitre: 80, titre: 120, motEnCouleur: 40, intro: 400, titreEbooks: 100, texteEbooks: 300, titreDidy: 120, texteDidy: 300, piedTexte: 300 };
+      var CHAMPS_TEXTES = { surtitre: 80, titre: 120, motEnCouleur: 40, intro: 400, titreEbooks: 100, texteEbooks: 300, titreDidy: 120, texteDidy: 300, piedTexte: 300, astuceTitre: 80, astuceTexte: 400, astuceEbook: 40, lienCommunaute: 200 };
       function remplirTextes(t) {
         Object.keys(CHAMPS_TEXTES).forEach(function (c) {
           $("tx-" + c).value = (t && typeof t[c] === "string") ? t[c] : "";
@@ -641,6 +649,17 @@
           if (v) t[c] = v;
         });
         if (!t.titre) throw new Error("Le grand titre ne peut pas être vide.");
+        if (t.astuceEbook && !/^[a-z0-9-]{1,40}$/.test(t.astuceEbook)) throw new Error("Le code de l'ebook lié à l'astuce doit être en minuscules, sans espace (ex. : argent).");
+        if (t.lienCommunaute) {
+          var okWa = false;
+          try {
+            var u = new URL(t.lienCommunaute), h = u.hostname.toLowerCase();
+            okWa = u.protocol === "https:" && !u.username && !u.password && !u.port &&
+              (((h === "whatsapp.com" || h === "www.whatsapp.com") && /^\/channel\/[A-Za-z0-9_-]+\/?$/.test(u.pathname)) ||
+               (h === "chat.whatsapp.com" && /^\/[A-Za-z0-9_-]+\/?$/.test(u.pathname)));
+          } catch (e) { okWa = false; }
+          if (!okWa) throw new Error("Le lien de la chaîne doit être un lien WhatsApp, par exemple https://whatsapp.com/channel/…");
+        }
         if (t.motEnCouleur && t.titre.toLowerCase().indexOf(t.motEnCouleur.toLowerCase()) < 0) {
           throw new Error("Le mot en couleur doit se trouver dans le grand titre.");
         }

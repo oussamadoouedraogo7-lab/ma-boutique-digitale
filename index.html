@@ -14,12 +14,16 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-NzRyTIyCuQyyogPWv6U2tHesxWd0v40IhZV66QfJ4N8='; script-src 'sha256-3n5SO+dyHViwtE2Uxi/yugUCtvxo903dXVJBssY8PBw='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xYcwcAIWPuLPdjDkf0o5MQRN9eyWCQGY4i8jGFeVpjA='; script-src 'sha256-WqCW6JerU+Tk1AZdFlxvgqvMnpGKx713OaepBhpS0lM='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
   <meta name="description" content="Didy Digital : des ebooks simples et pratiques, à lire sur votre téléphone. Paiement sécurisé sur Chariow ou par Orange Money, Moov Money et Wave.">
   <meta name="theme-color" content="#141a4a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="images/icone-180.png">
+  <link rel="icon" type="image/png" href="images/icone-192.png">
+  <meta name="apple-mobile-web-app-title" content="Didy Digital">
 
   <link rel="preload" href="fonts/bricolage-grotesque.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/plus-jakarta-sans.woff2" as="font" type="font/woff2" crossorigin>
@@ -339,6 +343,26 @@
     .panneau ol { margin: 0; padding-left: 22px; display: grid; gap: 10px; }
     .panneau li { line-height: 1.5; overflow-wrap: anywhere; }
     .panneau .bouton { margin-top: 14px; }
+    /* Restez avec nous : astuce, cadeau, communauté, écran d'accueil */
+    .fidelite-grille { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+    .fidele { display: flex; flex-direction: column; gap: 10px; padding: 22px; border-radius: 20px; background: var(--papier); border: 1px solid var(--bord); box-shadow: var(--ombre); }
+    .fidele[hidden] { display: none; }
+    .fidele h3 { margin: 0; font-size: 1.2rem; color: var(--nuit); }
+    .fidele p { margin: 0; color: var(--encre-douce); }
+    .fidele .bouton { margin-top: auto; }
+    .fidele .etiquette { align-self: flex-start; padding: 4px 12px; border-radius: 999px; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .fidele.astuce { background: #fff8e8; border-color: #f6d79a; }
+    .astuce .etiquette { background: var(--or); color: var(--nuit); }
+    .cadeau .etiquette { background: #fde3d9; color: var(--terre); }
+    .communaute { background: #eef9f2; border-color: #bfe3cc; }
+    .communaute .etiquette { background: var(--wa); color: #06341c; }
+    .bouton-wa { background: var(--wa); color: #06341c; }
+    .ecran .etiquette { background: #e6e8fb; color: var(--nuit); }
+    .bouton-nuit { background: var(--nuit); color: #fff; }
+    .bouton-nuit[hidden] { display: none; }
+    .ecran details { border-top: 1px dashed var(--bord); padding-top: 8px; }
+    .ecran summary { cursor: pointer; font-weight: 700; color: var(--nuit); min-height: 40px; display: flex; align-items: center; }
+    .ecran ol { margin: 6px 0 0; padding-left: 20px; color: var(--encre-douce); display: grid; gap: 4px; }
     .note-securite { margin: 0; font-size: 0.8rem; color: var(--vert); font-weight: 600; text-align: center; }
 
     .erreur { grid-column: 1 / -1; background: #fff; border-radius: 22px; padding: 24px; text-align: center; box-shadow: var(--ombre); }
@@ -590,6 +614,49 @@
             <div class="msg client">Comment je paie par Orange Money ?</div>
             <div class="msg robot"><span class="msg-nom">Didy</span>Touchez « Orange Money » : WhatsApp s'ouvre avec votre commande déjà écrite 📲</div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RESTEZ AVEC NOUS ===== -->
+    <section id="fidelite">
+      <div class="conteneur">
+        <div class="entete-section revele">
+          <span class="eyebrow">Restez avec nous</span>
+          <h2>Des conseils et des cadeaux, toute l'année</h2>
+        </div>
+        <div class="fidelite-grille">
+          <article class="fidele astuce revele" id="carte-astuce">
+            <span class="etiquette">💡 L'astuce de la semaine</span>
+            <h3 id="astuce-titre">Payez-vous en premier</h3>
+            <p id="astuce-texte">Dès que vous recevez votre argent, mettez de côté une petite somme, même 500 F, avant toute autre dépense. Au bout de quelques mois, vous serez surpris de ce que vous avez réussi à garder.</p>
+            <a class="bouton bouton-or" id="astuce-lien" href="vendeur.html?ebook=argent">💬 En savoir plus avec Didy</a>
+          </article>
+          <article class="fidele cadeau revele">
+            <span class="etiquette">🎁 Cadeau gratuit</span>
+            <h3>Mon budget du mois</h3>
+            <p>Une page simple pour calculer votre budget sur votre téléphone : ce qui entre, ce qui sort, ce qui vous reste. Gratuit, sans inscription.</p>
+            <a class="bouton bouton-or" href="budget.html">🎁 Ouvrir mon cadeau</a>
+          </article>
+          <article class="fidele communaute revele" id="carte-communaute" hidden>
+            <span class="etiquette">📣 Communauté</span>
+            <h3>Recevez nos nouveautés sur WhatsApp</h3>
+            <p>Nouveaux ebooks, astuces et offres : rejoignez notre chaîne WhatsApp gratuite. Vous pouvez la quitter quand vous voulez.</p>
+            <a class="bouton bouton-wa" id="lien-communaute" target="_blank" rel="noopener noreferrer">📣 Rejoindre la chaîne</a>
+          </article>
+          <article class="fidele ecran revele">
+            <span class="etiquette">📱 Sur votre téléphone</span>
+            <h3>Gardez Didy Digital sur votre écran</h3>
+            <p>Ajoutez le site sur l'écran d'accueil de votre téléphone, comme une application : vous nous retrouvez en un seul geste.</p>
+            <button class="bouton bouton-nuit" type="button" id="installer" hidden>📲 Ajouter à mon écran</button>
+            <details>
+              <summary>Comment faire ?</summary>
+              <ol>
+                <li><strong>Android (Chrome)</strong> : touchez le menu <strong>⋮</strong> en haut à droite, puis « Ajouter à l'écran d'accueil ».</li>
+                <li><strong>iPhone (Safari)</strong> : touchez le bouton <strong>Partager</strong> (carré avec une flèche), puis « Sur l'écran d'accueil ».</li>
+              </ol>
+            </details>
+          </article>
         </div>
       </div>
     </section>
@@ -1080,6 +1147,33 @@
         el.appendChild(element(balise, classe || "", texte.slice(i, i + mot.length)));
         el.appendChild(document.createTextNode(texte.slice(i + mot.length)));
       }
+      // N'accepte que les liens https:// de WhatsApp (chaîne ou groupe), rien d'autre.
+      function lienWhatsAppOfficiel(url) {
+        try {
+          var u = new URL(String(url || ""));
+          var h = u.hostname.toLowerCase();
+          var ok = u.protocol === "https:" && !u.username && !u.password && !u.port &&
+            (((h === "whatsapp.com" || h === "www.whatsapp.com") && /^\/channel\/[A-Za-z0-9_-]+\/?$/.test(u.pathname)) ||
+             (h === "chat.whatsapp.com" && /^\/[A-Za-z0-9_-]+\/?$/.test(u.pathname)));
+          return ok ? u.href : null;
+        } catch (e) { return null; }
+      }
+
+      // Ajouter le site sur l'écran d'accueil (Android/Chrome propose un bouton direct)
+      var demandeInstallation = null;
+      window.addEventListener("beforeinstallprompt", function (ev) {
+        ev.preventDefault();
+        demandeInstallation = ev;
+        document.getElementById("installer").hidden = false;
+      });
+      document.getElementById("installer").addEventListener("click", function () {
+        if (!demandeInstallation) return;
+        demandeInstallation.prompt();
+        demandeInstallation = null;
+        document.getElementById("installer").hidden = true;
+      });
+      window.addEventListener("appinstalled", function () { document.getElementById("installer").hidden = true; });
+
       fetch("textes.json", { cache: "no-cache", credentials: "same-origin" })
         .then(function (r) { if (!r.ok) throw new Error(); return r.json(); })
         .then(function (t) {
@@ -1092,6 +1186,18 @@
           });
           var titre = texteSur(t.titre, 120);
           if (titre) texteAvecMot(document.getElementById("t-titre"), titre, texteSur(t.motEnCouleur, 40), "span", "souligne");
+          // L'astuce de la semaine
+          var astuceTitre = texteSur(t.astuceTitre, 80), astuceTexte = texteSur(t.astuceTexte, 400);
+          if (astuceTitre) document.getElementById("astuce-titre").textContent = astuceTitre;
+          if (astuceTexte) document.getElementById("astuce-texte").textContent = astuceTexte;
+          var astuceEbook = texteSur(t.astuceEbook, 40).toLowerCase();
+          if (/^[a-z0-9-]{1,40}$/.test(astuceEbook)) document.getElementById("astuce-lien").href = "vendeur.html?ebook=" + astuceEbook + "&ref=astuce";
+          // La chaîne WhatsApp : le bouton n'apparaît que si le lien est un vrai lien WhatsApp
+          var communaute = lienWhatsAppOfficiel(t.lienCommunaute);
+          if (communaute) {
+            document.getElementById("lien-communaute").href = communaute;
+            document.getElementById("carte-communaute").hidden = false;
+          }
           var titreDidy = texteSur(t.titreDidy, 120);
           if (titreDidy) texteAvecMot(document.getElementById("t-titre-didy"), titreDidy, "Didy", "em");
         })

@@ -1,0 +1,15 @@
+{
+  "name": "Didy Digital – Ebooks pratiques",
+  "short_name": "Didy Digital",
+  "description": "Des ebooks simples et pratiques, à lire sur votre téléphone.",
+  "lang": "fr",
+  "start_url": "./?ref=ecran",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbf6ee",
+  "theme_color": "#141a4a",
+  "icons": [
+    { "src": "images/icone-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "images/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
