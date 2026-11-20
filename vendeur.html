@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-shjp3AzRK+Qx9P+ao9vQG09Aj81i7qW7C+S+gJwAB4s='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-vNA7345B5Ch1nDavKNWFJcvw5ZqLkQZX3+/+akgtfbY='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -330,7 +330,7 @@
       var codeStats = String(reglages.goatcounter || "").trim().toLowerCase();
       var dejaCompte = {};
       var proprio = false;
-      try { proprio = localStorage.getItem("didy-proprietaire") === "e0a30fb67edbbe1f9df4c805ec1c28035712d9caba1f77139a65a394b9b62be6"; } catch (e) { proprio = false; }
+      try { proprio = localStorage.getItem("didy-proprietaire") === "7096dd161ec5c7ca918bfeb4b6a3c119b3132d03f82c8a40b5d6e961a1b6e7e0"; } catch (e) { proprio = false; }
       function evenement(nom, titre) {
         if (proprio || !/^[a-z0-9-]{2,50}$/.test(codeStats) || location.protocol !== "https:") return;
         nom = String(nom).toLowerCase().replace(/[^a-z0-9-]/g, "-").slice(0, 60);

@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-cjSUdF/A01jjoDvfqBt7FndH5FoOeXSZdPQ2PYqBZUE='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-7bWW1b6WLxJ/sA2WMLqG0hGx/z2lt83qGoUw1WPBpQM='; script-src 'sha256-DT99oatezs/7QHjnjU4RD/7cQVhppf+MdSxlEHUh8sc='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -869,7 +869,7 @@
       // ----- Reconnaître le propriétaire du site (toi) -----
       // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
       // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.
-      var EMPREINTE_PROPRIO = "e0a30fb67edbbe1f9df4c805ec1c28035712d9caba1f77139a65a394b9b62be6";
+      var EMPREINTE_PROPRIO = "7096dd161ec5c7ca918bfeb4b6a3c119b3132d03f82c8a40b5d6e961a1b6e7e0";
       function estProprio() {
         try { return localStorage.getItem("didy-proprietaire") === EMPREINTE_PROPRIO; } catch (e) { return false; }
       }

@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mnlKHYQLn6chxLb2e9O0C+wnD2tZxApMgM1G/z3nCE8='; script-src 'sha256-CYNcSQelJQMjJ0hBIFKPP3tII2wsf5ZmufXcq4vf1AI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-mnlKHYQLn6chxLb2e9O0C+wnD2tZxApMgM1G/z3nCE8='; script-src 'sha256-ZocHOSKr+npUes3xnSe9PsPegNyQOl60jwn8kQ6Ixng='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -272,7 +272,7 @@
       // ----- Reconnaître le propriétaire du site (toi) -----
       // Tu ouvres une fois le lien secret ...?proprietaire=TON-CODE sur ton téléphone :
       // il est alors reconnu. On ne garde que l'empreinte du code, jamais le code lui-même.
-      var EMPREINTE_PROPRIO = "e0a30fb67edbbe1f9df4c805ec1c28035712d9caba1f77139a65a394b9b62be6";
+      var EMPREINTE_PROPRIO = "7096dd161ec5c7ca918bfeb4b6a3c119b3132d03f82c8a40b5d6e961a1b6e7e0";
       function estProprio() {
         try { return localStorage.getItem("didy-proprietaire") === EMPREINTE_PROPRIO; } catch (e) { return false; }
       }
