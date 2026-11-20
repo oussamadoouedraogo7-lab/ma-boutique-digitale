@@ -12,7 +12,7 @@
     SÉCURITÉ : la page ne collecte aucune donnée. Ce que le client écrit
     reste dans son téléphone et n'est envoyé nulle part.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-AS22r2Oytcqju5N0MIptgWxpMR1tG9Pkw1MeFg6x6tQ='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-pgiwarlbfab95Y0tFNihNjNrWXs3C796Fr6OwHDAElk='; script-src 'sha256-xcY6FN56WWmTvFmZ+fwai7qsMfO67kvw32Vp38mVWOY='; font-src 'self'; connect-src 'self'; media-src 'self'; img-src 'self' data: https://*.goatcounter.com; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#141a4a">
   <title>Didy – Assistante de vente | Didy Digital</title>
@@ -350,13 +350,13 @@
         if (texte) el.textContent = texte;
         return el;
       }
-      // N'accepte que les liens https:// vers Chariow (chariow.com ou ta boutique *.mychariow.shop).
+      // N'accepte que les liens https:// vers TA boutique Chariow (tvqanrik.mychariow.shop), rien d'autre.
       // Même si quelqu'un modifiait ebooks.json, un bouton ne pourrait pas mener vers un faux site de paiement.
       function lienSecurise(url) {
         try {
           var u = new URL(String(url || ""));
           var h = u.hostname.toLowerCase();
-          var chariow = h === "chariow.com" || /\.chariow\.com$/.test(h) || /^[a-z0-9-]+\.mychariow\.shop$/.test(h);
+          var chariow = h === "tvqanrik.mychariow.shop" && !u.port && /^\/(prd_[a-z0-9]+(\/checkout)?\/?)?$/i.test(u.pathname);
           return (u.protocol === "https:" && chariow && !u.username && !u.password) ? u.href : null;
         } catch (e) { return null; }
       }
@@ -598,6 +598,7 @@
         var chariow = lienSecurise(e.lienChariow) || lienSecurise(reglages.boutiqueChariow);
         if (chariow) {
           robot("Merci pour votre confiance 🙏 Vous pouvez payer par **Orange Money**, **Moov Money** ou **Wave** en nous écrivant sur WhatsApp :");
+          robot("🔒 Pour votre sécurité : payez **uniquement** à nos numéros officiels **+226 05 56 44 51** (Orange Money) et **+226 03 07 88 05** (Moov Money et Wave). Nous ne vous demanderons **jamais** votre code secret.");
           robotBloc(function () { return blocLiens(liensMobileMoney(e)); });
           robot("Ou payez directement en ligne sur **Chariow**, une page de paiement sécurisée : **vous recevez votre ebook automatiquement**, même la nuit 👇");
           robotBloc(function () { return blocLiens([{ classe: "chariow", texte: "🛒 Payer « " + e.nom + " » sur Chariow", href: chariow, evenements: evenementsPaiement(e, "chariow") }]); });

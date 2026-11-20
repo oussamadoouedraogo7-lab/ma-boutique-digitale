@@ -10,7 +10,7 @@
     Elle lit seulement le fichier ebooks.json de ton site, puis te donne
     le nouveau texte à coller toi-même dans ebooks.json sur GitHub.
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xZAQIKbyMZUJDpFokj0iBFXp70+AvKmfIBOUOfQPEE8='; script-src 'sha256-vpZ5vmxagA3dXVpsSa2O7ocFf0jjYLtZTNfnfkzyCAI='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-xZAQIKbyMZUJDpFokj0iBFXp70+AvKmfIBOUOfQPEE8='; script-src 'sha256-jrkWyCiKuXzyxv48prPlyc1uNXz20iT/oAhLqSHrpV8='; font-src 'self'; connect-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#23110a">
@@ -548,9 +548,9 @@
           try {
             var u = new URL(lien), h = u.hostname.toLowerCase();
             ok = u.protocol === "https:" && !u.username && !u.password &&
-              (h === "chariow.com" || /\.chariow\.com$/.test(h) || /^[a-z0-9-]+\.mychariow\.shop$/.test(h));
+              (h === "tvqanrik.mychariow.shop" && !u.port && /^\/(prd_[a-z0-9]+(\/checkout)?\/?)?$/i.test(u.pathname));
           } catch (err) { ok = false; }
-          if (!ok) throw new Error("Le lien doit être un lien Chariow sécurisé, par exemple https://tvqanrik.mychariow.shop/prd_…/checkout");
+          if (!ok) throw new Error("Ce lien n'est pas accepté : il doit venir de TA boutique Chariow, par exemple https://tvqanrik.mychariow.shop/prd_…/checkout");
         }
         e.lienChariow = lien;
 

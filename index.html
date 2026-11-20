@@ -14,7 +14,7 @@
     leur empreinte change : il faudra la recalculer (demande-moi).
     Les ebooks se modifient dans ebooks.json (ou avec la page gestion-ebooks.html).
   -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-WvwshncrkcF6RaWk/JFstO1beNZ9dfx0N/IyD7tDHTg='; script-src 'sha256-pBPb/My8RydLUc14BX8VNvIokHBHnxmQdf2y7aUBma0='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-J6833C8u7N8l84ZP1sUDT9uPt1SVp00lZH2VVBhM0DM='; script-src 'sha256-S4ehkwNRftvX38AAyvDbJCEWYauhzzEhWqxh0nDS36g='; font-src 'self'; img-src 'self' data: https://*.goatcounter.com; connect-src 'self' https://*.goatcounter.com; media-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
 
   <title>Didy Digital – Ebooks pratiques</title>
@@ -320,6 +320,10 @@
       background: var(--nuit); color: var(--or); font-family: var(--titres); font-weight: 800; font-size: 1.2rem;
     }
     .etape h3 { font-size: 1.12rem; color: var(--nuit); }
+    .securite-paiement { margin-top: 20px; padding: 20px 22px; border-radius: 18px; background: #eef7f0; border: 2px solid #2f8f5b; }
+    .securite-paiement h3 { margin: 0 0 10px; font-size: 1.12rem; color: var(--nuit); }
+    .securite-paiement ul { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+    .securite-paiement li { line-height: 1.5; overflow-wrap: anywhere; }
     .etape p { margin: 6px 0 0; color: var(--encre-douce); font-size: 0.95rem; }
 
     /* ===== DIDY ===== */
@@ -471,6 +475,15 @@
           <li class="etape revele"><h3>Payez en toute sécurité</h3><p>En ligne sur Chariow, ou par Orange Money, Moov Money ou Wave via WhatsApp.</p></li>
           <li class="etape revele"><h3>Recevez votre ebook</h3><p>Sur Chariow, il arrive automatiquement. Sur WhatsApp, nous vous l'envoyons dès que le paiement est confirmé.</p></li>
         </ol>
+        <div class="securite-paiement revele">
+          <h3>🔒 Pour payer en toute sécurité</h3>
+          <ul>
+            <li>Payez <strong>uniquement</strong> à nos numéros officiels : <strong>+226 05 56 44 51</strong> (Orange Money) et <strong>+226 03 07 88 05</strong> (Moov Money et Wave).</li>
+            <li>Nous ne vous demanderons <strong>jamais</strong> votre code secret Mobile Money.</li>
+            <li>Sur Chariow, vérifiez que l'adresse de la page commence par <strong>tvqanrik.mychariow.shop</strong>.</li>
+            <li>Un autre numéro ou un autre lien vous est proposé au nom de Didy Digital ? Ne payez pas et écrivez-nous d'abord sur WhatsApp.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -595,13 +608,13 @@
         if (texte) el.textContent = texte;
         return el;
       }
-      // N'accepte que les liens https:// vers Chariow (chariow.com ou ta boutique *.mychariow.shop).
+      // N'accepte que les liens https:// vers TA boutique Chariow (tvqanrik.mychariow.shop), rien d'autre.
       // Même si quelqu'un modifiait ebooks.json, un bouton ne pourrait pas mener vers un faux site de paiement.
       function lienSecurise(url) {
         try {
           var u = new URL(String(url || ""));
           var h = u.hostname.toLowerCase();
-          var chariow = h === "chariow.com" || /\.chariow\.com$/.test(h) || /^[a-z0-9-]+\.mychariow\.shop$/.test(h);
+          var chariow = h === "tvqanrik.mychariow.shop" && !u.port && /^\/(prd_[a-z0-9]+(\/checkout)?\/?)?$/i.test(u.pathname);
           return (u.protocol === "https:" && chariow && !u.username && !u.password) ? u.href : null;
         } catch (e) { return null; }
       }
